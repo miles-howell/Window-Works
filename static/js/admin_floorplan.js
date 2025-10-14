@@ -10,15 +10,49 @@
   const deskByCell = new Map();
   const selectedCells = new Set();
   let lastSelectedKey = null;
+  let activeMode = "layout";
 
-  const form = document.getElementById("layout-form");
+  const layoutForm = document.getElementById("layout-form");
   const departmentInput = document.getElementById("layout-department");
   const labelInput = document.getElementById("layout-label");
   const fillInput = document.getElementById("layout-fill");
   const notesInput = document.getElementById("layout-notes");
   const selectionInfo = document.getElementById("layout-selection-info");
-  const feedback = document.getElementById("layout-feedback");
+  const selectionList = document.getElementById("layout-selection-list");
+  const layoutFeedback = document.getElementById("layout-feedback");
   const clearButton = document.getElementById("layout-clear");
+
+  const assignmentForm = document.getElementById("assignment-form");
+  const assignmentSelectionInfo = document.getElementById("assignment-selection-info");
+  const assignmentName = document.getElementById("assignment-name");
+  const assignmentType = document.getElementById("assignment-type");
+  const assignmentDuration = document.getElementById("assignment-duration");
+  const assignmentStart = document.getElementById("assignment-start");
+  const assignmentEnd = document.getElementById("assignment-end");
+  const assignmentNote = document.getElementById("assignment-note");
+  const assignmentCreatedBy = document.getElementById("assignment-created-by");
+  const assignmentFeedback = document.getElementById("assignment-feedback");
+  const assignmentSubmit = document.getElementById("assignment-submit");
+
+  const blockForm = document.getElementById("block-form");
+  const blockSelectionInfo = document.getElementById("block-selection-info");
+  const blockName = document.getElementById("block-name");
+  const blockDuration = document.getElementById("block-duration");
+  const blockStart = document.getElementById("block-start");
+  const blockEnd = document.getElementById("block-end");
+  const blockReason = document.getElementById("block-reason");
+  const blockCreatedBy = document.getElementById("block-created-by");
+  const blockFeedback = document.getElementById("block-feedback");
+  const blockSubmit = document.getElementById("block-submit");
+
+  const modeButtons = document.querySelectorAll(".admin-mode-button");
+  const modePanels = document.querySelectorAll(".mode-panel");
+
+  const feedbackTargets = {
+    layout: layoutFeedback,
+    assignment: assignmentFeedback,
+    block: blockFeedback,
+  };
 
   const rows = parseInt(canvas.dataset.rows || "13", 10);
   const columns = parseInt(canvas.dataset.columns || "30", 10);
@@ -48,22 +82,38 @@
     return "Free";
   }
 
-  function updateSelectionInfo() {
-    if (selectedCells.size === 0) {
-      selectionInfo.textContent = "No cells selected.";
+  function setFeedback(message, tone, mode = "layout") {
+    const target = feedbackTargets[mode];
+    if (!target) {
       return;
     }
-    if (selectedCells.size === 1) {
-      const { row, column } = parseKey([...selectedCells][0]);
-      selectionInfo.textContent = `Editing cell r${String(row).padStart(2, "0")}c${String(column).padStart(2, "0")}`;
-      return;
+    target.textContent = message || "";
+    target.className = "note-text";
+    if (tone) {
+      target.classList.add(tone);
     }
-    selectionInfo.textContent = `${selectedCells.size} cells selected.`;
   }
 
-  function setFeedback(message, tone) {
-    feedback.textContent = message || "";
-    feedback.className = tone ? `note-text ${tone}` : "note-text";
+  function clearFeedback(mode) {
+    setFeedback("", "", mode);
+  }
+
+  function setActiveMode(mode) {
+    if (!mode) {
+      return;
+    }
+    activeMode = mode;
+    modeButtons.forEach((button) => {
+      const isActive = button.dataset.adminMode === mode;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+    modePanels.forEach((panel) => {
+      const isActive = panel.dataset.modePanel === mode;
+      panel.classList.toggle("active", isActive);
+      panel.setAttribute("aria-hidden", isActive ? "false" : "true");
+    });
+    clearFeedback(mode);
   }
 
   function renderCell(row, column) {
@@ -77,36 +127,42 @@
     cell.dataset.row = String(row);
     cell.dataset.column = String(column);
     cell.style.background = "";
-    const coordMarkup = `<div class="grid-cell-coord">r${String(row).padStart(2, "0")} c${String(column).padStart(2, "0")}</div>`;
-    cell.innerHTML = coordMarkup;
+    cell.innerHTML = "";
+    delete cell.dataset.deskId;
+
     if (desk) {
+      const isAssignable = desk.is_assignable !== false;
+      const isWalkway = (desk.department || "").toLowerCase() === "walkway";
+      const fill = desk.fill_color || desk.department_color || "";
+
       cell.classList.add("has-desk");
-      cell.classList.toggle("non-assignable", desk.is_assignable === false);
+      cell.classList.toggle("non-assignable", !isAssignable);
       cell.classList.toggle("blocked", desk.status === "blocked");
       cell.classList.toggle("occupied", desk.status === "occupied");
-      cell.classList.toggle("free", desk.status === "free" && desk.is_assignable !== false);
-      const isWalkway = (desk.department || "").toLowerCase() === "walkway";
+      cell.classList.toggle("free", desk.status === "free" && isAssignable);
       cell.classList.toggle("walkway", isWalkway);
       cell.dataset.deskId = desk.identifier;
-      if (desk.status !== "blocked") {
-        const fill = desk.fill_color || desk.department_color || "";
-        if (fill) {
-          cell.style.background = fill;
-        }
+
+      if (desk.status !== "blocked" && fill) {
+        cell.style.background = fill;
       }
-      if (isWalkway) {
-        cell.innerHTML = "";
-      } else {
-        const pill = desk.is_assignable === false ? "" : `<div class="status-pill">${statusLabel(desk)}</div>`;
+
+      if (!isWalkway) {
+        const pill = isAssignable
+          ? `<div class="status-pill status-${desk.status || "free"}">${statusLabel(desk)}</div>`
+          : "";
         cell.innerHTML = `
           <div class="desk-label">${desk.label}</div>
           ${pill}
         `;
       }
+      cell.title = `${desk.label} — ${desk.department}`;
     } else {
       cell.classList.add("empty-cell-state");
-      cell.innerHTML = `${coordMarkup}<span class="empty-cell">Empty</span>`;
+      cell.innerHTML = '<span class="empty-cell">Empty</span>';
+      cell.title = "";
     }
+
     if (selectedCells.has(key)) {
       cell.classList.add("selected");
     }
@@ -135,7 +191,7 @@
             toggleCellSelection(key);
           }
           lastSelectedKey = key;
-          syncFormWithSelection();
+          syncFormsWithSelection();
           updateSelectionInfo();
           refreshSelectedStyles();
         });
@@ -177,26 +233,145 @@
     }
   }
 
-  function syncFormWithSelection() {
-    setFeedback("");
-    if (selectedCells.size !== 1) {
-      form.reset();
+  function getSelectedDesks() {
+    return [...selectedCells]
+      .map((key) => deskByCell.get(key))
+      .filter((desk) => Boolean(desk));
+  }
+
+  function getAssignableDesks() {
+    return getSelectedDesks().filter((desk) => desk.is_assignable !== false);
+  }
+
+  function updateSelectionInfo() {
+    if (selectedCells.size === 0) {
+      selectionInfo.textContent = "No cells selected.";
+    } else if (selectedCells.size === 1) {
+      const { row, column } = parseKey([...selectedCells][0]);
+      selectionInfo.textContent = `Editing cell r${String(row).padStart(2, "0")}c${String(column).padStart(2, "0")}`;
+    } else {
+      selectionInfo.textContent = `${selectedCells.size} cells selected.`;
+    }
+
+    if (!selectionList) {
       return;
     }
-    const firstKey = Array.from(selectedCells)[0];
-    const desk = deskByCell.get(firstKey);
-    if (!desk) {
-      form.reset();
+
+    selectionList.innerHTML = "";
+    if (selectedCells.size === 0) {
       return;
     }
-    departmentInput.value = String(desk.department_id || "");
-    labelInput.value = desk.label || "";
-    fillInput.value = desk.fill_color || "";
-    notesInput.value = desk.notes || "";
+
+    const fragment = document.createDocumentFragment();
+    const sortedKeys = [...selectedCells].map((key) => ({ key, ...parseKey(key) }));
+    sortedKeys.sort((a, b) => (a.row - b.row !== 0 ? a.row - b.row : a.column - b.column));
+    sortedKeys.forEach((item) => {
+      const desk = deskByCell.get(item.key);
+      const entry = document.createElement("li");
+      entry.className = "selection-list-item";
+      if (desk) {
+        entry.textContent = `${desk.label} • ${statusLabel(desk)}`;
+      } else {
+        entry.textContent = `Empty cell r${String(item.row).padStart(2, "0")}c${String(item.column).padStart(2, "0")}`;
+      }
+      fragment.appendChild(entry);
+    });
+    selectionList.appendChild(fragment);
+  }
+
+  function syncFormsWithSelection() {
+    clearFeedback("layout");
+    clearFeedback("assignment");
+    clearFeedback("block");
+    if (layoutForm) {
+      if (selectedCells.size !== 1) {
+        layoutForm.reset();
+      } else {
+        const firstKey = Array.from(selectedCells)[0];
+        const desk = deskByCell.get(firstKey);
+        if (desk) {
+          if (departmentInput) {
+            departmentInput.value = String(desk.department_id || "");
+          }
+          if (labelInput) {
+            labelInput.value = desk.label || "";
+          }
+          if (fillInput) {
+            fillInput.value = desk.fill_color || "";
+          }
+          if (notesInput) {
+            notesInput.value = desk.notes || "";
+          }
+        } else {
+          layoutForm.reset();
+        }
+      }
+    }
+    updateActionAvailability();
+  }
+
+  function updateActionAvailability() {
+    const desks = getSelectedDesks();
+    const assignable = getAssignableDesks();
+    const ignoredCount = selectedCells.size - desks.length;
+
+    if (assignmentSelectionInfo) {
+      if (assignable.length === 0) {
+        assignmentSelectionInfo.textContent = selectedCells.size
+          ? "Selected desks cannot accept assignments."
+          : "Select at least one assignable desk.";
+      } else {
+        assignmentSelectionInfo.textContent = `${assignable.length} desk(s) ready for assignment.`;
+      }
+    }
+    if (assignmentSubmit) {
+      assignmentSubmit.disabled = assignable.length === 0;
+    }
+
+    if (blockSelectionInfo) {
+      if (desks.length === 0) {
+        blockSelectionInfo.textContent = "Select the desks you want to block.";
+      } else if (ignoredCount > 0) {
+        blockSelectionInfo.textContent = `${desks.length} desk(s) will be blocked. ${ignoredCount} empty cell(s) ignored.`;
+      } else {
+        blockSelectionInfo.textContent = `${desks.length} desk(s) will be blocked.`;
+      }
+    }
+    if (blockSubmit) {
+      blockSubmit.disabled = desks.length === 0;
+    }
   }
 
   function selectedCellsPayload() {
     return [...selectedCells].map((key) => parseKey(key));
+  }
+
+  function setDefaultStart(form, input) {
+    if (!form || !input) {
+      return;
+    }
+    const value = form.dataset.defaultStart;
+    if (value && !input.value) {
+      input.value = value;
+    }
+  }
+
+  function bindDurationToggle(select, endInput) {
+    if (!select || !endInput) {
+      return;
+    }
+    const handleChange = () => {
+      const isPermanent = select.value === "permanent";
+      endInput.disabled = isPermanent;
+      if (isPermanent) {
+        endInput.value = "";
+      }
+    };
+    if (select.dataset.durationBound !== "true") {
+      select.addEventListener("change", handleChange);
+      select.dataset.durationBound = "true";
+    }
+    handleChange();
   }
 
   async function sendUpdate(payload) {
@@ -235,60 +410,183 @@
       });
     }
     refreshSelectedStyles();
-    syncFormWithSelection();
+    syncFormsWithSelection();
+    updateSelectionInfo();
   }
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (selectedCells.size === 0) {
-      setFeedback("Select at least one cell before assigning.", "warning");
-      return;
-    }
-    if (!departmentInput.value) {
-      setFeedback("Choose a department for the selected cells.", "warning");
-      return;
-    }
-    const payload = {
-      action: "assign",
-      cells: selectedCellsPayload(),
-      data: {
-        department: parseInt(departmentInput.value, 10),
-        label: labelInput.value.trim(),
-        fill_color: fillInput.value.trim(),
-        notes: notesInput.value.trim(),
-      },
-    };
-    try {
-      const result = await sendUpdate(payload);
-      applyServerResult(result);
-      setFeedback(result.message || "Cells updated.", "success");
-    } catch (error) {
-      setFeedback(error.message, "danger");
-    }
-  });
+  if (layoutForm) {
+    layoutForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (selectedCells.size === 0) {
+        setFeedback("Select at least one cell before assigning.", "warning", "layout");
+        return;
+      }
+      if (!departmentInput || !departmentInput.value) {
+        setFeedback("Choose a department for the selected cells.", "warning", "layout");
+        return;
+      }
+      const payload = {
+        action: "assign",
+        cells: selectedCellsPayload(),
+        data: {
+          department: parseInt(departmentInput.value, 10),
+          label: labelInput ? labelInput.value.trim() : "",
+          fill_color: fillInput ? fillInput.value.trim() : "",
+          notes: notesInput ? notesInput.value.trim() : "",
+        },
+      };
+      try {
+        const result = await sendUpdate(payload);
+        applyServerResult(result);
+        setFeedback(result.message || "Cells updated.", "success", "layout");
+      } catch (error) {
+        setFeedback(error.message, "danger", "layout");
+      }
+    });
+  }
 
-  clearButton.addEventListener("click", async () => {
-    if (selectedCells.size === 0) {
-      setFeedback("Select the cells you want to clear.", "warning");
-      return;
-    }
-    if (!window.confirm("Remove desks from the selected cells? This will also delete related assignments.")) {
-      return;
-    }
-    const payload = {
-      action: "clear",
-      cells: selectedCellsPayload(),
-    };
-    try {
-      const result = await sendUpdate(payload);
-      applyServerResult(result);
-      form.reset();
-      setFeedback(result.message || "Cells cleared.", "success");
-    } catch (error) {
-      setFeedback(error.message, "danger");
-    }
+  if (clearButton) {
+    clearButton.addEventListener("click", async () => {
+      if (selectedCells.size === 0) {
+        setFeedback("Select the cells you want to clear.", "warning", "layout");
+        return;
+      }
+      if (
+        !window.confirm(
+          "Remove desks from the selected cells? This will also delete related assignments.",
+        )
+      ) {
+        return;
+      }
+      const payload = {
+        action: "clear",
+        cells: selectedCellsPayload(),
+      };
+      try {
+        const result = await sendUpdate(payload);
+        applyServerResult(result);
+        if (layoutForm) {
+          layoutForm.reset();
+        }
+        setFeedback(result.message || "Cells cleared.", "success", "layout");
+      } catch (error) {
+        setFeedback(error.message, "danger", "layout");
+      }
+    });
+  }
+
+  if (assignmentForm) {
+    assignmentForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const assignable = getAssignableDesks();
+      if (assignable.length === 0) {
+        setFeedback(
+          "Select at least one assignable desk to create an assignment.",
+          "warning",
+          "assignment",
+        );
+        return;
+      }
+      if (!assignmentName) {
+        return;
+      }
+      const assigneeName = assignmentName.value.trim();
+      if (!assigneeName) {
+        setFeedback("Enter an employee name before saving.", "warning", "assignment");
+        assignmentName.focus();
+        return;
+      }
+      const durationValue = assignmentDuration ? assignmentDuration.value : "temporary";
+      const startValue = assignmentStart ? assignmentStart.value : "";
+      const endValue =
+        durationValue === "permanent" || !assignmentEnd ? "" : assignmentEnd.value;
+      const payload = {
+        action: "assignment",
+        cells: selectedCellsPayload(),
+        data: {
+          assignee_name: assigneeName,
+          assignment_type: assignmentType ? assignmentType.value : "desk",
+          duration_choice: durationValue,
+          start: startValue,
+          end: endValue,
+          note: assignmentNote ? assignmentNote.value.trim() : "",
+          created_by: assignmentCreatedBy ? assignmentCreatedBy.value.trim() : "",
+        },
+      };
+      try {
+        const result = await sendUpdate(payload);
+        applyServerResult(result);
+        assignmentForm.reset();
+        setDefaultStart(assignmentForm, assignmentStart);
+        bindDurationToggle(assignmentDuration, assignmentEnd);
+        setFeedback(result.message || "Assignment saved.", "success", "assignment");
+      } catch (error) {
+        setFeedback(error.message, "danger", "assignment");
+      }
+    });
+  }
+
+  if (blockForm) {
+    blockForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const desks = getSelectedDesks();
+      if (desks.length === 0) {
+        setFeedback("Select at least one desk to block.", "warning", "block");
+        return;
+      }
+      if (!blockName) {
+        return;
+      }
+      const zoneName = blockName.value.trim();
+      if (!zoneName) {
+        setFeedback("Enter a name for this block-out zone.", "warning", "block");
+        blockName.focus();
+        return;
+      }
+      const blockDurationValue = blockDuration ? blockDuration.value : "temporary";
+      const blockStartValue = blockStart ? blockStart.value : "";
+      const blockEndValue =
+        blockDurationValue === "permanent" || !blockEnd ? "" : blockEnd.value;
+      const payload = {
+        action: "block",
+        cells: selectedCellsPayload(),
+        data: {
+          name: zoneName,
+          duration_choice: blockDurationValue,
+          start: blockStartValue,
+          end: blockEndValue,
+          reason: blockReason ? blockReason.value.trim() : "",
+          created_by: blockCreatedBy ? blockCreatedBy.value.trim() : "",
+        },
+      };
+      try {
+        const result = await sendUpdate(payload);
+        applyServerResult(result);
+        blockForm.reset();
+        setDefaultStart(blockForm, blockStart);
+        bindDurationToggle(blockDuration, blockEnd);
+        setFeedback(result.message || "Block-out zone saved.", "success", "block");
+      } catch (error) {
+        setFeedback(error.message, "danger", "block");
+      }
+    });
+  }
+
+  modeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.adminMode;
+      if (mode && mode !== activeMode) {
+        setActiveMode(mode);
+      }
+    });
   });
 
   buildGrid();
   updateSelectionInfo();
+  setActiveMode(activeMode);
+  setDefaultStart(assignmentForm, assignmentStart);
+  setDefaultStart(blockForm, blockStart);
+  bindDurationToggle(assignmentDuration, assignmentEnd);
+  bindDurationToggle(blockDuration, blockEnd);
+  updateActionAvailability();
 })();
