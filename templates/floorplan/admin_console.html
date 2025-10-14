@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}Admin Console | Workspace Manager{% endblock %}
+{% block content %}
+  <section class="card">
+    <h2>Administrative Tools</h2>
+    <p class="note-text">
+      Use these tools to override seat assignments, schedule block-out zones, and monitor who is
+      currently seated in the building. All actions take effect immediately.
+    </p>
+  </section>
+
+  {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+        <div class="flash-message {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="grid grid-two">
+    <section class="card">
+      <h3>Override or Create Assignment</h3>
+      <form method="post" class="form-grid">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="assignment" />
+        <div class="form-grid two-col">
+          <div>
+            <label for="id_assignee_name">Employee name</label>
+            {{ assignment_form.assignee_name }}
+          </div>
+          <div>
+            <label for="id_assignment_type">Type</label>
+            {{ assignment_form.assignment_type }}
+          </div>
+          <div>
+            <label for="id_desk">Desk (required for desk assignment)</label>
+            {{ assignment_form.desk }}
+          </div>
+          <div>
+            <label for="id_duration_choice">Duration</label>
+            {{ assignment_form.duration_choice }}
+          </div>
+          <div>
+            <label for="id_start">Start</label>
+            {{ assignment_form.start }}
+          </div>
+          <div>
+            <label for="id_end">End</label>
+            {{ assignment_form.end }}
+          </div>
+        </div>
+        <div>
+          <label for="id_note">Notes</label>
+          {{ assignment_form.note }}
+        </div>
+        <div>
+          <label for="id_created_by">Recorded by</label>
+          {{ assignment_form.created_by }}
+        </div>
+        <button type="submit" class="button primary">Save assignment</button>
+      </form>
+      {% if assignment_form.errors %}
+        <pre class="note-text">{{ assignment_form.errors }}</pre>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h3>Block-Out Zones</h3>
+      <form method="post" class="form-grid">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="block" />
+        <div>
+          <label for="id_name">Zone name</label>
+          {{ block_form.name }}
+        </div>
+        <div>
+          <label for="id_desks">Affected desks</label>
+          <div class="form-grid">
+            {{ block_form.desks }}
+          </div>
+        </div>
+        <div class="form-grid two-col">
+          <div>
+            <label for="id_start">Start</label>
+            {{ block_form.start }}
+          </div>
+          <div>
+            <label for="id_end">End</label>
+            {{ block_form.end }}
+          </div>
+          <div>
+            <label for="id_duration_choice">Duration</label>
+            {{ block_form.duration_choice }}
+          </div>
+        </div>
+        <div>
+          <label for="id_reason">Reason / notes</label>
+          {{ block_form.reason }}
+        </div>
+        <div>
+          <label for="id_created_by">Recorded by</label>
+          {{ block_form.created_by }}
+        </div>
+        <button type="submit" class="button danger">Save block-out zone</button>
+      </form>
+      {% if block_form.errors %}
+        <pre class="note-text">{{ block_form.errors }}</pre>
+      {% endif %}
+    </section>
+  </div>
+
+  <div class="grid" style="margin-top: 2rem;">
+    <section class="card">
+      <h3>Active Assignments</h3>
+      {% if active_assignments %}
+        <ul class="assignment-list">
+          {% for assignment in active_assignments %}
+            <li class="assignment-item">
+              <strong>{{ assignment.assignee_name }}</strong>
+              <div class="assignment-meta">
+                {% if assignment.assignment_type == 'desk' and assignment.desk %}
+                  <span>Desk: {{ assignment.desk.label }}</span>
+                  <span>Department: {{ assignment.desk.department.name }}</span>
+                {% else %}
+                  <span>Location: WFH</span>
+                {% endif %}
+                <span>{{ assignment.duration_display }}</span>
+              </div>
+              <form
+                method="post"
+                action="{% url 'floorplan:end-assignment' assignment.pk %}"
+                style="margin-top: 0.75rem;"
+              >
+                {% csrf_token %}
+                <button type="submit" class="button secondary">End assignment</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="note-text">No active assignments at this time.</p>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h3>Active Block-Out Zones</h3>
+      {% if active_blocks %}
+        <ul class="block-list">
+          {% for block in active_blocks %}
+            <li class="block-item">
+              <strong>{{ block.name }}</strong>
+              <div class="assignment-meta">
+                <span>{{ block.desks.count }} desks affected</span>
+                {% if block.is_permanent %}
+                  <span class="badge warning">Permanent</span>
+                {% elif block.end %}
+                  <span>Ends {{ block.end|date:'M d, Y H:i' }}</span>
+                {% endif %}
+              </div>
+              {% if block.reason %}
+                <p class="note-text">{{ block.reason }}</p>
+              {% endif %}
+              <form
+                method="post"
+                action="{% url 'floorplan:delete-block-zone' block.pk %}"
+                style="margin-top: 0.75rem;"
+              >
+                {% csrf_token %}
+                <button type="submit" class="button secondary">Remove block-out zone</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="note-text">There are no active block-out zones.</p>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}

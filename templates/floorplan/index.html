@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Floor Plan | Workspace Manager{% endblock %}
+{% block content %}
+  <div class="grid grid-two">
+    <section class="card floorplan-card">
+      <div class="card-header">
+        <h2>Interactive Floor Plan</h2>
+        <p class="note-text">
+          Click a seat to view details, assign yourself to a free location, or review existing
+          occupants. Blocked zones are shown with diagonal stripes.
+        </p>
+      </div>
+      <div class="floorplan-wrapper">
+        <div class="floorplan-canvas" id="floorplan-canvas"></div>
+      </div>
+      <div class="legend">
+        {% for department in departments %}
+          <div class="legend-item">
+            <span class="legend-swatch" style="background: {{ department.color }}"></span>
+            <span>{{ department.name }}</span>
+          </div>
+        {% endfor %}
+        <div class="legend-item">
+          <span class="badge success">Free</span>
+          <span>Available seat</span>
+        </div>
+        <div class="legend-item">
+          <span class="badge warning">Occupied</span>
+          <span>Currently assigned</span>
+        </div>
+        <div class="legend-item">
+          <span class="badge danger">Blocked</span>
+          <span>Unavailable due to construction</span>
+        </div>
+      </div>
+    </section>
+    <aside class="card sidebar-card">
+      <h2>Today's Assignment</h2>
+      <div id="user-status" class="status-banner info">
+        <div>
+          <strong id="status-title">Welcome!</strong>
+          <span id="status-body">Enter your name to load your assignment details.</span>
+        </div>
+      </div>
+      <button id="change-name" class="button secondary" type="button">Update employee name</button>
+      <div id="assignment-details" class="hidden">
+        <table class="table-like">
+          <tbody>
+            <tr>
+              <th scope="row">Employee</th>
+              <td id="detail-employee"></td>
+            </tr>
+            <tr>
+              <th scope="row">Location</th>
+              <td id="detail-location"></td>
+            </tr>
+            <tr>
+              <th scope="row">Department</th>
+              <td id="detail-department"></td>
+            </tr>
+            <tr>
+              <th scope="row">Duration</th>
+              <td id="detail-duration"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul id="alert-list" class="alert-list hidden"></ul>
+      <p class="note-text" style="margin-top: 1.5rem;">
+        Need a change? Select any available seat (marked Free) to reserve it for yourself for the
+        rest of the day.
+      </p>
+    </aside>
+  </div>
+
+  <script id="desk-data" type="application/json">{{ desks|safe }}</script>
+  <script id="current-time" type="application/json">"{{ now_iso }}"</script>
+
+  <div id="name-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2>Welcome!</h2>
+      <p>Please let us know who you are so we can show the correct seat assignment.</p>
+      <form id="name-form">
+        <div>
+          <label for="employee-name">Full name</label>
+          <input type="text" id="employee-name" name="employee_name" required placeholder="Ada Lovelace" />
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="button primary">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="desk-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card" id="desk-modal-card">
+      <div id="desk-modal-content"></div>
+      <div class="modal-actions">
+        <button type="button" id="desk-modal-close" class="button secondary">Close</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_scripts %}
+  <script src="{% static 'js/floorplan.js' %}"></script>
+{% endblock %}
