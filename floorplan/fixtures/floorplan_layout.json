@@ -67,7 +67,7 @@
     "pk": 8,
     "fields": {
       "name": "Enrollment",
-      "color": "#833C0C",
+      "color": "#F97316",
       "description": ""
     }
   },
@@ -5321,7 +5321,7 @@
       "width_percentage": 3.333333,
       "height_percentage": 7.692308,
       "notes": "",
-      "fill_color": "#833C0C"
+      "fill_color": "#F97316"
     }
   },
   {
@@ -5336,7 +5336,7 @@
       "width_percentage": 3.333333,
       "height_percentage": 7.692308,
       "notes": "",
-      "fill_color": "#833C0C"
+      "fill_color": "#F97316"
     }
   },
   {
@@ -5351,7 +5351,7 @@
       "width_percentage": 3.333333,
       "height_percentage": 7.692308,
       "notes": "",
-      "fill_color": "#833C0C"
+      "fill_color": "#F97316"
     }
   },
   {
@@ -5366,7 +5366,7 @@
       "width_percentage": 3.333333,
       "height_percentage": 7.692308,
       "notes": "",
-      "fill_color": "#833C0C"
+      "fill_color": "#F97316"
     }
   },
   {

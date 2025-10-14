@@ -16,6 +16,176 @@
 
   const cellMap = new Map();
 
+  const DEFAULT_TEXT_COLOR = "#0f172a";
+  const LIGHT_TEXT_COLOR = "#ffffff";
+  const WHITE_RGB = { r: 255, g: 255, b: 255 };
+  const BLACK_RGB = { r: 0, g: 0, b: 0 };
+
+  function clampChannel(value) {
+    return Math.min(Math.max(Math.round(value), 0), 255);
+  }
+
+  function hexToRgb(hex) {
+    if (!hex) {
+      return null;
+    }
+    let normalized = hex.trim();
+    if (!normalized) {
+      return null;
+    }
+    if (normalized.startsWith("#")) {
+      normalized = normalized.slice(1);
+    }
+    const rgbMatch = normalized.match(/^rgb\((\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i);
+    if (rgbMatch) {
+      return {
+        r: clampChannel(parseInt(rgbMatch[1], 10)),
+        g: clampChannel(parseInt(rgbMatch[2], 10)),
+        b: clampChannel(parseInt(rgbMatch[3], 10)),
+      };
+    }
+    if (!/^([0-9a-f]{3}|[0-9a-f]{6})$/i.test(normalized)) {
+      return null;
+    }
+    if (normalized.length === 3) {
+      normalized = normalized
+        .split("")
+        .map((char) => char + char)
+        .join("");
+    }
+    const numericValue = parseInt(normalized, 16);
+    return {
+      r: (numericValue >> 16) & 255,
+      g: (numericValue >> 8) & 255,
+      b: numericValue & 255,
+    };
+  }
+
+  function rgbToHex(rgb) {
+    if (!rgb) {
+      return "";
+    }
+    const toHex = (value) => clampChannel(value).toString(16).padStart(2, "0");
+    return `#${toHex(rgb.r)}${toHex(rgb.g)}${toHex(rgb.b)}`.toUpperCase();
+  }
+
+  function srgbToLinear(value) {
+    const channel = value <= 0 ? 0 : value >= 1 ? 1 : value;
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  }
+
+  function relativeLuminance(rgb) {
+    if (!rgb) {
+      return 0;
+    }
+    const r = srgbToLinear(rgb.r / 255);
+    const g = srgbToLinear(rgb.g / 255);
+    const b = srgbToLinear(rgb.b / 255);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+
+  const DARK_TEXT_RGB = hexToRgb(DEFAULT_TEXT_COLOR);
+  const LIGHT_TEXT_RGB = hexToRgb(LIGHT_TEXT_COLOR);
+  const DARK_TEXT_LUMINANCE = relativeLuminance(DARK_TEXT_RGB);
+  const LIGHT_TEXT_LUMINANCE = relativeLuminance(LIGHT_TEXT_RGB);
+
+  function contrastRatio(l1, l2) {
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  function mixRgb(source, target, amount) {
+    const mix = Math.min(Math.max(amount, 0), 1);
+    return {
+      r: clampChannel(source.r + (target.r - source.r) * mix),
+      g: clampChannel(source.g + (target.g - source.g) * mix),
+      b: clampChannel(source.b + (target.b - source.b) * mix),
+    };
+  }
+
+  function computeAccessibleColors(color) {
+    const baseRgb = hexToRgb(color);
+    if (!baseRgb) {
+      return {
+        background: color || "",
+        textColor: DEFAULT_TEXT_COLOR,
+        theme: "light",
+      };
+    }
+
+    let textColor = DEFAULT_TEXT_COLOR;
+    let textRgb = DARK_TEXT_RGB;
+    let textLuminance = DARK_TEXT_LUMINANCE;
+    const baseLuminance = relativeLuminance(baseRgb);
+    let contrast = contrastRatio(baseLuminance, textLuminance);
+    let mixTarget = WHITE_RGB;
+
+    const contrastWithLight = contrastRatio(baseLuminance, LIGHT_TEXT_LUMINANCE);
+    if (contrastWithLight > contrast) {
+      textColor = LIGHT_TEXT_COLOR;
+      textRgb = LIGHT_TEXT_RGB;
+      textLuminance = LIGHT_TEXT_LUMINANCE;
+      contrast = contrastWithLight;
+      mixTarget = BLACK_RGB;
+    }
+
+    let adjustedRgb = baseRgb;
+
+    if (contrast < 4.5) {
+      const steps = 6;
+      const increment = 0.12;
+      for (let index = 1; index <= steps; index += 1) {
+        adjustedRgb = mixRgb(baseRgb, mixTarget, increment * index);
+        const adjustedLuminance = relativeLuminance(adjustedRgb);
+        contrast = contrastRatio(adjustedLuminance, textLuminance);
+        if (contrast >= 4.5) {
+          break;
+        }
+      }
+
+      if (contrast < 4.5) {
+        const alternativeRgb = textColor === LIGHT_TEXT_COLOR ? DARK_TEXT_RGB : LIGHT_TEXT_RGB;
+        const alternativeLuminance = textColor === LIGHT_TEXT_COLOR ? DARK_TEXT_LUMINANCE : LIGHT_TEXT_LUMINANCE;
+        const alternativeContrast = contrastRatio(baseLuminance, alternativeLuminance);
+        if (alternativeContrast > contrast) {
+          textColor = textColor === LIGHT_TEXT_COLOR ? DEFAULT_TEXT_COLOR : LIGHT_TEXT_COLOR;
+          textRgb = alternativeRgb;
+          textLuminance = alternativeLuminance;
+          adjustedRgb = baseRgb;
+          contrast = alternativeContrast;
+        }
+      }
+    }
+
+    return {
+      background: rgbToHex(adjustedRgb),
+      textColor,
+      theme: textColor === LIGHT_TEXT_COLOR ? "dark" : "light",
+    };
+  }
+
+  function applyAccessibleCellStyles(cell, fillColor) {
+    if (!cell) {
+      return null;
+    }
+    if (!fillColor) {
+      cell.style.removeProperty("--cell-background");
+      cell.style.removeProperty("--cell-text-color");
+      cell.style.background = "";
+      cell.style.color = "";
+      cell.removeAttribute("data-contrast");
+      return null;
+    }
+    const accessible = computeAccessibleColors(fillColor);
+    cell.style.setProperty("--cell-background", accessible.background);
+    cell.style.setProperty("--cell-text-color", accessible.textColor);
+    cell.style.background = accessible.background;
+    cell.style.color = accessible.textColor;
+    cell.dataset.contrast = accessible.theme;
+    return accessible;
+  }
+
   const nameModal = document.getElementById("name-modal");
   const deskModal = document.getElementById("desk-modal");
   const deskModalContent = document.getElementById("desk-modal-content");
@@ -150,11 +320,9 @@
     cell.dataset.deskId = desk.identifier;
 
     if (desk.status === "blocked") {
-      cell.style.background = "";
-    } else if (fillColor) {
-      cell.style.background = fillColor;
+      applyAccessibleCellStyles(cell, "");
     } else {
-      cell.style.background = "";
+      applyAccessibleCellStyles(cell, fillColor);
     }
 
     const statusLabel = statusLabelForDesk(desk);
@@ -193,6 +361,22 @@
     }
     deskMap.forEach((desk) => {
       updateCellForDesk(desk);
+    });
+  }
+
+  function adjustLegendColors() {
+    const swatches = document.querySelectorAll(".legend-swatch[data-color]");
+    swatches.forEach((swatch) => {
+      const colorValue = swatch.dataset.color;
+      if (!colorValue) {
+        return;
+      }
+      const accessible = computeAccessibleColors(colorValue);
+      swatch.style.background = accessible.background;
+      swatch.style.borderColor =
+        accessible.theme === "dark"
+          ? "rgba(255, 255, 255, 0.6)"
+          : "rgba(15, 23, 42, 0.12)";
     });
   }
 
@@ -383,6 +567,7 @@
   });
 
   renderFloorplan();
+  adjustLegendColors();
   initNameModal();
   loadAssignmentInfo();
 })();
