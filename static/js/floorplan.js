@@ -158,11 +158,12 @@
     }
 
     const statusLabel = statusLabelForDesk(desk);
+    const statusModifier = desk.status ? ` status-${desk.status}` : "";
     const details = [];
     if (!isWalkway) {
       details.push(`<div class="desk-label">${desk.label}</div>`);
       if (isAssignable) {
-        details.push(`<div class="status-pill">${statusLabel}</div>`);
+        details.push(`<div class="status-pill${statusModifier}">${statusLabel}</div>`);
       }
     }
     cell.innerHTML = details.join("");
