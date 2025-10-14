@@ -22,8 +22,8 @@ body {
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0;
+  max-width: 95vw;
+  margin: 0.5rem;
   padding: 0 1.5rem;
   width: 100%;
 }
@@ -78,7 +78,7 @@ body {
 
 .app-main {
   flex: 1;
-  padding: 2rem 0 4rem;
+  padding: 0.5rem 0 4rem;
 }
 
 .app-footer {
@@ -149,11 +149,14 @@ body {
   width: 75vw;
 }
 
+.sidebar-card {
+  width: 15vw;
+}
+
 .floorplan-wrapper {
   position: relative;
   width: 100%;
   min-height: 520px;
-  max-height: 80vh;
   overflow: auto;
   border-radius: 16px;
   background: linear-gradient(135deg, #e9eef6, #f8fbff);
@@ -274,6 +277,10 @@ body {
   color: rgba(15, 23, 42, 0.65);
 }
 
+.grid-cell-meta {
+  visibility: hidden;
+}
+
 .grid-cell.walkway {
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
   border-style: solid;
@@ -283,6 +290,7 @@ body {
   font-size: 0.7rem;
   font-weight: 500;
   color: rgba(15, 23, 42, 0.35);
+  visibility: hidden;
 }
 
 .grid-cell.empty-cell-state {
@@ -389,6 +397,11 @@ body {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
+  min-width: 95%;
+}
+
+.legend-item.pill {
+  justify-content: space-between;
 }
 
 .legend-swatch {
@@ -482,6 +495,7 @@ body {
 .button.secondary {
   background: rgba(15, 23, 42, 0.08);
   color: var(--text);
+  margin-top: 0.25rem;
 }
 
 .button.danger {

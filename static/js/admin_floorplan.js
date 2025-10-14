@@ -101,8 +101,6 @@
         cell.innerHTML = `
           <div class="desk-label">${desk.label}</div>
           ${pill}
-          <div class="grid-cell-meta">${desk.department}</div>
-          ${coordMarkup}
         `;
       }
     } else {
