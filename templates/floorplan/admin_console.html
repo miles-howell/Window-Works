@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Admin Console | Workspace Manager{% endblock %}
 {% block content %}
   <section class="card">
@@ -16,6 +17,58 @@
       {% endfor %}
     </div>
   {% endif %}
+
+  <section class="card">
+    <div class="card-header">
+      <h3>Floor Plan Layout</h3>
+      <p class="note-text">
+        Select cells to assign departments, update labels, or clear areas. Changes are saved
+        immediately for the interactive floor plan and assignment tools.
+      </p>
+    </div>
+    <div class="layout-editor">
+      <div class="floorplan-wrapper">
+        <div
+          class="floorplan-canvas"
+          id="layout-canvas"
+          data-rows="{{ grid_rows }}"
+          data-columns="{{ grid_columns }}"
+        ></div>
+      </div>
+      <div class="layout-controls">
+        <p id="layout-selection-info" class="note-text">No cells selected.</p>
+        <form id="layout-form" class="form-grid">
+          <div>
+            <label for="layout-department">Department</label>
+            <select id="layout-department" name="department" required>
+              <option value="">Select department</option>
+              {% for department in departments %}
+                <option value="{{ department.pk }}">{{ department.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="layout-label">Label</label>
+            <input type="text" id="layout-label" name="label" placeholder="Desk label" />
+          </div>
+          <div>
+            <label for="layout-fill">Fill color override</label>
+            <input type="text" id="layout-fill" name="fill_color" placeholder="#5B9BD5" />
+            <p class="note-text">Leave blank to use the department color.</p>
+          </div>
+          <div>
+            <label for="layout-notes">Notes</label>
+            <textarea id="layout-notes" name="notes" rows="2"></textarea>
+          </div>
+          <div class="layout-actions">
+            <button type="submit" class="button primary">Assign selected cells</button>
+            <button type="button" class="button secondary" id="layout-clear">Clear selected cells</button>
+          </div>
+        </form>
+        <div id="layout-feedback" class="note-text"></div>
+      </div>
+    </div>
+  </section>
 
   <div class="grid grid-two">
     <section class="card">
@@ -176,4 +229,9 @@
       {% endif %}
     </section>
   </div>
+  <script id="layout-desk-data" type="application/json">{{ layout_desks|safe }}</script>
+{% endblock %}
+{% block extra_scripts %}
+  {{ block.super }}
+  <script src="{% static 'js/admin_floorplan.js' %}"></script>
 {% endblock %}

@@ -13,6 +13,7 @@ urlpatterns = [
         views.assign_to_desk,
         name="assign-to-desk",
     ),
+    path("api/layout/update/", views.update_layout, name="layout-update"),
     path("admin-console/", views.admin_console, name="admin-console"),
     path(
         "admin-console/block-zone/<int:pk>/delete/",

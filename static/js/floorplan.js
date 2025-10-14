@@ -1,6 +1,7 @@
 (function () {
   const deskDataElement = document.getElementById("desk-data");
-  if (!deskDataElement) {
+  const floorplanCanvas = document.getElementById("floorplan-canvas");
+  if (!deskDataElement || !floorplanCanvas) {
     return;
   }
 
@@ -8,7 +9,13 @@
   const deskMap = new Map();
   desks.forEach((desk) => deskMap.set(desk.identifier, desk));
 
-  const floorplanCanvas = document.getElementById("floorplan-canvas");
+  const gridRows = parseInt(floorplanCanvas.dataset.rows || "13", 10);
+  const gridColumns = parseInt(floorplanCanvas.dataset.columns || "30", 10);
+  floorplanCanvas.style.setProperty("--grid-rows", String(gridRows));
+  floorplanCanvas.style.setProperty("--grid-columns", String(gridColumns));
+
+  const cellMap = new Map();
+
   const nameModal = document.getElementById("name-modal");
   const deskModal = document.getElementById("desk-modal");
   const deskModalContent = document.getElementById("desk-modal-content");
@@ -27,7 +34,11 @@
   const alertList = document.getElementById("alert-list");
 
   let currentUserName = localStorage.getItem("workspaceEmployeeName") || "";
-  let highlightedDeskId = null;
+  let highlightedCellKey = null;
+
+  function cellKey(row, column) {
+    return `${row}-${column}`;
+  }
 
   function showModal(modal) {
     modal.classList.remove("hidden");
@@ -87,81 +98,96 @@
   }
 
   function highlightDesk(identifier) {
-    if (highlightedDeskId && deskMap.has(highlightedDeskId)) {
-      const oldDesk = floorplanCanvas.querySelector(`[data-desk-id="${highlightedDeskId}"]`);
-      if (oldDesk) {
-        oldDesk.classList.remove("current-user");
+    if (highlightedCellKey && cellMap.has(highlightedCellKey)) {
+      const oldCell = cellMap.get(highlightedCellKey);
+      if (oldCell) {
+        oldCell.classList.remove("current-user");
       }
     }
-    highlightedDeskId = identifier;
-    if (identifier) {
-      const newDesk = floorplanCanvas.querySelector(`[data-desk-id="${identifier}"]`);
-      if (newDesk) {
-        newDesk.classList.add("current-user");
-      }
-    }
-  }
-
-  function renderDeskElement(desk) {
-    const element = document.createElement("div");
-    element.className = `desk ${desk.status}`;
-    element.style.left = desk.style.left;
-    element.style.top = desk.style.top;
-    element.style.width = desk.style.width;
-    element.style.height = desk.style.height;
-    const isAssignable = desk.is_assignable !== false;
-    if (!isAssignable) {
-      element.classList.add("non-assignable");
-    }
-    if (desk.status === "blocked") {
-      element.style.background = "";
-    } else {
-      const fillColor = desk.fill_color || desk.department_color;
-      element.style.background = fillColor;
-    }
-    element.dataset.deskId = desk.identifier;
-    const statusLabel = desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied";
-    element.innerHTML = `
-      <div>${desk.label}</div>
-      ${isAssignable ? `<div class="status-pill">${statusLabel}</div>` : ""}
-    `;
-    if (isAssignable) {
-      element.addEventListener("click", () => {
-        openDeskModal(desk.identifier);
-      });
-    } else {
-      element.style.cursor = "default";
-    }
-    floorplanCanvas.appendChild(element);
-    return element;
-  }
-
-  function refreshDeskElement(desk) {
-    const element = floorplanCanvas.querySelector(`[data-desk-id="${desk.identifier}"]`);
-    if (!element) {
-      renderDeskElement(desk);
+    highlightedCellKey = null;
+    if (!identifier) {
       return;
     }
-    element.className = `desk ${desk.status}`;
-    const isAssignable = desk.is_assignable !== false;
-    element.classList.toggle("non-assignable", !isAssignable);
-    if (desk.status === "blocked") {
-      element.style.background = "";
-    } else {
-      const fillColor = desk.fill_color || desk.department_color;
-      element.style.background = fillColor;
+    const desk = deskMap.get(identifier);
+    if (!desk) {
+      return;
     }
-    const statusLabel = desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied";
-    element.innerHTML = `
-      <div>${desk.label}</div>
-      ${isAssignable ? `<div class="status-pill">${statusLabel}</div>` : ""}
-    `;
+    const key = cellKey(desk.row, desk.column);
+    const cell = cellMap.get(key);
+    if (cell) {
+      cell.classList.add("current-user");
+      highlightedCellKey = key;
+    }
+  }
+
+  function statusLabelForDesk(desk) {
+    if (desk.status === "blocked") {
+      return "Blocked";
+    }
+    if (desk.status === "occupied") {
+      return "Occupied";
+    }
+    return "Free";
+  }
+
+  function updateCellForDesk(desk) {
+    const key = cellKey(desk.row, desk.column);
+    const cell = cellMap.get(key);
+    if (!cell) {
+      return;
+    }
+
+    const isAssignable = desk.is_assignable !== false;
+    const fillColor = desk.fill_color || desk.department_color || "";
+
+    cell.className = "grid-cell has-desk";
+    cell.classList.toggle("non-assignable", !isAssignable);
+    cell.classList.toggle("blocked", desk.status === "blocked");
+    cell.classList.toggle("occupied", desk.status === "occupied");
+    cell.classList.toggle("free", desk.status === "free" && isAssignable);
+    cell.dataset.deskId = desk.identifier;
+
+    if (desk.status === "blocked") {
+      cell.style.background = "";
+    } else if (fillColor) {
+      cell.style.background = fillColor;
+    } else {
+      cell.style.background = "";
+    }
+
+    const statusLabel = statusLabelForDesk(desk);
+    const details = [];
+    details.push(`<div class="desk-label">${desk.label}</div>`);
+    if (isAssignable) {
+      details.push(`<div class="status-pill">${statusLabel}</div>`);
+    }
+    cell.innerHTML = details.join("");
+    cell.title = `${desk.label} — ${desk.department}`;
+
+    if (isAssignable) {
+      cell.onclick = () => openDeskModal(desk.identifier);
+      cell.style.cursor = "pointer";
+    } else {
+      cell.onclick = null;
+      cell.style.cursor = "default";
+    }
   }
 
   function renderFloorplan() {
     floorplanCanvas.innerHTML = "";
+    cellMap.clear();
+    for (let row = 1; row <= gridRows; row += 1) {
+      for (let column = 1; column <= gridColumns; column += 1) {
+        const cell = document.createElement("div");
+        cell.className = "grid-cell";
+        cell.dataset.row = String(row);
+        cell.dataset.column = String(column);
+        floorplanCanvas.appendChild(cell);
+        cellMap.set(cellKey(row, column), cell);
+      }
+    }
     deskMap.forEach((desk) => {
-      renderDeskElement(desk);
+      updateCellForDesk(desk);
     });
   }
 
@@ -200,6 +226,9 @@
       }
     } else if (desk.status !== "blocked") {
       lines.push("<p>This desk is currently unassigned.</p>");
+    }
+    if (desk.notes) {
+      lines.push(`<p class="note-text">${desk.notes}</p>`);
     }
     deskModalContent.innerHTML = lines.join("");
   }
@@ -248,13 +277,13 @@
           assignError.classList.remove("hidden");
           if (payload.desk) {
             deskMap.set(payload.desk.identifier, payload.desk);
-            refreshDeskElement(payload.desk);
+            updateCellForDesk(payload.desk);
           }
           return;
         }
         const result = await response.json();
         deskMap.set(result.desk.identifier, result.desk);
-        refreshDeskElement(result.desk);
+        updateCellForDesk(result.desk);
         currentUserName = nameValue;
         localStorage.setItem("workspaceEmployeeName", currentUserName);
         hideModal(deskModal);
@@ -274,9 +303,9 @@
       }
       const data = await response.json();
       deskMap.set(data.identifier, data);
-      refreshDeskElement(data);
+      updateCellForDesk(data);
     } catch (error) {
-      // ignore network errors for now
+      // ignore network errors
     }
   }
 

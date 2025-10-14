@@ -35,22 +35,42 @@ class Desk(models.Model):
         blank=True,
         help_text="Optional fill color override for this desk.",
     )
+    row_index = models.PositiveIntegerField(
+        help_text="Row in the fixed floor grid where this desk appears (1-indexed)."
+    )
+    column_index = models.PositiveIntegerField(
+        help_text="Column in the fixed floor grid where this desk appears (1-indexed)."
+    )
+    row_span = models.PositiveIntegerField(
+        default=1,
+        help_text="Number of grid rows this desk spans.",
+    )
+    column_span = models.PositiveIntegerField(
+        default=1,
+        help_text="Number of grid columns this desk spans.",
+    )
     left_percentage = models.FloatField(
-        help_text="Horizontal position (0-100) relative to the floor plan container."
+        help_text="Horizontal position (0-100) relative to the floor plan container.",
     )
     top_percentage = models.FloatField(
-        help_text="Vertical position (0-100) relative to the floor plan container."
+        help_text="Vertical position (0-100) relative to the floor plan container.",
     )
     width_percentage = models.FloatField(
-        help_text="Width (0-100) relative to the floor plan container."
+        help_text="Width (0-100) relative to the floor plan container.",
     )
     height_percentage = models.FloatField(
-        help_text="Height (0-100) relative to the floor plan container."
+        help_text="Height (0-100) relative to the floor plan container.",
     )
     notes = models.TextField(blank=True)
 
     class Meta:
-        ordering = ["label"]
+        ordering = ["row_index", "column_index", "label"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["row_index", "column_index"],
+                name="floorplan_unique_grid_position",
+            )
+        ]
 
     def __str__(self) -> str:  # pragma: no cover - human readable helper
         return self.label
