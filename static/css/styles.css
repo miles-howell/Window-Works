@@ -23,7 +23,7 @@ body {
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0;
   padding: 0 1.5rem;
   width: 100%;
 }
@@ -146,6 +146,7 @@ body {
 .floorplan-card {
   position: relative;
   min-width: 0;
+  width: 75vw;
 }
 
 .floorplan-wrapper {
@@ -249,6 +250,21 @@ body {
   letter-spacing: 0.04em;
   color: rgba(15, 23, 42, 0.8);
   background: rgba(255, 255, 255, 0.7);
+}
+
+.grid-cell .status-pill.status-free {
+  background: rgba(3, 152, 85, 0.15);
+  color: var(--success);
+}
+
+.grid-cell .status-pill.status-occupied {
+  background: rgba(247, 144, 9, 0.15);
+  color: var(--warning);
+}
+
+.grid-cell .status-pill.status-blocked {
+  background: rgba(217, 45, 32, 0.2);
+  color: var(--danger);
 }
 
 .grid-cell .grid-cell-meta {

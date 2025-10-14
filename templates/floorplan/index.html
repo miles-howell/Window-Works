@@ -4,13 +4,6 @@
 {% block content %}
   <div class="grid grid-two">
     <section class="card floorplan-card">
-      <div class="card-header">
-        <h2>Interactive Floor Plan</h2>
-        <p class="note-text">
-          Click a seat to view details, assign yourself to a free location, or review existing
-          occupants. Blocked zones are shown with diagonal stripes.
-        </p>
-      </div>
       <div class="floorplan-wrapper">
         <div
           class="floorplan-canvas"
@@ -18,26 +11,6 @@
           data-rows="{{ grid_rows }}"
           data-columns="{{ grid_columns }}"
         ></div>
-      </div>
-      <div class="legend">
-        {% for department in departments %}
-          <div class="legend-item">
-            <span class="legend-swatch" style="background: {{ department.color }}"></span>
-            <span>{{ department.name }}</span>
-          </div>
-        {% endfor %}
-        <div class="legend-item">
-          <span class="badge success">Free</span>
-          <span>Available seat</span>
-        </div>
-        <div class="legend-item">
-          <span class="badge warning">Occupied</span>
-          <span>Currently assigned</span>
-        </div>
-        <div class="legend-item">
-          <span class="badge danger">Blocked</span>
-          <span>Unavailable due to construction</span>
-        </div>
       </div>
     </section>
     <aside class="card sidebar-card">
@@ -76,6 +49,26 @@
         Need a change? Select any available seat (marked Free) to reserve it for yourself for the
         rest of the day.
       </p>
+      <div class="legend">
+        {% for department in departments %}
+          <div class="legend-item">
+            <span class="legend-swatch" style="background: {{ department.color }}"></span>
+            <span>{{ department.name }}</span>
+          </div>
+        {% endfor %}
+        <div class="legend-item">
+          <span class="badge success">Free</span>
+          <span>Available seat</span>
+        </div>
+        <div class="legend-item">
+          <span class="badge warning">Occupied</span>
+          <span>Currently assigned</span>
+        </div>
+        <div class="legend-item">
+          <span class="badge danger">Blocked</span>
+          <span>Unavailable due to construction</span>
+        </div>
+      </div>
     </aside>
   </div>
 
