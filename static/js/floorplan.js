@@ -138,6 +138,7 @@
     }
 
     const isAssignable = desk.is_assignable !== false;
+    const isWalkway = (desk.department || "").toLowerCase() === "walkway";
     const fillColor = desk.fill_color || desk.department_color || "";
 
     cell.className = "grid-cell has-desk";
@@ -145,6 +146,7 @@
     cell.classList.toggle("blocked", desk.status === "blocked");
     cell.classList.toggle("occupied", desk.status === "occupied");
     cell.classList.toggle("free", desk.status === "free" && isAssignable);
+    cell.classList.toggle("walkway", isWalkway);
     cell.dataset.deskId = desk.identifier;
 
     if (desk.status === "blocked") {
@@ -157,9 +159,11 @@
 
     const statusLabel = statusLabelForDesk(desk);
     const details = [];
-    details.push(`<div class="desk-label">${desk.label}</div>`);
-    if (isAssignable) {
-      details.push(`<div class="status-pill">${statusLabel}</div>`);
+    if (!isWalkway) {
+      details.push(`<div class="desk-label">${desk.label}</div>`);
+      if (isAssignable) {
+        details.push(`<div class="status-pill">${statusLabel}</div>`);
+      }
     }
     cell.innerHTML = details.join("");
     cell.title = `${desk.label} — ${desk.department}`;

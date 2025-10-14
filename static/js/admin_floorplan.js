@@ -84,7 +84,9 @@
       cell.classList.toggle("non-assignable", desk.is_assignable === false);
       cell.classList.toggle("blocked", desk.status === "blocked");
       cell.classList.toggle("occupied", desk.status === "occupied");
-      cell.classList.toggle("free", desk.status === "free");
+      cell.classList.toggle("free", desk.status === "free" && desk.is_assignable !== false);
+      const isWalkway = (desk.department || "").toLowerCase() === "walkway";
+      cell.classList.toggle("walkway", isWalkway);
       cell.dataset.deskId = desk.identifier;
       if (desk.status !== "blocked") {
         const fill = desk.fill_color || desk.department_color || "";
@@ -92,13 +94,17 @@
           cell.style.background = fill;
         }
       }
-      const pill = desk.is_assignable === false ? "" : `<div class="status-pill">${statusLabel(desk)}</div>`;
-      cell.innerHTML = `
-        <div class="desk-label">${desk.label}</div>
-        ${pill}
-        <div class="grid-cell-meta">${desk.department}</div>
-        ${coordMarkup}
-      `;
+      if (isWalkway) {
+        cell.innerHTML = "";
+      } else {
+        const pill = desk.is_assignable === false ? "" : `<div class="status-pill">${statusLabel(desk)}</div>`;
+        cell.innerHTML = `
+          <div class="desk-label">${desk.label}</div>
+          ${pill}
+          <div class="grid-cell-meta">${desk.department}</div>
+          ${coordMarkup}
+        `;
+      }
     } else {
       cell.classList.add("empty-cell-state");
       cell.innerHTML = `${coordMarkup}<span class="empty-cell">Empty</span>`;

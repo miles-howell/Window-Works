@@ -145,6 +145,7 @@ body {
 
 .floorplan-card {
   position: relative;
+  min-width: 0;
 }
 
 .floorplan-wrapper {
@@ -162,10 +163,10 @@ body {
 .floorplan-canvas {
   --grid-columns: 30;
   --grid-rows: 13;
-  --cell-width: 140px;
-  --cell-height: 90px;
-  --canvas-gap: 0.75rem;
-  --canvas-padding: clamp(1rem, 2vw, 2rem);
+  --cell-width: 88px;
+  --cell-height: 60px;
+  --canvas-gap: 0.25rem;
+  --canvas-padding: clamp(0.5rem, 1.2vw, 1.25rem);
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), var(--cell-width));
   grid-auto-rows: var(--cell-height);
@@ -189,7 +190,7 @@ body {
 
 .grid-cell {
   position: relative;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--border);
   background: #f8fafc;
   display: flex;
@@ -200,7 +201,7 @@ body {
   font-size: 0.85rem;
   font-weight: 600;
   color: #0f172a;
-  padding: 0.5rem;
+  padding: 0.35rem;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -257,6 +258,11 @@ body {
   color: rgba(15, 23, 42, 0.65);
 }
 
+.grid-cell.walkway {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  border-style: solid;
+}
+
 .grid-cell-coord {
   font-size: 0.7rem;
   font-weight: 500;
@@ -295,11 +301,32 @@ body {
   display: grid;
   gap: 1.5rem;
   align-items: flex-start;
+  min-width: 0;
+  grid-template-columns: 1fr;
+}
+
+.layout-editor > .floorplan-wrapper {
+  grid-column: 1 / -1;
 }
 
 @media (min-width: 960px) {
+  .layout-editor > .layout-controls {
+    justify-self: center;
+    width: min(100%, 420px);
+  }
+}
+
+@media (min-width: 1280px) {
   .layout-editor {
-    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
+    align-items: start;
+  }
+  .layout-editor > .floorplan-wrapper {
+    grid-column: 1 / 2;
+  }
+  .layout-editor > .layout-controls {
+    grid-column: 2 / 3;
+    justify-self: stretch;
   }
 }
 
