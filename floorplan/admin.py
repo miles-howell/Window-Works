@@ -11,7 +11,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 
 @admin.register(Desk)
 class DeskAdmin(admin.ModelAdmin):
-    list_display = ("label", "identifier", "department")
+    list_display = ("label", "identifier", "department", "fill_color")
     list_filter = ("department",)
     search_fields = ("label", "identifier")
 
