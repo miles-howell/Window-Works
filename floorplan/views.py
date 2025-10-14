@@ -4,7 +4,7 @@ import json
 from datetime import datetime, time, timedelta
 
 from django.contrib import messages
-from django.db import models
+from django.db import models, transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -12,6 +12,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_POST
 
 from .forms import AssignmentForm, BlockOutZoneForm
+from .layout import GRID_COLUMNS, GRID_ROWS, cell_identifier, grid_to_percentages
 from .models import Assignment, BlockOutZone, Department, Desk
 
 
@@ -52,6 +53,12 @@ def _desk_payload(desk: Desk, now=None) -> dict:
     if block_zones:
         status = "blocked"
     is_assignable = desk.department.name not in {"Utility/Resource", "Walkway"}
+    left, top, width, height = grid_to_percentages(
+        desk.row_index,
+        desk.column_index,
+        desk.row_span,
+        desk.column_span,
+    )
     return {
         "identifier": desk.identifier,
         "label": desk.label,
@@ -60,16 +67,21 @@ def _desk_payload(desk: Desk, now=None) -> dict:
         "fill_color": desk.fill_color or desk.department.color,
         "notes": desk.notes,
         "is_assignable": is_assignable,
+        "row": desk.row_index,
+        "column": desk.column_index,
+        "row_span": desk.row_span,
+        "column_span": desk.column_span,
         "style": {
-            "left": f"{desk.left_percentage}%",
-            "top": f"{desk.top_percentage}%",
-            "width": f"{desk.width_percentage}%",
-            "height": f"{desk.height_percentage}%",
+            "left": f"{left}%",
+            "top": f"{top}%",
+            "width": f"{width}%",
+            "height": f"{height}%",
         },
         "status": status,
         "is_blocked": bool(block_zones),
         "block_zones": [zone.name for zone in block_zones],
         "assignment": _serialize_assignment(active_assignment, now),
+        "department_id": desk.department_id,
     }
 
 
@@ -87,6 +99,8 @@ def index(request):
         "desks": json.dumps(desk_payloads),
         "departments": departments,
         "now_iso": timezone.localtime(now).isoformat(),
+        "grid_rows": GRID_ROWS,
+        "grid_columns": GRID_COLUMNS,
     }
     return render(request, "floorplan/index.html", context)
 
@@ -244,6 +258,12 @@ def admin_console(request):
     active_assignments = [assignment for assignment in assignments if assignment.is_active(now)]
     block_zones = BlockOutZone.objects.prefetch_related("desks")
     active_blocks = [zone for zone in block_zones if zone.is_active(now)]
+    desks = (
+        Desk.objects.select_related("department")
+        .prefetch_related("block_zones", "assignments")
+        .all()
+    )
+    layout_desks = [_desk_payload(desk, now) for desk in desks]
 
     context = {
         "assignment_form": assignment_form,
@@ -251,6 +271,10 @@ def admin_console(request):
         "active_assignments": active_assignments,
         "active_blocks": active_blocks,
         "now": local_now,
+        "layout_desks": json.dumps(layout_desks),
+        "grid_rows": GRID_ROWS,
+        "grid_columns": GRID_COLUMNS,
+        "departments": Department.objects.all(),
     }
     return render(request, "floorplan/admin_console.html", context)
 
@@ -271,3 +295,125 @@ def end_assignment(request, pk: int):
     assignment.save(update_fields=["end", "is_permanent"])
     messages.success(request, f"Assignment for {assignment.assignee_name} has been ended.")
     return redirect("floorplan:admin-console")
+
+
+@require_POST
+def update_layout(request):
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JsonResponse({"error": "Invalid JSON payload."}, status=400)
+
+    action = payload.get("action", "assign").lower()
+    cells = payload.get("cells") or []
+    if not isinstance(cells, list) or not cells:
+        return JsonResponse({"error": "Please select at least one cell."}, status=400)
+
+    normalized_cells: list[tuple[int, int]] = []
+    seen = set()
+    for cell in cells:
+        try:
+            row = int(cell["row"])
+            column = int(cell["column"])
+        except (KeyError, TypeError, ValueError):
+            return JsonResponse({"error": "Invalid cell coordinates."}, status=400)
+        if not (1 <= row <= GRID_ROWS and 1 <= column <= GRID_COLUMNS):
+            return JsonResponse({"error": "Selected cell is outside the 30x13 grid."}, status=400)
+        key = (row, column)
+        if key not in seen:
+            seen.add(key)
+            normalized_cells.append(key)
+
+    if action not in {"assign", "clear"}:
+        return JsonResponse({"error": "Unsupported action."}, status=400)
+
+    now = timezone.now()
+    updated_identifiers: set[str] = set()
+    cleared_cells: list[dict[str, int]] = []
+
+    with transaction.atomic():
+        if action == "assign":
+            data = payload.get("data") or {}
+            department_id = data.get("department")
+            if not department_id:
+                return JsonResponse({"error": "Department is required."}, status=400)
+            try:
+                department = Department.objects.get(pk=department_id)
+            except Department.DoesNotExist:
+                return JsonResponse({"error": "Department not found."}, status=404)
+
+            label_value = (data.get("label") or "").strip()
+            fill_color = (data.get("fill_color") or "").strip()
+            notes_value = (data.get("notes") or "").strip()
+
+            for row, column in normalized_cells:
+                left, top, width, height = grid_to_percentages(row, column)
+                desk, created = Desk.objects.select_for_update().get_or_create(
+                    row_index=row,
+                    column_index=column,
+                    defaults={
+                        "identifier": cell_identifier(row, column),
+                        "label": label_value or f"{department.name} r{row:02d}c{column:02d}",
+                        "department": department,
+                        "fill_color": fill_color,
+                        "notes": notes_value,
+                        "row_span": 1,
+                        "column_span": 1,
+                        "left_percentage": left,
+                        "top_percentage": top,
+                        "width_percentage": width,
+                        "height_percentage": height,
+                    },
+                )
+                if not created:
+                    desk.department = department
+                    if label_value:
+                        desk.label = label_value
+                    elif not desk.label:
+                        desk.label = f"{department.name} r{row:02d}c{column:02d}"
+                    desk.fill_color = fill_color
+                    desk.notes = notes_value
+                    desk.row_index = row
+                    desk.column_index = column
+                    desk.row_span = 1
+                    desk.column_span = 1
+                    desk.left_percentage = left
+                    desk.top_percentage = top
+                    desk.width_percentage = width
+                    desk.height_percentage = height
+                    desk.save()
+                else:
+                    updated_identifiers.add(desk.identifier)
+                    continue
+                updated_identifiers.add(desk.identifier)
+        else:  # clear
+            for row, column in normalized_cells:
+                try:
+                    desk = Desk.objects.select_for_update().get(
+                        row_index=row, column_index=column
+                    )
+                except Desk.DoesNotExist:
+                    continue
+                cleared_cells.append({"row": row, "column": column})
+                desk.delete()
+
+    refreshed = (
+        Desk.objects.select_related("department")
+        .prefetch_related("block_zones", "assignments")
+        .filter(identifier__in=list(updated_identifiers))
+    )
+    updated_payloads = [_desk_payload(desk, now) for desk in refreshed]
+
+    message = ""
+    if action == "assign":
+        message = f"Updated {len(updated_identifiers)} cell(s)."
+    else:
+        message = f"Cleared {len(cleared_cells)} cell(s)."
+
+    return JsonResponse(
+        {
+            "updated": updated_payloads,
+            "cleared": cleared_cells,
+            "message": message,
+        }
+    )
