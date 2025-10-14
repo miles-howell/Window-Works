@@ -1,0 +1,419 @@
+[
+  {
+    "model": "floorplan.department",
+    "pk": 1,
+    "fields": {
+      "name": "Reception",
+      "color": "#a8c5ff",
+      "description": "Front desk and visitor support"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 2,
+    "fields": {
+      "name": "Marketing",
+      "color": "#f9c5d1",
+      "description": "Campaign and content teams"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 3,
+    "fields": {
+      "name": "Member Services",
+      "color": "#f8e59f",
+      "description": "Customer call center"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 4,
+    "fields": {
+      "name": "Accounting",
+      "color": "#b7f5c8",
+      "description": "Finance and payroll"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 5,
+    "fields": {
+      "name": "Administration",
+      "color": "#dcd7f8",
+      "description": "Executive and HR offices"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 6,
+    "fields": {
+      "name": "Medical",
+      "color": "#f9d1f0",
+      "description": "Onsite clinic"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 7,
+    "fields": {
+      "name": "Finance",
+      "color": "#fcd7a5",
+      "description": "Budget planning"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 8,
+    "fields": {
+      "name": "Information Technology",
+      "color": "#a5d8ff",
+      "description": "IT operations and support"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 9,
+    "fields": {
+      "name": "Claims",
+      "color": "#fde4b2",
+      "description": "Claims processing"
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 10,
+    "fields": {
+      "name": "Break Areas",
+      "color": "#e2e8f0",
+      "description": "Shared collaboration spaces"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 1,
+    "fields": {
+      "identifier": "reception-front",
+      "label": "Reception Front Desk",
+      "department": 1,
+      "left_percentage": 2.5,
+      "top_percentage": 6,
+      "width_percentage": 12,
+      "height_percentage": 10,
+      "notes": "Visitor entry point"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 2,
+    "fields": {
+      "identifier": "marketing-collab",
+      "label": "Marketing Collaboration",
+      "department": 2,
+      "left_percentage": 18,
+      "top_percentage": 6,
+      "width_percentage": 16,
+      "height_percentage": 12,
+      "notes": "Open collaboration table"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 3,
+    "fields": {
+      "identifier": "marketing-focus",
+      "label": "Marketing Focus Desk",
+      "department": 2,
+      "left_percentage": 18,
+      "top_percentage": 21,
+      "width_percentage": 7,
+      "height_percentage": 12,
+      "notes": "Individual workstation"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 4,
+    "fields": {
+      "identifier": "marketing-design",
+      "label": "Design Studio",
+      "department": 2,
+      "left_percentage": 27,
+      "top_percentage": 21,
+      "width_percentage": 7,
+      "height_percentage": 12,
+      "notes": "Design pod"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 5,
+    "fields": {
+      "identifier": "member-services-1",
+      "label": "Member Services Pod A",
+      "department": 3,
+      "left_percentage": 40,
+      "top_percentage": 6,
+      "width_percentage": 12,
+      "height_percentage": 10,
+      "notes": "Phone support"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 6,
+    "fields": {
+      "identifier": "member-services-2",
+      "label": "Member Services Pod B",
+      "department": 3,
+      "left_percentage": 40,
+      "top_percentage": 18,
+      "width_percentage": 12,
+      "height_percentage": 10,
+      "notes": "Phone support"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 7,
+    "fields": {
+      "identifier": "accounting-analysts",
+      "label": "Accounting Analysts",
+      "department": 4,
+      "left_percentage": 55,
+      "top_percentage": 6,
+      "width_percentage": 10,
+      "height_percentage": 12,
+      "notes": "Shared analyst row"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 8,
+    "fields": {
+      "identifier": "accounting-leads",
+      "label": "Accounting Leads",
+      "department": 4,
+      "left_percentage": 55,
+      "top_percentage": 21,
+      "width_percentage": 10,
+      "height_percentage": 12,
+      "notes": "Team lead offices"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 9,
+    "fields": {
+      "identifier": "administration-suite",
+      "label": "Administration Suite",
+      "department": 5,
+      "left_percentage": 70,
+      "top_percentage": 6,
+      "width_percentage": 12,
+      "height_percentage": 14,
+      "notes": "Executive offices"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 10,
+    "fields": {
+      "identifier": "medical-clinic",
+      "label": "Medical Clinic",
+      "department": 6,
+      "left_percentage": 70,
+      "top_percentage": 23,
+      "width_percentage": 12,
+      "height_percentage": 12,
+      "notes": "Onsite nurse station"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 11,
+    "fields": {
+      "identifier": "finance-workstations",
+      "label": "Finance Workstations",
+      "department": 7,
+      "left_percentage": 10,
+      "top_percentage": 40,
+      "width_percentage": 15,
+      "height_percentage": 12,
+      "notes": "Financial planning"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 12,
+    "fields": {
+      "identifier": "it-operations",
+      "label": "IT Operations",
+      "department": 8,
+      "left_percentage": 30,
+      "top_percentage": 40,
+      "width_percentage": 14,
+      "height_percentage": 12,
+      "notes": "Support engineers"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 13,
+    "fields": {
+      "identifier": "it-lab",
+      "label": "IT Lab",
+      "department": 8,
+      "left_percentage": 30,
+      "top_percentage": 54,
+      "width_percentage": 14,
+      "height_percentage": 12,
+      "notes": "Equipment staging"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 14,
+    "fields": {
+      "identifier": "claims-team",
+      "label": "Claims Team",
+      "department": 9,
+      "left_percentage": 50,
+      "top_percentage": 40,
+      "width_percentage": 14,
+      "height_percentage": 12,
+      "notes": "Claims processors"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 15,
+    "fields": {
+      "identifier": "claims-leads",
+      "label": "Claims Leads",
+      "department": 9,
+      "left_percentage": 50,
+      "top_percentage": 54,
+      "width_percentage": 14,
+      "height_percentage": 12,
+      "notes": "Lead pods"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 16,
+    "fields": {
+      "identifier": "break-lounge",
+      "label": "Break Lounge",
+      "department": 10,
+      "left_percentage": 68,
+      "top_percentage": 42,
+      "width_percentage": 14,
+      "height_percentage": 12,
+      "notes": "Soft seating"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 17,
+    "fields": {
+      "identifier": "training-room",
+      "label": "Training Room",
+      "department": 10,
+      "left_percentage": 68,
+      "top_percentage": 56,
+      "width_percentage": 14,
+      "height_percentage": 12,
+      "notes": "Flexible training space"
+    }
+  },
+  {
+    "model": "floorplan.assignment",
+    "pk": 1,
+    "fields": {
+      "desk": 3,
+      "assignment_type": "desk",
+      "assignee_name": "Alice Johnson",
+      "start": "2025-01-01T13:00:00Z",
+      "end": null,
+      "is_permanent": true,
+      "note": "Marketing lead",
+      "created_at": "2025-01-01T13:00:00Z",
+      "created_by": "System"
+    }
+  },
+  {
+    "model": "floorplan.assignment",
+    "pk": 2,
+    "fields": {
+      "desk": 12,
+      "assignment_type": "desk",
+      "assignee_name": "Jordan Lee",
+      "start": "2025-01-05T13:00:00Z",
+      "end": null,
+      "is_permanent": true,
+      "note": "IT manager",
+      "created_at": "2025-01-05T13:00:00Z",
+      "created_by": "System"
+    }
+  },
+  {
+    "model": "floorplan.assignment",
+    "pk": 3,
+    "fields": {
+      "desk": 5,
+      "assignment_type": "desk",
+      "assignee_name": "Sasha Patel",
+      "start": "2025-02-01T13:00:00Z",
+      "end": null,
+      "is_permanent": true,
+      "note": "Shift lead",
+      "created_at": "2025-02-01T13:00:00Z",
+      "created_by": "System"
+    }
+  },
+  {
+    "model": "floorplan.assignment",
+    "pk": 4,
+    "fields": {
+      "desk": null,
+      "assignment_type": "wfh",
+      "assignee_name": "Taylor Brooks",
+      "start": "2025-02-15T13:00:00Z",
+      "end": null,
+      "is_permanent": false,
+      "note": "WFH while construction is active",
+      "created_at": "2025-02-15T13:00:00Z",
+      "created_by": "System"
+    }
+  },
+  {
+    "model": "floorplan.assignment",
+    "pk": 5,
+    "fields": {
+      "desk": 4,
+      "assignment_type": "desk",
+      "assignee_name": "Jamie Nguyen",
+      "start": "2025-02-10T13:00:00Z",
+      "end": "2025-03-10T13:00:00Z",
+      "is_permanent": false,
+      "note": "Temporary desk while renovations finish",
+      "created_at": "2025-02-10T13:00:00Z",
+      "created_by": "Admin"
+    }
+  },
+  {
+    "model": "floorplan.blockoutzone",
+    "pk": 1,
+    "fields": {
+      "name": "North Wing Construction",
+      "start": "2025-02-20T12:00:00Z",
+      "end": "2025-03-15T22:00:00Z",
+      "is_permanent": false,
+      "reason": "Ceiling work in marketing and member services",
+      "created_at": "2025-02-18T12:00:00Z",
+      "created_by": "Facilities",
+      "desks": [3, 4, 5]
+    }
+  }
+]

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Workspace Manager{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="container">
+        <div class="branding">
+          <span class="logo">🏢</span>
+          <div>
+            <h1 class="app-title">Workspace Move Coordinator</h1>
+            <p class="app-subtitle">Manage temporary desk moves during construction</p>
+          </div>
+        </div>
+        <nav class="app-nav">
+          <a href="{% url 'floorplan:index' %}">Floor plan</a>
+          <a href="{% url 'floorplan:admin-console' %}">Admin console</a>
+        </nav>
+      </div>
+    </header>
+    <main class="app-main">
+      <div class="container">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+    <footer class="app-footer">
+      <div class="container">
+        <p>Need help? Contact Workplace Services.</p>
+      </div>
+    </footer>
+    <script src="{% static 'js/csrf.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>
