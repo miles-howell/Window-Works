@@ -52,7 +52,7 @@
       <div class="legend">
         {% for department in departments %}
           <div class="legend-item">
-            <span class="legend-swatch" style="background: {{ department.color }}"></span>
+            <span class="legend-swatch" data-color="{{ department.color }}" style="background: {{ department.color }}"></span>
             <span>{{ department.name }}</span>
           </div>
         {% endfor %}
