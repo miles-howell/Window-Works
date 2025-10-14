@@ -36,131 +36,160 @@
         ></div>
       </div>
       <div class="layout-controls">
-        <p id="layout-selection-info" class="note-text">No cells selected.</p>
-        <form id="layout-form" class="form-grid">
-          <div>
-            <label for="layout-department">Department</label>
-            <select id="layout-department" name="department" required>
-              <option value="">Select department</option>
-              {% for department in departments %}
-                <option value="{{ department.pk }}">{{ department.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div>
-            <label for="layout-label">Label</label>
-            <input type="text" id="layout-label" name="label" placeholder="Desk label" />
-          </div>
-          <div>
-            <label for="layout-fill">Fill color override</label>
-            <input type="text" id="layout-fill" name="fill_color" placeholder="#5B9BD5" />
-            <p class="note-text">Leave blank to use the department color.</p>
-          </div>
-          <div>
-            <label for="layout-notes">Notes</label>
-            <textarea id="layout-notes" name="notes" rows="2"></textarea>
-          </div>
-          <div class="layout-actions">
-            <button type="submit" class="button primary">Assign selected cells</button>
-            <button type="button" class="button secondary" id="layout-clear">Clear selected cells</button>
-          </div>
-        </form>
-        <div id="layout-feedback" class="note-text"></div>
+        <div class="selection-summary">
+          <p id="layout-selection-info" class="note-text">No cells selected.</p>
+          <ul id="layout-selection-list" class="selection-list"></ul>
+        </div>
+        <div class="admin-mode-toggle" role="tablist">
+          <button
+            type="button"
+            class="admin-mode-button active"
+            data-admin-mode="layout"
+            role="tab"
+            aria-selected="true"
+          >
+            Layout
+          </button>
+          <button
+            type="button"
+            class="admin-mode-button"
+            data-admin-mode="assignment"
+            role="tab"
+            aria-selected="false"
+          >
+            Seat assignment
+          </button>
+          <button
+            type="button"
+            class="admin-mode-button"
+            data-admin-mode="block"
+            role="tab"
+            aria-selected="false"
+          >
+            Block zone
+          </button>
+        </div>
+
+        <div class="mode-panel active" data-mode-panel="layout" role="tabpanel">
+          <form id="layout-form" class="form-grid">
+            <div>
+              <label for="layout-department">Department</label>
+              <select id="layout-department" name="department" required>
+                <option value="">Select department</option>
+                {% for department in departments %}
+                  <option value="{{ department.pk }}">{{ department.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label for="layout-label">Label</label>
+              <input type="text" id="layout-label" name="label" placeholder="Desk label" />
+            </div>
+            <div>
+              <label for="layout-fill">Fill color override</label>
+              <input type="text" id="layout-fill" name="fill_color" placeholder="#5B9BD5" />
+              <p class="note-text">Leave blank to use the department color.</p>
+            </div>
+            <div>
+              <label for="layout-notes">Notes</label>
+              <textarea id="layout-notes" name="notes" rows="2"></textarea>
+            </div>
+            <div class="layout-actions">
+              <button type="submit" class="button primary">Assign selected cells</button>
+              <button type="button" class="button secondary" id="layout-clear">Clear selected cells</button>
+            </div>
+          </form>
+          <div id="layout-feedback" class="note-text"></div>
+        </div>
+
+        <div class="mode-panel" data-mode-panel="assignment" role="tabpanel" aria-hidden="true">
+          <form id="assignment-form" class="form-grid" data-default-start="{{ now|date:'Y-m-d\TH:i' }}">
+            <p id="assignment-selection-info" class="note-text">Select at least one assignable desk.</p>
+            <div>
+              <label for="assignment-name">Employee name</label>
+              <input type="text" id="assignment-name" name="assignee_name" placeholder="Jordan Smith" required />
+            </div>
+            <div class="form-grid two-col">
+              <div>
+                <label for="assignment-type">Assignment type</label>
+                <select id="assignment-type" name="assignment_type">
+                  <option value="desk">Desk</option>
+                </select>
+              </div>
+              <div>
+                <label for="assignment-duration">Duration</label>
+                <select id="assignment-duration" name="duration_choice">
+                  <option value="temporary">Temporary</option>
+                  <option value="permanent">Permanent</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid two-col">
+              <div>
+                <label for="assignment-start">Start</label>
+                <input type="datetime-local" id="assignment-start" name="start" />
+              </div>
+              <div>
+                <label for="assignment-end">End</label>
+                <input type="datetime-local" id="assignment-end" name="end" />
+              </div>
+            </div>
+            <div>
+              <label for="assignment-note">Notes</label>
+              <textarea id="assignment-note" name="note" rows="2"></textarea>
+            </div>
+            <div>
+              <label for="assignment-created-by">Recorded by</label>
+              <input type="text" id="assignment-created-by" name="created_by" placeholder="Facility team" />
+            </div>
+            <div class="layout-actions">
+              <button type="submit" class="button primary" id="assignment-submit">Save assignment</button>
+            </div>
+          </form>
+          <div id="assignment-feedback" class="note-text"></div>
+        </div>
+
+        <div class="mode-panel" data-mode-panel="block" role="tabpanel" aria-hidden="true">
+          <form id="block-form" class="form-grid" data-default-start="{{ now|date:'Y-m-d\TH:i' }}">
+            <p id="block-selection-info" class="note-text">Select the desks you want to block.</p>
+            <div>
+              <label for="block-name">Zone name</label>
+              <input type="text" id="block-name" name="name" placeholder="Renovation zone" required />
+            </div>
+            <div class="form-grid two-col">
+              <div>
+                <label for="block-duration">Duration</label>
+                <select id="block-duration" name="duration_choice">
+                  <option value="temporary">Temporary</option>
+                  <option value="permanent">Permanent</option>
+                </select>
+              </div>
+              <div>
+                <label for="block-start">Start</label>
+                <input type="datetime-local" id="block-start" name="start" />
+              </div>
+            </div>
+            <div>
+              <label for="block-end">End</label>
+              <input type="datetime-local" id="block-end" name="end" />
+            </div>
+            <div>
+              <label for="block-reason">Reason / notes</label>
+              <textarea id="block-reason" name="reason" rows="2"></textarea>
+            </div>
+            <div>
+              <label for="block-created-by">Recorded by</label>
+              <input type="text" id="block-created-by" name="created_by" placeholder="Construction team" />
+            </div>
+            <div class="layout-actions">
+              <button type="submit" class="button danger" id="block-submit">Save block-out zone</button>
+            </div>
+          </form>
+          <div id="block-feedback" class="note-text"></div>
+        </div>
       </div>
     </div>
   </section>
-
-  <div class="grid grid-two">
-    <section class="card">
-      <h3>Override or Create Assignment</h3>
-      <form method="post" class="form-grid">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="assignment" />
-        <div class="form-grid two-col">
-          <div>
-            <label for="id_assignee_name">Employee name</label>
-            {{ assignment_form.assignee_name }}
-          </div>
-          <div>
-            <label for="id_assignment_type">Type</label>
-            {{ assignment_form.assignment_type }}
-          </div>
-          <div>
-            <label for="id_desk">Desk (required for desk assignment)</label>
-            {{ assignment_form.desk }}
-          </div>
-          <div>
-            <label for="id_duration_choice">Duration</label>
-            {{ assignment_form.duration_choice }}
-          </div>
-          <div>
-            <label for="id_start">Start</label>
-            {{ assignment_form.start }}
-          </div>
-          <div>
-            <label for="id_end">End</label>
-            {{ assignment_form.end }}
-          </div>
-        </div>
-        <div>
-          <label for="id_note">Notes</label>
-          {{ assignment_form.note }}
-        </div>
-        <div>
-          <label for="id_created_by">Recorded by</label>
-          {{ assignment_form.created_by }}
-        </div>
-        <button type="submit" class="button primary">Save assignment</button>
-      </form>
-      {% if assignment_form.errors %}
-        <pre class="note-text">{{ assignment_form.errors }}</pre>
-      {% endif %}
-    </section>
-
-    <section class="card">
-      <h3>Block-Out Zones</h3>
-      <form method="post" class="form-grid">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="block" />
-        <div>
-          <label for="id_name">Zone name</label>
-          {{ block_form.name }}
-        </div>
-        <div>
-          <label for="id_desks">Affected desks</label>
-          <div class="form-grid">
-            {{ block_form.desks }}
-          </div>
-        </div>
-        <div class="form-grid two-col">
-          <div>
-            <label for="id_start">Start</label>
-            {{ block_form.start }}
-          </div>
-          <div>
-            <label for="id_end">End</label>
-            {{ block_form.end }}
-          </div>
-          <div>
-            <label for="id_duration_choice">Duration</label>
-            {{ block_form.duration_choice }}
-          </div>
-        </div>
-        <div>
-          <label for="id_reason">Reason / notes</label>
-          {{ block_form.reason }}
-        </div>
-        <div>
-          <label for="id_created_by">Recorded by</label>
-          {{ block_form.created_by }}
-        </div>
-        <button type="submit" class="button danger">Save block-out zone</button>
-      </form>
-      {% if block_form.errors %}
-        <pre class="note-text">{{ block_form.errors }}</pre>
-      {% endif %}
-    </section>
-  </div>
 
   <div class="grid" style="margin-top: 2rem;">
     <section class="card">

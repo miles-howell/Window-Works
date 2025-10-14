@@ -5,7 +5,7 @@ from datetime import datetime, time, timedelta
 
 from django.contrib import messages
 from django.db import models, transaction
-from django.http import JsonResponse
+from django.http import JsonResponse, QueryDict
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -83,6 +83,15 @@ def _desk_payload(desk: Desk, now=None) -> dict:
         "assignment": _serialize_assignment(active_assignment, now),
         "department_id": desk.department_id,
     }
+
+
+def _first_form_error(form, default_message: str) -> str:
+    if not form.errors:
+        return default_message
+    for errors in form.errors.values():
+        if errors:
+            return errors[0]
+    return default_message
 
 
 @ensure_csrf_cookie
@@ -223,33 +232,6 @@ def assign_to_desk(request, identifier: str):
 def admin_console(request):
     now = timezone.now()
     local_now = timezone.localtime(now)
-    formatted_now = local_now.strftime("%Y-%m-%dT%H:%M")
-    assignment_initial = {"start": formatted_now}
-    block_initial = {"start": formatted_now}
-    assignment_form = AssignmentForm(initial=assignment_initial)
-    block_form = BlockOutZoneForm(initial=block_initial)
-
-    if request.method == "POST":
-        form_type = request.POST.get("form_type")
-        if form_type == "assignment":
-            assignment_form = AssignmentForm(request.POST)
-            if assignment_form.is_valid():
-                assignment = assignment_form.save()
-                messages.success(
-                    request,
-                    f"Assignment saved for {assignment.assignee_name}.",
-                )
-                return redirect("floorplan:admin-console")
-            else:
-                messages.error(request, "Please correct the errors in the assignment form.")
-        elif form_type == "block":
-            block_form = BlockOutZoneForm(request.POST)
-            if block_form.is_valid():
-                block = block_form.save()
-                messages.success(request, f"Block-out zone '{block.name}' saved.")
-                return redirect("floorplan:admin-console")
-            else:
-                messages.error(request, "Please correct the errors in the block-out form.")
 
     assignments = (
         Assignment.objects.select_related("desk", "desk__department")
@@ -266,8 +248,6 @@ def admin_console(request):
     layout_desks = [_desk_payload(desk, now) for desk in desks]
 
     context = {
-        "assignment_form": assignment_form,
-        "block_form": block_form,
         "active_assignments": active_assignments,
         "active_blocks": active_blocks,
         "now": local_now,
@@ -324,12 +304,15 @@ def update_layout(request):
             seen.add(key)
             normalized_cells.append(key)
 
-    if action not in {"assign", "clear"}:
+    if action not in {"assign", "clear", "block", "assignment"}:
         return JsonResponse({"error": "Unsupported action."}, status=400)
 
     now = timezone.now()
+    local_now = timezone.localtime(now)
     updated_identifiers: set[str] = set()
     cleared_cells: list[dict[str, int]] = []
+    created_assignments: list[Assignment] = []
+    blocked_count = 0
 
     with transaction.atomic():
         if action == "assign":
@@ -386,7 +369,7 @@ def update_layout(request):
                     updated_identifiers.add(desk.identifier)
                     continue
                 updated_identifiers.add(desk.identifier)
-        else:  # clear
+        elif action == "clear":
             for row, column in normalized_cells:
                 try:
                     desk = Desk.objects.select_for_update().get(
@@ -396,6 +379,112 @@ def update_layout(request):
                     continue
                 cleared_cells.append({"row": row, "column": column})
                 desk.delete()
+        elif action == "block":
+            data = payload.get("data") or {}
+            desks = []
+            for row, column in normalized_cells:
+                try:
+                    desk = Desk.objects.select_for_update().get(
+                        row_index=row, column_index=column
+                    )
+                except Desk.DoesNotExist:
+                    continue
+                desks.append(desk)
+            if not desks:
+                return JsonResponse(
+                    {"error": "Select desks with existing workspaces before blocking."},
+                    status=400,
+                )
+
+            form_data = QueryDict("", mutable=True)
+            form_data["name"] = (data.get("name") or "").strip()
+            form_data["duration_choice"] = data.get("duration_choice") or "temporary"
+            form_data["start"] = data.get("start") or local_now.strftime("%Y-%m-%dT%H:%M")
+            if data.get("end"):
+                form_data["end"] = data["end"]
+            if data.get("reason"):
+                form_data["reason"] = data["reason"]
+            if data.get("created_by"):
+                form_data["created_by"] = data["created_by"]
+            form_data.setlist("desks", [str(desk.pk) for desk in desks])
+
+            block_form = BlockOutZoneForm(form_data)
+            if not block_form.is_valid():
+                return JsonResponse(
+                    {"error": _first_form_error(block_form, "Unable to save block-out zone.")},
+                    status=400,
+                )
+            block = block_form.save()
+            blocked_count = block.desks.count()
+            updated_identifiers.update(block.desks.values_list("identifier", flat=True))
+        else:  # assignment
+            data = payload.get("data") or {}
+            desks = []
+            for row, column in normalized_cells:
+                try:
+                    desk = Desk.objects.select_for_update().get(
+                        row_index=row, column_index=column
+                    )
+                except Desk.DoesNotExist:
+                    continue
+                desks.append(desk)
+
+            assignable_desks = [
+                desk
+                for desk in desks
+                if desk.department.name not in {"Utility/Resource", "Walkway"}
+            ]
+
+            if not assignable_desks:
+                return JsonResponse(
+                    {"error": "Select at least one assignable desk before saving."},
+                    status=400,
+                )
+
+            assignee_name = (data.get("assignee_name") or "").strip()
+            if not assignee_name:
+                return JsonResponse(
+                    {"error": "Employee name is required to create an assignment."},
+                    status=400,
+                )
+
+            duration_choice = data.get("duration_choice") or "temporary"
+            start_value = data.get("start") or local_now.strftime("%Y-%m-%dT%H:%M")
+            end_value = data.get("end") if duration_choice != "permanent" else None
+
+            forms_to_save: list[tuple[AssignmentForm, Desk]] = []
+            for desk in assignable_desks:
+                form_data = QueryDict("", mutable=True)
+                form_data["assignee_name"] = assignee_name
+                form_data["assignment_type"] = data.get(
+                    "assignment_type", Assignment.TYPE_DESK
+                )
+                form_data["desk"] = str(desk.pk)
+                form_data["duration_choice"] = duration_choice
+                form_data["start"] = start_value
+                if end_value:
+                    form_data["end"] = end_value
+                if data.get("note"):
+                    form_data["note"] = data["note"]
+                if data.get("created_by"):
+                    form_data["created_by"] = data["created_by"]
+
+                assignment_form = AssignmentForm(form_data)
+                if not assignment_form.is_valid():
+                    return JsonResponse(
+                        {
+                            "error": _first_form_error(
+                                assignment_form, "Unable to save assignment."
+                            )
+                        },
+                        status=400,
+                    )
+                forms_to_save.append((assignment_form, desk))
+
+            for assignment_form, desk in forms_to_save:
+                assignment = assignment_form.save()
+                created_assignments.append(assignment)
+                updated_identifiers.add(desk.identifier)
 
     refreshed = (
         Desk.objects.select_related("department")
@@ -407,8 +496,12 @@ def update_layout(request):
     message = ""
     if action == "assign":
         message = f"Updated {len(updated_identifiers)} cell(s)."
-    else:
+    elif action == "clear":
         message = f"Cleared {len(cleared_cells)} cell(s)."
+    elif action == "block":
+        message = f"Blocked {blocked_count} desk(s)."
+    else:
+        message = f"Created {len(created_assignments)} assignment(s)."
 
     return JsonResponse(
         {

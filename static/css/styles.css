@@ -395,6 +395,83 @@ body {
   gap: 1rem;
 }
 
+.selection-summary {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+
+.selection-summary p {
+  margin: 0 0 0.5rem;
+}
+
+.selection-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.selection-list-item {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.admin-mode-toggle {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.admin-mode-button {
+  appearance: none;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  padding: 0.55rem 0.75rem;
+  font-weight: 600;
+  background: #fff;
+  color: var(--text-color);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-mode-button:hover,
+.admin-mode-button:focus {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.admin-mode-button.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.mode-panel {
+  display: none;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.mode-panel.active {
+  display: block;
+}
+
+.mode-panel .note-text {
+  margin-top: 0;
+}
+
+.mode-panel .layout-actions {
+  margin-top: 1rem;
+}
+
 .layout-actions {
   display: flex;
   flex-wrap: wrap;
