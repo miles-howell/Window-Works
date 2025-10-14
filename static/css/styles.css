@@ -151,7 +151,6 @@ body {
 .floorplan-wrapper {
   position: relative;
   width: 100%;
-  min-width: 0;
   min-height: 520px;
   max-height: 80vh;
   overflow: auto;
@@ -199,7 +198,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #0f172a;
   padding: 0.35rem;
