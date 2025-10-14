@@ -12,27 +12,7 @@
         </p>
       </div>
       <div class="floorplan-wrapper">
-        <div class="floorplan-controls">
-          <div class="zoom-controls" role="group" aria-label="Zoom controls">
-            <span class="zoom-label">Zoom</span>
-            <div class="zoom-buttons">
-              <button type="button" class="button icon" id="zoom-out" aria-label="Zoom out">
-                &minus;
-              </button>
-              <span id="zoom-level" class="zoom-level">100%</span>
-              <button type="button" class="button icon" id="zoom-in" aria-label="Zoom in">
-                +
-              </button>
-            </div>
-            <button type="button" class="button subtle" id="zoom-reset">Reset view</button>
-          </div>
-          <p class="note-text layout-tip">
-            Use the zoom controls or scroll horizontally to view every department in the plan.
-          </p>
-        </div>
-        <div class="floorplan-viewport" id="floorplan-viewport">
-          <div class="floorplan-canvas" id="floorplan-canvas"></div>
-        </div>
+        <div class="floorplan-canvas" id="floorplan-canvas"></div>
       </div>
       <div class="legend">
         {% for department in departments %}

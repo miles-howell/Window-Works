@@ -9,11 +9,6 @@
   desks.forEach((desk) => deskMap.set(desk.identifier, desk));
 
   const floorplanCanvas = document.getElementById("floorplan-canvas");
-  const floorplanViewport = document.getElementById("floorplan-viewport");
-  const zoomOutButton = document.getElementById("zoom-out");
-  const zoomInButton = document.getElementById("zoom-in");
-  const zoomResetButton = document.getElementById("zoom-reset");
-  const zoomLevelDisplay = document.getElementById("zoom-level");
   const nameModal = document.getElementById("name-modal");
   const deskModal = document.getElementById("desk-modal");
   const deskModalContent = document.getElementById("desk-modal-content");
@@ -33,100 +28,6 @@
 
   let currentUserName = localStorage.getItem("workspaceEmployeeName") || "";
   let highlightedDeskId = null;
-  const BASE_FLOORPLAN_UNIT = 56;
-  const MIN_ZOOM = 0.6;
-  const MAX_ZOOM = 1.4;
-  const ZOOM_STEP = 0.1;
-  const DEFAULT_ZOOM = 0.85;
-  let zoomLevel = parseFloat(localStorage.getItem("floorplanZoom") || `${DEFAULT_ZOOM}`);
-  if (Number.isNaN(zoomLevel)) {
-    zoomLevel = DEFAULT_ZOOM;
-  }
-  zoomLevel = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoomLevel));
-
-  function applyZoom(preserveCenter = true) {
-    if (!floorplanCanvas) {
-      return;
-    }
-    let centerXRatio = 0.5;
-    let centerYRatio = 0.5;
-    let previousWidth = 0;
-    let previousHeight = 0;
-    if (preserveCenter && floorplanViewport) {
-      previousWidth = floorplanCanvas.offsetWidth;
-      previousHeight = floorplanCanvas.offsetHeight;
-      if (previousWidth > 0) {
-        centerXRatio =
-          (floorplanViewport.scrollLeft + floorplanViewport.clientWidth / 2) / previousWidth;
-      }
-      if (previousHeight > 0) {
-        centerYRatio =
-          (floorplanViewport.scrollTop + floorplanViewport.clientHeight / 2) / previousHeight;
-      }
-    }
-
-    floorplanCanvas.style.setProperty("--floorplan-unit", `${BASE_FLOORPLAN_UNIT * zoomLevel}px`);
-    if (zoomLevelDisplay) {
-      zoomLevelDisplay.textContent = `${Math.round(zoomLevel * 100)}%`;
-    }
-    localStorage.setItem("floorplanZoom", zoomLevel.toFixed(2));
-
-    if (preserveCenter && floorplanViewport && previousWidth > 0 && previousHeight > 0) {
-      const newWidth = floorplanCanvas.offsetWidth;
-      const newHeight = floorplanCanvas.offsetHeight;
-      floorplanViewport.scrollLeft = Math.max(
-        0,
-        newWidth * centerXRatio - floorplanViewport.clientWidth / 2,
-      );
-      floorplanViewport.scrollTop = Math.max(
-        0,
-        newHeight * centerYRatio - floorplanViewport.clientHeight / 2,
-      );
-    }
-  }
-
-  function setZoom(level) {
-    const clamped = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, level));
-    if (Math.abs(clamped - zoomLevel) < 0.005) {
-      return;
-    }
-    zoomLevel = clamped;
-    applyZoom(true);
-  }
-
-  function changeZoom(delta) {
-    setZoom(parseFloat((zoomLevel + delta).toFixed(2)));
-  }
-
-  if (zoomOutButton) {
-    zoomOutButton.addEventListener("click", () => {
-      changeZoom(-ZOOM_STEP);
-    });
-  }
-  if (zoomInButton) {
-    zoomInButton.addEventListener("click", () => {
-      changeZoom(ZOOM_STEP);
-    });
-  }
-  if (zoomResetButton) {
-    zoomResetButton.addEventListener("click", () => {
-      setZoom(DEFAULT_ZOOM);
-    });
-  }
-  if (floorplanViewport) {
-    floorplanViewport.addEventListener(
-      "wheel",
-      (event) => {
-        if (!event.ctrlKey) {
-          return;
-        }
-        event.preventDefault();
-        const delta = event.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
-        changeZoom(delta);
-      },
-      { passive: false },
-    );
-  }
 
   function showModal(modal) {
     modal.classList.remove("hidden");
@@ -186,10 +87,6 @@
   }
 
   function highlightDesk(identifier) {
-    if (!floorplanCanvas) {
-      highlightedDeskId = identifier;
-      return;
-    }
     if (highlightedDeskId && deskMap.has(highlightedDeskId)) {
       const oldDesk = floorplanCanvas.querySelector(`[data-desk-id="${highlightedDeskId}"]`);
       if (oldDesk) {
@@ -205,81 +102,63 @@
     }
   }
 
-  function applyDeskStyles(element, desk, isNew = false) {
-    const identifier = desk.identifier || "";
-    const isWalkway = desk.department === "Walkway" || identifier.startsWith("walkway");
-    const isAssignable = desk.is_assignable !== false && !isWalkway;
-    if (isNew) {
-      element.className = "desk";
+  function renderDeskElement(desk) {
+    const element = document.createElement("div");
+    element.className = `desk ${desk.status}`;
+    element.style.left = desk.style.left;
+    element.style.top = desk.style.top;
+    element.style.width = desk.style.width;
+    element.style.height = desk.style.height;
+    const isAssignable = desk.is_assignable !== false;
+    if (!isAssignable) {
+      element.classList.add("non-assignable");
     }
-    element.classList.remove("free", "occupied", "blocked");
-    element.classList.add(desk.status);
-    element.classList.toggle("non-assignable", !isAssignable);
-    element.classList.toggle("walkway", isWalkway);
-
-    if (desk.status === "blocked" || isWalkway) {
+    if (desk.status === "blocked") {
       element.style.background = "";
     } else {
       const fillColor = desk.fill_color || desk.department_color;
       element.style.background = fillColor;
     }
-
-    const statusLabel =
-      desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied";
-    if (isWalkway) {
-      element.innerHTML = `<div class="walkway-label">${desk.label}</div>`;
-    } else {
-      element.innerHTML = `
-        <div>${desk.label}</div>
-        ${isAssignable ? `<div class="status-pill">${statusLabel}</div>` : ""}
-      `;
-    }
-
-    if (!isAssignable || isWalkway) {
-      element.style.cursor = "default";
-    } else {
-      element.style.cursor = "";
-    }
-
-    return { isAssignable, isWalkway };
-  }
-
-  function renderDeskElement(desk) {
-    if (!floorplanCanvas) {
-      return null;
-    }
-    const element = document.createElement("div");
-    element.style.left = desk.style.left;
-    element.style.top = desk.style.top;
-    element.style.width = desk.style.width;
-    element.style.height = desk.style.height;
     element.dataset.deskId = desk.identifier;
-    const { isAssignable } = applyDeskStyles(element, desk, true);
+    const statusLabel = desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied";
+    element.innerHTML = `
+      <div>${desk.label}</div>
+      ${isAssignable ? `<div class="status-pill">${statusLabel}</div>` : ""}
+    `;
     if (isAssignable) {
       element.addEventListener("click", () => {
         openDeskModal(desk.identifier);
       });
+    } else {
+      element.style.cursor = "default";
     }
     floorplanCanvas.appendChild(element);
     return element;
   }
 
   function refreshDeskElement(desk) {
-    if (!floorplanCanvas) {
-      return;
-    }
     const element = floorplanCanvas.querySelector(`[data-desk-id="${desk.identifier}"]`);
     if (!element) {
       renderDeskElement(desk);
       return;
     }
-    applyDeskStyles(element, desk, false);
+    element.className = `desk ${desk.status}`;
+    const isAssignable = desk.is_assignable !== false;
+    element.classList.toggle("non-assignable", !isAssignable);
+    if (desk.status === "blocked") {
+      element.style.background = "";
+    } else {
+      const fillColor = desk.fill_color || desk.department_color;
+      element.style.background = fillColor;
+    }
+    const statusLabel = desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied";
+    element.innerHTML = `
+      <div>${desk.label}</div>
+      ${isAssignable ? `<div class="status-pill">${statusLabel}</div>` : ""}
+    `;
   }
 
   function renderFloorplan() {
-    if (!floorplanCanvas) {
-      return;
-    }
     floorplanCanvas.innerHTML = "";
     deskMap.forEach((desk) => {
       renderDeskElement(desk);
@@ -469,7 +348,6 @@
     }
   });
 
-  applyZoom(false);
   renderFloorplan();
   initNameModal();
   loadAssignmentInfo();
