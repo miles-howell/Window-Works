@@ -12,7 +12,12 @@
         </p>
       </div>
       <div class="floorplan-wrapper">
-        <div class="floorplan-canvas" id="floorplan-canvas"></div>
+        <div
+          class="floorplan-canvas"
+          id="floorplan-canvas"
+          data-rows="{{ grid_rows }}"
+          data-columns="{{ grid_columns }}"
+        ></div>
       </div>
       <div class="legend">
         {% for department in departments %}
