@@ -1,0 +1,5942 @@
+[
+  {
+    "model": "floorplan.department",
+    "pk": 1,
+    "fields": {
+      "name": "Marketing",
+      "color": "#5B9BD5",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 2,
+    "fields": {
+      "name": "Utility/Resource",
+      "color": "#4B5563",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 3,
+    "fields": {
+      "name": "Walkway",
+      "color": "#F3F4F6",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 4,
+    "fields": {
+      "name": "Member Services",
+      "color": "#FF66CC",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 5,
+    "fields": {
+      "name": "Finance",
+      "color": "#70AD47",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 6,
+    "fields": {
+      "name": "Medical",
+      "color": "#C00000",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 7,
+    "fields": {
+      "name": "Administration",
+      "color": "#595959",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 8,
+    "fields": {
+      "name": "Enrollment",
+      "color": "#833C0C",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 9,
+    "fields": {
+      "name": "IT",
+      "color": "#7030A0",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.department",
+    "pk": 10,
+    "fields": {
+      "name": "Claims",
+      "color": "#FFC000",
+      "description": ""
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 1,
+    "fields": {
+      "identifier": "marketing-r01c01",
+      "label": "MA3 (on wifi)",
+      "department": 1,
+      "left_percentage": 0.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 2,
+    "fields": {
+      "identifier": "marketing-r01c05",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 13.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 3,
+    "fields": {
+      "identifier": "marketing-r01c06",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 16.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 4,
+    "fields": {
+      "identifier": "marketing-r01c07",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 20.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 5,
+    "fields": {
+      "identifier": "marketing-r01c08",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 23.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 6,
+    "fields": {
+      "identifier": "marketing-r01c09",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 26.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 7,
+    "fields": {
+      "identifier": "marketing-r01c10",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 30.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 8,
+    "fields": {
+      "identifier": "marketing-r01c11",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 33.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 9,
+    "fields": {
+      "identifier": "marketing-r01c12",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 36.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 10,
+    "fields": {
+      "identifier": "marketing-r01c13",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 40.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 11,
+    "fields": {
+      "identifier": "marketing-r02c06",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 16.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 12,
+    "fields": {
+      "identifier": "marketing-r02c07",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 20.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 13,
+    "fields": {
+      "identifier": "marketing-r02c08",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 23.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 14,
+    "fields": {
+      "identifier": "marketing-r02c09",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 26.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 15,
+    "fields": {
+      "identifier": "marketing-r02c10",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 30.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 16,
+    "fields": {
+      "identifier": "marketing-r02c11",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 33.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 17,
+    "fields": {
+      "identifier": "marketing-r02c12",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 36.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 18,
+    "fields": {
+      "identifier": "marketing-r02c13",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 40.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 19,
+    "fields": {
+      "identifier": "marketing-r02c14",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 43.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 20,
+    "fields": {
+      "identifier": "marketing-r03c01",
+      "label": "Front Desk",
+      "department": 1,
+      "left_percentage": 0.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 21,
+    "fields": {
+      "identifier": "marketing-r03c05",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 13.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 22,
+    "fields": {
+      "identifier": "marketing-r03c06",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 16.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 23,
+    "fields": {
+      "identifier": "marketing-r03c07",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 20.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 24,
+    "fields": {
+      "identifier": "marketing-r03c08",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 23.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 25,
+    "fields": {
+      "identifier": "marketing-r03c09",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 26.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 26,
+    "fields": {
+      "identifier": "marketing-r03c10",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 30.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 27,
+    "fields": {
+      "identifier": "marketing-r03c11",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 33.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 28,
+    "fields": {
+      "identifier": "marketing-r03c12",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 36.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 29,
+    "fields": {
+      "identifier": "marketing-r03c13",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 40.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 30,
+    "fields": {
+      "identifier": "marketing-r03c14",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 43.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 31,
+    "fields": {
+      "identifier": "marketing-r04c01",
+      "label": "MA2 (on wifi)",
+      "department": 1,
+      "left_percentage": 0.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 32,
+    "fields": {
+      "identifier": "marketing-r04c02",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 3.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 33,
+    "fields": {
+      "identifier": "marketing-r06c07",
+      "label": "Empty",
+      "department": 1,
+      "left_percentage": 20.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#5B9BD5"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 34,
+    "fields": {
+      "identifier": "utility-resource-r01c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 35,
+    "fields": {
+      "identifier": "utility-resource-r01c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 36,
+    "fields": {
+      "identifier": "utility-resource-r01c14",
+      "label": "Standing Desk",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 37,
+    "fields": {
+      "identifier": "utility-resource-r01c19",
+      "label": "Printer",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 38,
+    "fields": {
+      "identifier": "utility-resource-r01c24",
+      "label": "Printer",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 39,
+    "fields": {
+      "identifier": "utility-resource-r01c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 40,
+    "fields": {
+      "identifier": "utility-resource-r01c27",
+      "label": "Files",
+      "department": 2,
+      "left_percentage": 86.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 41,
+    "fields": {
+      "identifier": "utility-resource-r01c28",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 90.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 42,
+    "fields": {
+      "identifier": "utility-resource-r01c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 43,
+    "fields": {
+      "identifier": "utility-resource-r02c01",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 0.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 44,
+    "fields": {
+      "identifier": "utility-resource-r02c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 45,
+    "fields": {
+      "identifier": "utility-resource-r02c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 46,
+    "fields": {
+      "identifier": "utility-resource-r02c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 47,
+    "fields": {
+      "identifier": "utility-resource-r02c05",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 48,
+    "fields": {
+      "identifier": "utility-resource-r02c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 49,
+    "fields": {
+      "identifier": "utility-resource-r02c26",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 83.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 50,
+    "fields": {
+      "identifier": "utility-resource-r02c27",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 86.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 51,
+    "fields": {
+      "identifier": "utility-resource-r02c28",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 90.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 52,
+    "fields": {
+      "identifier": "utility-resource-r02c29",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 93.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 53,
+    "fields": {
+      "identifier": "utility-resource-r02c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 54,
+    "fields": {
+      "identifier": "utility-resource-r03c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 55,
+    "fields": {
+      "identifier": "utility-resource-r03c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 56,
+    "fields": {
+      "identifier": "utility-resource-r03c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 57,
+    "fields": {
+      "identifier": "utility-resource-r03c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 58,
+    "fields": {
+      "identifier": "utility-resource-r03c26",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 83.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 59,
+    "fields": {
+      "identifier": "utility-resource-r03c27",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 86.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 60,
+    "fields": {
+      "identifier": "utility-resource-r03c28",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 90.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 61,
+    "fields": {
+      "identifier": "utility-resource-r03c29",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 93.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 62,
+    "fields": {
+      "identifier": "utility-resource-r03c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 63,
+    "fields": {
+      "identifier": "utility-resource-r04c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 64,
+    "fields": {
+      "identifier": "utility-resource-r04c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 65,
+    "fields": {
+      "identifier": "utility-resource-r04c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 66,
+    "fields": {
+      "identifier": "utility-resource-r04c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 67,
+    "fields": {
+      "identifier": "utility-resource-r04c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 68,
+    "fields": {
+      "identifier": "utility-resource-r04c09",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 69,
+    "fields": {
+      "identifier": "utility-resource-r04c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 70,
+    "fields": {
+      "identifier": "utility-resource-r04c11",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 71,
+    "fields": {
+      "identifier": "utility-resource-r04c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 72,
+    "fields": {
+      "identifier": "utility-resource-r04c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 73,
+    "fields": {
+      "identifier": "utility-resource-r04c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 74,
+    "fields": {
+      "identifier": "utility-resource-r04c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 75,
+    "fields": {
+      "identifier": "utility-resource-r04c17",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 53.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 76,
+    "fields": {
+      "identifier": "utility-resource-r04c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 77,
+    "fields": {
+      "identifier": "utility-resource-r04c19",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 78,
+    "fields": {
+      "identifier": "utility-resource-r04c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 79,
+    "fields": {
+      "identifier": "utility-resource-r04c22",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 80,
+    "fields": {
+      "identifier": "utility-resource-r04c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 81,
+    "fields": {
+      "identifier": "utility-resource-r04c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 82,
+    "fields": {
+      "identifier": "utility-resource-r04c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 83,
+    "fields": {
+      "identifier": "utility-resource-r04c26",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 83.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 84,
+    "fields": {
+      "identifier": "utility-resource-r04c27",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 86.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 85,
+    "fields": {
+      "identifier": "utility-resource-r04c28",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 90.0,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 86,
+    "fields": {
+      "identifier": "utility-resource-r04c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 87,
+    "fields": {
+      "identifier": "utility-resource-r05c01",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 0.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 88,
+    "fields": {
+      "identifier": "utility-resource-r05c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 89,
+    "fields": {
+      "identifier": "utility-resource-r05c05",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 90,
+    "fields": {
+      "identifier": "utility-resource-r05c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 91,
+    "fields": {
+      "identifier": "utility-resource-r05c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 92,
+    "fields": {
+      "identifier": "utility-resource-r05c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 93,
+    "fields": {
+      "identifier": "utility-resource-r05c09",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 94,
+    "fields": {
+      "identifier": "utility-resource-r05c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 95,
+    "fields": {
+      "identifier": "utility-resource-r05c11",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 96,
+    "fields": {
+      "identifier": "utility-resource-r05c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 97,
+    "fields": {
+      "identifier": "utility-resource-r05c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 98,
+    "fields": {
+      "identifier": "utility-resource-r05c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 99,
+    "fields": {
+      "identifier": "utility-resource-r05c15",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 46.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 100,
+    "fields": {
+      "identifier": "utility-resource-r05c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 101,
+    "fields": {
+      "identifier": "utility-resource-r05c17",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 53.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 102,
+    "fields": {
+      "identifier": "utility-resource-r05c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 103,
+    "fields": {
+      "identifier": "utility-resource-r05c19",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 104,
+    "fields": {
+      "identifier": "utility-resource-r05c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 105,
+    "fields": {
+      "identifier": "utility-resource-r05c21",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 66.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 106,
+    "fields": {
+      "identifier": "utility-resource-r05c22",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 107,
+    "fields": {
+      "identifier": "utility-resource-r05c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 108,
+    "fields": {
+      "identifier": "utility-resource-r05c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 109,
+    "fields": {
+      "identifier": "utility-resource-r05c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 110,
+    "fields": {
+      "identifier": "utility-resource-r05c26",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 83.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 111,
+    "fields": {
+      "identifier": "utility-resource-r05c28",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 90.0,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 112,
+    "fields": {
+      "identifier": "utility-resource-r05c29",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 93.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 113,
+    "fields": {
+      "identifier": "utility-resource-r05c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 114,
+    "fields": {
+      "identifier": "utility-resource-r06c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 115,
+    "fields": {
+      "identifier": "utility-resource-r06c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 116,
+    "fields": {
+      "identifier": "utility-resource-r06c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 117,
+    "fields": {
+      "identifier": "utility-resource-r06c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 118,
+    "fields": {
+      "identifier": "utility-resource-r06c09",
+      "label": "Printer",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 119,
+    "fields": {
+      "identifier": "utility-resource-r06c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 120,
+    "fields": {
+      "identifier": "utility-resource-r06c11",
+      "label": "Restroom",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 121,
+    "fields": {
+      "identifier": "utility-resource-r06c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 122,
+    "fields": {
+      "identifier": "utility-resource-r06c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 123,
+    "fields": {
+      "identifier": "utility-resource-r06c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 124,
+    "fields": {
+      "identifier": "utility-resource-r06c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 125,
+    "fields": {
+      "identifier": "utility-resource-r06c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 126,
+    "fields": {
+      "identifier": "utility-resource-r06c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 127,
+    "fields": {
+      "identifier": "utility-resource-r06c22",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 128,
+    "fields": {
+      "identifier": "utility-resource-r06c23",
+      "label": "Con 2",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 129,
+    "fields": {
+      "identifier": "utility-resource-r06c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 130,
+    "fields": {
+      "identifier": "utility-resource-r06c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 131,
+    "fields": {
+      "identifier": "utility-resource-r06c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 132,
+    "fields": {
+      "identifier": "utility-resource-r07c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 133,
+    "fields": {
+      "identifier": "utility-resource-r07c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 134,
+    "fields": {
+      "identifier": "utility-resource-r07c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 135,
+    "fields": {
+      "identifier": "utility-resource-r07c05",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 136,
+    "fields": {
+      "identifier": "utility-resource-r07c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 137,
+    "fields": {
+      "identifier": "utility-resource-r07c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 138,
+    "fields": {
+      "identifier": "utility-resource-r07c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 139,
+    "fields": {
+      "identifier": "utility-resource-r07c09",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 140,
+    "fields": {
+      "identifier": "utility-resource-r07c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 141,
+    "fields": {
+      "identifier": "utility-resource-r07c11",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 142,
+    "fields": {
+      "identifier": "utility-resource-r07c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 143,
+    "fields": {
+      "identifier": "utility-resource-r07c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 144,
+    "fields": {
+      "identifier": "utility-resource-r07c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 145,
+    "fields": {
+      "identifier": "utility-resource-r07c15",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 46.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 146,
+    "fields": {
+      "identifier": "utility-resource-r07c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 147,
+    "fields": {
+      "identifier": "utility-resource-r07c17",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 53.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 148,
+    "fields": {
+      "identifier": "utility-resource-r07c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 149,
+    "fields": {
+      "identifier": "utility-resource-r07c19",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 150,
+    "fields": {
+      "identifier": "utility-resource-r07c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 151,
+    "fields": {
+      "identifier": "utility-resource-r07c21",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 66.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 152,
+    "fields": {
+      "identifier": "utility-resource-r07c22",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 153,
+    "fields": {
+      "identifier": "utility-resource-r07c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 154,
+    "fields": {
+      "identifier": "utility-resource-r07c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 155,
+    "fields": {
+      "identifier": "utility-resource-r07c26",
+      "label": "Printer",
+      "department": 2,
+      "left_percentage": 83.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 156,
+    "fields": {
+      "identifier": "utility-resource-r07c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 157,
+    "fields": {
+      "identifier": "utility-resource-r08c01",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 0.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 158,
+    "fields": {
+      "identifier": "utility-resource-r08c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 159,
+    "fields": {
+      "identifier": "utility-resource-r08c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 160,
+    "fields": {
+      "identifier": "utility-resource-r08c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 161,
+    "fields": {
+      "identifier": "utility-resource-r08c05",
+      "label": "Con 1",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 162,
+    "fields": {
+      "identifier": "utility-resource-r08c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 163,
+    "fields": {
+      "identifier": "utility-resource-r08c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 164,
+    "fields": {
+      "identifier": "utility-resource-r08c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 165,
+    "fields": {
+      "identifier": "utility-resource-r08c09",
+      "label": "IT Storage",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 166,
+    "fields": {
+      "identifier": "utility-resource-r08c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 167,
+    "fields": {
+      "identifier": "utility-resource-r08c11",
+      "label": "Restroom",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 168,
+    "fields": {
+      "identifier": "utility-resource-r08c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 169,
+    "fields": {
+      "identifier": "utility-resource-r08c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 170,
+    "fields": {
+      "identifier": "utility-resource-r08c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 171,
+    "fields": {
+      "identifier": "utility-resource-r08c15",
+      "label": "Maintenance",
+      "department": 2,
+      "left_percentage": 46.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 172,
+    "fields": {
+      "identifier": "utility-resource-r08c16",
+      "label": "Data Center",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 173,
+    "fields": {
+      "identifier": "utility-resource-r08c17",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 53.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 174,
+    "fields": {
+      "identifier": "utility-resource-r08c19",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 175,
+    "fields": {
+      "identifier": "utility-resource-r08c20",
+      "label": "Con 3",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 176,
+    "fields": {
+      "identifier": "utility-resource-r08c21",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 66.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 177,
+    "fields": {
+      "identifier": "utility-resource-r08c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 178,
+    "fields": {
+      "identifier": "utility-resource-r08c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 179,
+    "fields": {
+      "identifier": "utility-resource-r08c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 180,
+    "fields": {
+      "identifier": "utility-resource-r08c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 181,
+    "fields": {
+      "identifier": "utility-resource-r09c01",
+      "label": "Vending",
+      "department": 2,
+      "left_percentage": 0.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 182,
+    "fields": {
+      "identifier": "utility-resource-r09c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 183,
+    "fields": {
+      "identifier": "utility-resource-r09c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 184,
+    "fields": {
+      "identifier": "utility-resource-r09c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 185,
+    "fields": {
+      "identifier": "utility-resource-r09c05",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 186,
+    "fields": {
+      "identifier": "utility-resource-r09c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 187,
+    "fields": {
+      "identifier": "utility-resource-r09c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 188,
+    "fields": {
+      "identifier": "utility-resource-r09c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 189,
+    "fields": {
+      "identifier": "utility-resource-r09c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 190,
+    "fields": {
+      "identifier": "utility-resource-r09c11",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 191,
+    "fields": {
+      "identifier": "utility-resource-r09c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 192,
+    "fields": {
+      "identifier": "utility-resource-r09c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 193,
+    "fields": {
+      "identifier": "utility-resource-r09c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 194,
+    "fields": {
+      "identifier": "utility-resource-r09c15",
+      "label": "Electrical",
+      "department": 2,
+      "left_percentage": 46.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 195,
+    "fields": {
+      "identifier": "utility-resource-r09c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 196,
+    "fields": {
+      "identifier": "utility-resource-r09c17",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 53.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 197,
+    "fields": {
+      "identifier": "utility-resource-r09c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 198,
+    "fields": {
+      "identifier": "utility-resource-r09c19",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 199,
+    "fields": {
+      "identifier": "utility-resource-r09c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 200,
+    "fields": {
+      "identifier": "utility-resource-r09c21",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 66.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 201,
+    "fields": {
+      "identifier": "utility-resource-r09c22",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 202,
+    "fields": {
+      "identifier": "utility-resource-r09c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 203,
+    "fields": {
+      "identifier": "utility-resource-r09c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 204,
+    "fields": {
+      "identifier": "utility-resource-r09c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 205,
+    "fields": {
+      "identifier": "utility-resource-r09c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 206,
+    "fields": {
+      "identifier": "utility-resource-r10c01",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 0.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 207,
+    "fields": {
+      "identifier": "utility-resource-r10c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 208,
+    "fields": {
+      "identifier": "utility-resource-r10c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 209,
+    "fields": {
+      "identifier": "utility-resource-r10c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 210,
+    "fields": {
+      "identifier": "utility-resource-r10c05",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 211,
+    "fields": {
+      "identifier": "utility-resource-r10c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 212,
+    "fields": {
+      "identifier": "utility-resource-r10c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 213,
+    "fields": {
+      "identifier": "utility-resource-r10c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 214,
+    "fields": {
+      "identifier": "utility-resource-r10c09",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 215,
+    "fields": {
+      "identifier": "utility-resource-r10c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 216,
+    "fields": {
+      "identifier": "utility-resource-r10c11",
+      "label": "Printer",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 217,
+    "fields": {
+      "identifier": "utility-resource-r10c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 218,
+    "fields": {
+      "identifier": "utility-resource-r10c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 219,
+    "fields": {
+      "identifier": "utility-resource-r10c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 220,
+    "fields": {
+      "identifier": "utility-resource-r10c15",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 46.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 221,
+    "fields": {
+      "identifier": "utility-resource-r10c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 222,
+    "fields": {
+      "identifier": "utility-resource-r10c17",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 53.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 223,
+    "fields": {
+      "identifier": "utility-resource-r10c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 224,
+    "fields": {
+      "identifier": "utility-resource-r10c19",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 225,
+    "fields": {
+      "identifier": "utility-resource-r10c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 226,
+    "fields": {
+      "identifier": "utility-resource-r10c21",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 66.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 227,
+    "fields": {
+      "identifier": "utility-resource-r10c22",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 228,
+    "fields": {
+      "identifier": "utility-resource-r10c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 229,
+    "fields": {
+      "identifier": "utility-resource-r10c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 230,
+    "fields": {
+      "identifier": "utility-resource-r10c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 231,
+    "fields": {
+      "identifier": "utility-resource-r11c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 232,
+    "fields": {
+      "identifier": "utility-resource-r11c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 233,
+    "fields": {
+      "identifier": "utility-resource-r11c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 234,
+    "fields": {
+      "identifier": "utility-resource-r11c05",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 235,
+    "fields": {
+      "identifier": "utility-resource-r11c06",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 236,
+    "fields": {
+      "identifier": "utility-resource-r11c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 237,
+    "fields": {
+      "identifier": "utility-resource-r11c08",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 238,
+    "fields": {
+      "identifier": "utility-resource-r11c09",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 239,
+    "fields": {
+      "identifier": "utility-resource-r11c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 240,
+    "fields": {
+      "identifier": "utility-resource-r11c11",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 241,
+    "fields": {
+      "identifier": "utility-resource-r11c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 242,
+    "fields": {
+      "identifier": "utility-resource-r11c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 243,
+    "fields": {
+      "identifier": "utility-resource-r11c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 244,
+    "fields": {
+      "identifier": "utility-resource-r11c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 245,
+    "fields": {
+      "identifier": "utility-resource-r11c17",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 53.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 246,
+    "fields": {
+      "identifier": "utility-resource-r11c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 247,
+    "fields": {
+      "identifier": "utility-resource-r11c19",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 60.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 248,
+    "fields": {
+      "identifier": "utility-resource-r11c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 249,
+    "fields": {
+      "identifier": "utility-resource-r11c21",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 66.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 250,
+    "fields": {
+      "identifier": "utility-resource-r11c22",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 251,
+    "fields": {
+      "identifier": "utility-resource-r11c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 252,
+    "fields": {
+      "identifier": "utility-resource-r11c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 253,
+    "fields": {
+      "identifier": "utility-resource-r11c25",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 80.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 254,
+    "fields": {
+      "identifier": "utility-resource-r11c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 255,
+    "fields": {
+      "identifier": "utility-resource-r12c01",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 0.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 256,
+    "fields": {
+      "identifier": "utility-resource-r12c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 257,
+    "fields": {
+      "identifier": "utility-resource-r12c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 258,
+    "fields": {
+      "identifier": "utility-resource-r12c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 259,
+    "fields": {
+      "identifier": "utility-resource-r12c05",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 260,
+    "fields": {
+      "identifier": "utility-resource-r12c06",
+      "label": "Mail",
+      "department": 2,
+      "left_percentage": 16.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 261,
+    "fields": {
+      "identifier": "utility-resource-r12c07",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 20.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 262,
+    "fields": {
+      "identifier": "utility-resource-r12c08",
+      "label": "Enrollment",
+      "department": 2,
+      "left_percentage": 23.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 263,
+    "fields": {
+      "identifier": "utility-resource-r12c09",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 26.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 264,
+    "fields": {
+      "identifier": "utility-resource-r12c10",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 30.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 265,
+    "fields": {
+      "identifier": "utility-resource-r12c11",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 33.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 266,
+    "fields": {
+      "identifier": "utility-resource-r12c12",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 36.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 267,
+    "fields": {
+      "identifier": "utility-resource-r12c13",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 40.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 268,
+    "fields": {
+      "identifier": "utility-resource-r12c14",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 43.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 269,
+    "fields": {
+      "identifier": "utility-resource-r12c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 270,
+    "fields": {
+      "identifier": "utility-resource-r12c18",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 56.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 271,
+    "fields": {
+      "identifier": "utility-resource-r12c20",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 63.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 272,
+    "fields": {
+      "identifier": "utility-resource-r12c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 273,
+    "fields": {
+      "identifier": "utility-resource-r12c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 274,
+    "fields": {
+      "identifier": "utility-resource-r13c01",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 0.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 275,
+    "fields": {
+      "identifier": "utility-resource-r13c02",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 3.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 276,
+    "fields": {
+      "identifier": "utility-resource-r13c03",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 6.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 277,
+    "fields": {
+      "identifier": "utility-resource-r13c04",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 10.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 278,
+    "fields": {
+      "identifier": "utility-resource-r13c05",
+      "label": "TV",
+      "department": 2,
+      "left_percentage": 13.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 279,
+    "fields": {
+      "identifier": "utility-resource-r13c16",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 50.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 280,
+    "fields": {
+      "identifier": "utility-resource-r13c22",
+      "label": "Standing Desk",
+      "department": 2,
+      "left_percentage": 70.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 281,
+    "fields": {
+      "identifier": "utility-resource-r13c23",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 73.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 282,
+    "fields": {
+      "identifier": "utility-resource-r13c24",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 76.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 283,
+    "fields": {
+      "identifier": "utility-resource-r13c30",
+      "label": "Empty",
+      "department": 2,
+      "left_percentage": 96.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 284,
+    "fields": {
+      "identifier": "walkway-r01c03",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 6.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 285,
+    "fields": {
+      "identifier": "walkway-r04c05",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 13.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 286,
+    "fields": {
+      "identifier": "walkway-r04c15",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 46.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 287,
+    "fields": {
+      "identifier": "walkway-r04c21",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 66.666667,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 288,
+    "fields": {
+      "identifier": "walkway-r04c29",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 93.333333,
+      "top_percentage": 23.076923,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 289,
+    "fields": {
+      "identifier": "walkway-r05c03",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 6.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 290,
+    "fields": {
+      "identifier": "walkway-r05c27",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 86.666667,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 291,
+    "fields": {
+      "identifier": "walkway-r07c25",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 80.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 292,
+    "fields": {
+      "identifier": "walkway-r10c25",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 80.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 293,
+    "fields": {
+      "identifier": "walkway-r11c01",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 0.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 294,
+    "fields": {
+      "identifier": "walkway-r11c15",
+      "label": "Walkway",
+      "department": 3,
+      "left_percentage": 46.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 295,
+    "fields": {
+      "identifier": "member-services-r01c15",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 46.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 296,
+    "fields": {
+      "identifier": "member-services-r01c16",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 50.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 297,
+    "fields": {
+      "identifier": "member-services-r01c17",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 53.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 298,
+    "fields": {
+      "identifier": "member-services-r01c18",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 56.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 299,
+    "fields": {
+      "identifier": "member-services-r01c20",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 63.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 300,
+    "fields": {
+      "identifier": "member-services-r02c15",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 46.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 301,
+    "fields": {
+      "identifier": "member-services-r02c16",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 50.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 302,
+    "fields": {
+      "identifier": "member-services-r02c17",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 53.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 303,
+    "fields": {
+      "identifier": "member-services-r02c18",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 56.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 304,
+    "fields": {
+      "identifier": "member-services-r02c19",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 60.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 305,
+    "fields": {
+      "identifier": "member-services-r02c20",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 63.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 306,
+    "fields": {
+      "identifier": "member-services-r03c15",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 46.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 307,
+    "fields": {
+      "identifier": "member-services-r03c16",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 50.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 308,
+    "fields": {
+      "identifier": "member-services-r03c17",
+      "label": "Kiosk",
+      "department": 4,
+      "left_percentage": 53.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 309,
+    "fields": {
+      "identifier": "member-services-r03c18",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 56.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 310,
+    "fields": {
+      "identifier": "member-services-r03c19",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 60.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 311,
+    "fields": {
+      "identifier": "member-services-r03c20",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 63.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 312,
+    "fields": {
+      "identifier": "member-services-r06c17",
+      "label": "Empty",
+      "department": 4,
+      "left_percentage": 53.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FF66CC"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 313,
+    "fields": {
+      "identifier": "finance-r01c21",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 66.666667,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 314,
+    "fields": {
+      "identifier": "finance-r01c22",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 70.0,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 315,
+    "fields": {
+      "identifier": "finance-r01c23",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 73.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 316,
+    "fields": {
+      "identifier": "finance-r02c21",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 66.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 317,
+    "fields": {
+      "identifier": "finance-r02c22",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 70.0,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 318,
+    "fields": {
+      "identifier": "finance-r02c23",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 73.333333,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 319,
+    "fields": {
+      "identifier": "finance-r02c24",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 76.666667,
+      "top_percentage": 7.692308,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 320,
+    "fields": {
+      "identifier": "finance-r03c21",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 66.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 321,
+    "fields": {
+      "identifier": "finance-r03c22",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 70.0,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 322,
+    "fields": {
+      "identifier": "finance-r03c23",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 73.333333,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 323,
+    "fields": {
+      "identifier": "finance-r03c24",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 76.666667,
+      "top_percentage": 15.384615,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 324,
+    "fields": {
+      "identifier": "finance-r06c19",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 60.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 325,
+    "fields": {
+      "identifier": "finance-r06c21",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 66.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 326,
+    "fields": {
+      "identifier": "finance-r07c27",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 86.666667,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 327,
+    "fields": {
+      "identifier": "finance-r07c28",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 90.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 328,
+    "fields": {
+      "identifier": "finance-r07c29",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 93.333333,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 329,
+    "fields": {
+      "identifier": "finance-r08c26",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 83.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 330,
+    "fields": {
+      "identifier": "finance-r08c27",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 86.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 331,
+    "fields": {
+      "identifier": "finance-r08c28",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 90.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 332,
+    "fields": {
+      "identifier": "finance-r08c29",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 93.333333,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 333,
+    "fields": {
+      "identifier": "finance-r09c26",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 83.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 334,
+    "fields": {
+      "identifier": "finance-r09c27",
+      "label": "Kiosk",
+      "department": 5,
+      "left_percentage": 86.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 335,
+    "fields": {
+      "identifier": "finance-r09c28",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 90.0,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 336,
+    "fields": {
+      "identifier": "finance-r09c29",
+      "label": "Empty",
+      "department": 5,
+      "left_percentage": 93.333333,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#70AD47"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 337,
+    "fields": {
+      "identifier": "medical-r01c26",
+      "label": "Empty",
+      "department": 6,
+      "left_percentage": 83.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#C00000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 338,
+    "fields": {
+      "identifier": "medical-r06c15",
+      "label": "Empty",
+      "department": 6,
+      "left_percentage": 46.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#C00000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 339,
+    "fields": {
+      "identifier": "medical-r06c26",
+      "label": "CH Kiosk",
+      "department": 6,
+      "left_percentage": 83.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 340,
+    "fields": {
+      "identifier": "medical-r06c27",
+      "label": "Empty",
+      "department": 6,
+      "left_percentage": 86.666667,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#C00000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 341,
+    "fields": {
+      "identifier": "medical-r06c28",
+      "label": "Empty",
+      "department": 6,
+      "left_percentage": 90.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#C00000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 342,
+    "fields": {
+      "identifier": "medical-r06c29",
+      "label": "Empty",
+      "department": 6,
+      "left_percentage": 93.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#C00000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 343,
+    "fields": {
+      "identifier": "medical-r10c26",
+      "label": "Empty",
+      "department": 6,
+      "left_percentage": 83.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#C00000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 344,
+    "fields": {
+      "identifier": "medical-r10c27",
+      "label": "Empty",
+      "department": 6,
+      "left_percentage": 86.666667,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#C00000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 345,
+    "fields": {
+      "identifier": "administration-r01c29",
+      "label": "CEO",
+      "department": 7,
+      "left_percentage": 93.333333,
+      "top_percentage": 0.0,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#595959"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 346,
+    "fields": {
+      "identifier": "administration-r06c05",
+      "label": "Empty",
+      "department": 7,
+      "left_percentage": 13.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#595959"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 347,
+    "fields": {
+      "identifier": "administration-r13c06",
+      "label": "Empty",
+      "department": 7,
+      "left_percentage": 16.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#595959"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 348,
+    "fields": {
+      "identifier": "administration-r13c07",
+      "label": "Empty",
+      "department": 7,
+      "left_percentage": 20.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#595959"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 349,
+    "fields": {
+      "identifier": "enrollment-r05c02",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 3.333333,
+      "top_percentage": 30.769231,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#833C0C"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 350,
+    "fields": {
+      "identifier": "enrollment-r06c01",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 0.0,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#833C0C"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 351,
+    "fields": {
+      "identifier": "enrollment-r06c02",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 3.333333,
+      "top_percentage": 38.461538,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#833C0C"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 352,
+    "fields": {
+      "identifier": "enrollment-r07c01",
+      "label": "Printers",
+      "department": 8,
+      "left_percentage": 0.0,
+      "top_percentage": 46.153846,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#833C0C"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 353,
+    "fields": {
+      "identifier": "enrollment-r09c09",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 26.666667,
+      "top_percentage": 61.538462,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 354,
+    "fields": {
+      "identifier": "enrollment-r13c08",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 23.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 355,
+    "fields": {
+      "identifier": "enrollment-r13c09",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 26.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 356,
+    "fields": {
+      "identifier": "enrollment-r13c10",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 30.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 357,
+    "fields": {
+      "identifier": "enrollment-r13c11",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 33.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 358,
+    "fields": {
+      "identifier": "enrollment-r13c12",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 36.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 359,
+    "fields": {
+      "identifier": "enrollment-r13c13",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 40.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 360,
+    "fields": {
+      "identifier": "enrollment-r13c14",
+      "label": "Empty",
+      "department": 8,
+      "left_percentage": 43.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#ED7D31"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 361,
+    "fields": {
+      "identifier": "it-r08c18",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 56.666667,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 362,
+    "fields": {
+      "identifier": "it-r12c15",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 46.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 363,
+    "fields": {
+      "identifier": "it-r12c17",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 53.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 364,
+    "fields": {
+      "identifier": "it-r12c19",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 60.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 365,
+    "fields": {
+      "identifier": "it-r12c21",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 66.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 366,
+    "fields": {
+      "identifier": "it-r12c22",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 70.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 367,
+    "fields": {
+      "identifier": "it-r12c23",
+      "label": "Files",
+      "department": 9,
+      "left_percentage": 73.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 368,
+    "fields": {
+      "identifier": "it-r13c15",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 46.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 369,
+    "fields": {
+      "identifier": "it-r13c17",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 53.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 370,
+    "fields": {
+      "identifier": "it-r13c18",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 56.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 371,
+    "fields": {
+      "identifier": "it-r13c19",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 60.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 372,
+    "fields": {
+      "identifier": "it-r13c20",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 63.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 373,
+    "fields": {
+      "identifier": "it-r13c21",
+      "label": "Empty",
+      "department": 9,
+      "left_percentage": 66.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#7030A0"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 374,
+    "fields": {
+      "identifier": "claims-r08c22",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 70.0,
+      "top_percentage": 53.846154,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 375,
+    "fields": {
+      "identifier": "claims-r10c28",
+      "label": "WFH PCs",
+      "department": 10,
+      "left_percentage": 90.0,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 376,
+    "fields": {
+      "identifier": "claims-r10c29",
+      "label": "Kiosk",
+      "department": 10,
+      "left_percentage": 93.333333,
+      "top_percentage": 69.230769,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 377,
+    "fields": {
+      "identifier": "claims-r11c26",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 83.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 378,
+    "fields": {
+      "identifier": "claims-r11c27",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 86.666667,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 379,
+    "fields": {
+      "identifier": "claims-r11c28",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 90.0,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 380,
+    "fields": {
+      "identifier": "claims-r11c29",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 93.333333,
+      "top_percentage": 76.923077,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 381,
+    "fields": {
+      "identifier": "claims-r12c25",
+      "label": "Files",
+      "department": 10,
+      "left_percentage": 80.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 382,
+    "fields": {
+      "identifier": "claims-r12c26",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 83.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 383,
+    "fields": {
+      "identifier": "claims-r12c27",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 86.666667,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 384,
+    "fields": {
+      "identifier": "claims-r12c28",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 90.0,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 385,
+    "fields": {
+      "identifier": "claims-r12c29",
+      "label": "Kiosk",
+      "department": 10,
+      "left_percentage": 93.333333,
+      "top_percentage": 84.615385,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#000000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 386,
+    "fields": {
+      "identifier": "claims-r13c25",
+      "label": "ComCom",
+      "department": 10,
+      "left_percentage": 80.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 387,
+    "fields": {
+      "identifier": "claims-r13c26",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 83.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 388,
+    "fields": {
+      "identifier": "claims-r13c27",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 86.666667,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 389,
+    "fields": {
+      "identifier": "claims-r13c28",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 90.0,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  },
+  {
+    "model": "floorplan.desk",
+    "pk": 390,
+    "fields": {
+      "identifier": "claims-r13c29",
+      "label": "Empty",
+      "department": 10,
+      "left_percentage": 93.333333,
+      "top_percentage": 92.307692,
+      "width_percentage": 3.333333,
+      "height_percentage": 7.692308,
+      "notes": "",
+      "fill_color": "#FFC000"
+    }
+  }
+]

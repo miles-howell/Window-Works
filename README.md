@@ -33,7 +33,10 @@ python manage.py migrate
 # 4. Load the sample floor plan (optional but recommended)
 python manage.py loaddata floorplan/fixtures/sample_floorplan.json
 
-# 5. Launch the development server
+# 5. Load the production seating layout (matches the reference spreadsheet)
+python manage.py loaddata floorplan/fixtures/floorplan_layout.json
+
+# 6. Launch the development server
 python manage.py runserver
 ```
 

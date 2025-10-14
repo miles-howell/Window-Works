@@ -30,6 +30,11 @@ class Desk(models.Model):
     )
     label = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    fill_color = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Optional fill color override for this desk.",
+    )
     left_percentage = models.FloatField(
         help_text="Horizontal position (0-100) relative to the floor plan container."
     )

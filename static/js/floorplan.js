@@ -109,19 +109,29 @@
     element.style.top = desk.style.top;
     element.style.width = desk.style.width;
     element.style.height = desk.style.height;
+    const isAssignable = desk.is_assignable !== false;
+    if (!isAssignable) {
+      element.classList.add("non-assignable");
+    }
     if (desk.status === "blocked") {
       element.style.background = "";
     } else {
-      element.style.background = desk.department_color;
+      const fillColor = desk.fill_color || desk.department_color;
+      element.style.background = fillColor;
     }
     element.dataset.deskId = desk.identifier;
+    const statusLabel = desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied";
     element.innerHTML = `
       <div>${desk.label}</div>
-      <div class="status-pill">${desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied"}</div>
+      ${isAssignable ? `<div class="status-pill">${statusLabel}</div>` : ""}
     `;
-    element.addEventListener("click", () => {
-      openDeskModal(desk.identifier);
-    });
+    if (isAssignable) {
+      element.addEventListener("click", () => {
+        openDeskModal(desk.identifier);
+      });
+    } else {
+      element.style.cursor = "default";
+    }
     floorplanCanvas.appendChild(element);
     return element;
   }
@@ -133,14 +143,18 @@
       return;
     }
     element.className = `desk ${desk.status}`;
+    const isAssignable = desk.is_assignable !== false;
+    element.classList.toggle("non-assignable", !isAssignable);
     if (desk.status === "blocked") {
       element.style.background = "";
     } else {
-      element.style.background = desk.department_color;
+      const fillColor = desk.fill_color || desk.department_color;
+      element.style.background = fillColor;
     }
+    const statusLabel = desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied";
     element.innerHTML = `
       <div>${desk.label}</div>
-      <div class="status-pill">${desk.status === "free" ? "Free" : desk.status === "blocked" ? "Blocked" : "Occupied"}</div>
+      ${isAssignable ? `<div class="status-pill">${statusLabel}</div>` : ""}
     `;
   }
 

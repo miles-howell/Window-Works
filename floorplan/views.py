@@ -51,12 +51,15 @@ def _desk_payload(desk: Desk, now=None) -> dict:
         status = "occupied"
     if block_zones:
         status = "blocked"
+    is_assignable = desk.department.name not in {"Utility/Resource", "Walkway"}
     return {
         "identifier": desk.identifier,
         "label": desk.label,
         "department": desk.department.name,
         "department_color": desk.department.color,
+        "fill_color": desk.fill_color or desk.department.color,
         "notes": desk.notes,
+        "is_assignable": is_assignable,
         "style": {
             "left": f"{desk.left_percentage}%",
             "top": f"{desk.top_percentage}%",
