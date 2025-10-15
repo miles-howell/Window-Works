@@ -47,10 +47,6 @@
 
   const modeButtons = document.querySelectorAll(".admin-mode-button");
   const modePanels = document.querySelectorAll(".mode-panel");
-  const layoutControlsContainer = document.querySelector(".layout-controls");
-  const combinedToggle = document.getElementById("combined-mode-toggle");
-  const combinedModeDescription = document.getElementById("combined-mode-help");
-  let combinedModeEnabled = combinedToggle ? combinedToggle.checked : true;
 
   const feedbackTargets = {
     layout: layoutFeedback,
@@ -102,54 +98,22 @@
     setFeedback("", "", mode);
   }
 
-  function updateCombinedDescription() {
-    if (!combinedModeDescription) {
-      return;
-    }
-    if (combinedModeEnabled) {
-      combinedModeDescription.textContent =
-        "Saving layout changes will also save seat assignments when a name is provided.";
-    } else {
-      combinedModeDescription.textContent =
-        "Use the tabs above to modify layout, assignments, or block zones individually.";
-    }
-  }
-
-  function updateModeUI() {
-    const showCombinedPanels = combinedModeEnabled && activeMode !== "block";
-    modeButtons.forEach((button) => {
-      const mode = button.dataset.adminMode;
-      const isCombinedTab = showCombinedPanels && (mode === "layout" || mode === "assignment");
-      const isActive = showCombinedPanels ? isCombinedTab : mode === activeMode;
-      const ariaSelected = isActive ? "true" : "false";
-      button.classList.toggle("active", isActive);
-      button.setAttribute("aria-selected", ariaSelected);
-    });
-    modePanels.forEach((panel) => {
-      const panelMode = panel.dataset.modePanel;
-      const isActivePanel = showCombinedPanels
-        ? panelMode === "layout" || panelMode === "assignment"
-        : panelMode === activeMode;
-      panel.classList.toggle("active", isActivePanel);
-      panel.setAttribute("aria-hidden", isActivePanel ? "false" : "true");
-    });
-    if (layoutControlsContainer) {
-      layoutControlsContainer.classList.toggle("combined-mode", showCombinedPanels);
-    }
-  }
-
   function setActiveMode(mode) {
     if (!mode) {
       return;
     }
     activeMode = mode;
-    updateModeUI();
-    if (combinedModeEnabled && mode !== "block") {
-      clearFeedback("layout");
-      clearFeedback("assignment");
-    } else {
-      clearFeedback(mode);
-    }
+    modeButtons.forEach((button) => {
+      const isActive = button.dataset.adminMode === mode;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+    modePanels.forEach((panel) => {
+      const isActive = panel.dataset.modePanel === mode;
+      panel.classList.toggle("active", isActive);
+      panel.setAttribute("aria-hidden", isActive ? "false" : "true");
+    });
+    clearFeedback(mode);
   }
 
   function renderCell(row, column) {
@@ -378,18 +342,6 @@
     }
   }
 
-  function triggerAssignmentSubmit() {
-    if (!assignmentForm) {
-      return;
-    }
-    if (typeof assignmentForm.requestSubmit === "function") {
-      assignmentForm.requestSubmit();
-    } else {
-      const submitEvent = new Event("submit", { cancelable: true, bubbles: true });
-      assignmentForm.dispatchEvent(submitEvent);
-    }
-  }
-
   function selectedCellsPayload() {
     return [...selectedCells].map((key) => parseKey(key));
   }
@@ -487,10 +439,6 @@
         const result = await sendUpdate(payload);
         applyServerResult(result);
         setFeedback(result.message || "Cells updated.", "success", "layout");
-        const occupantName = assignmentName ? assignmentName.value.trim() : "";
-        if (combinedModeEnabled && occupantName) {
-          triggerAssignmentSubmit();
-        }
       } catch (error) {
         setFeedback(error.message, "danger", "layout");
       }
@@ -627,32 +575,14 @@
   modeButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const mode = button.dataset.adminMode;
-      if (mode) {
+      if (mode && mode !== activeMode) {
         setActiveMode(mode);
       }
     });
   });
 
-  if (combinedToggle) {
-    combinedToggle.addEventListener("change", () => {
-      combinedModeEnabled = combinedToggle.checked;
-      if (combinedModeEnabled && activeMode === "block") {
-        activeMode = "layout";
-      }
-      updateCombinedDescription();
-      updateModeUI();
-      if (combinedModeEnabled) {
-        clearFeedback("layout");
-        clearFeedback("assignment");
-      } else {
-        clearFeedback(activeMode);
-      }
-    });
-  }
-
   buildGrid();
   updateSelectionInfo();
-  updateCombinedDescription();
   setActiveMode(activeMode);
   setDefaultStart(assignmentForm, assignmentStart);
   setDefaultStart(blockForm, blockStart);
