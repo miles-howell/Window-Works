@@ -28,19 +28,6 @@ body {
   width: 100%;
 }
 
-.app-header {
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
-}
-
-.app-header .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-}
-
 .branding {
   display: flex;
   align-items: center;
@@ -63,19 +50,6 @@ body {
   color: var(--muted);
 }
 
-.app-nav a {
-  color: var(--muted);
-  text-decoration: none;
-  font-weight: 500;
-  margin-left: 1rem;
-  transition: color 0.2s;
-}
-
-.app-nav a:hover,
-.app-nav a:focus {
-  color: var(--accent);
-}
-
 .app-main {
   flex: 1;
   padding: 0.5rem 0 4rem;
@@ -88,6 +62,36 @@ body {
   text-align: center;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.footer-copy {
+  margin: 0;
+  text-align: left;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.footer-nav a:hover,
+.footer-nav a:focus {
+  color: var(--accent);
 }
 
 .card {
@@ -629,15 +633,46 @@ body {
   background: var(--card-bg);
   border-radius: 16px;
   padding: 1.75rem;
-  max-width: 420px;
+  max-width: 520px;
   width: 100%;
   box-shadow: var(--shadow);
   position: relative;
 }
 
+.modal-card h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
 .modal-card h2 {
   margin-top: 0;
   margin-bottom: 0.75rem;
+}
+
+.welcome-modal {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.welcome-hero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.welcome-hero .logo {
+  font-size: 2.5rem;
+}
+
+.welcome-body h2 {
+  margin: 0 0 0.75rem;
+}
+
+.welcome-body p {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
 }
 
 .modal-card form {
@@ -756,10 +791,18 @@ body {
 }
 
 @media (max-width: 768px) {
-  .app-header .container {
-    flex-direction: column;
-    gap: 0.75rem;
-    align-items: flex-start;
+  .footer-container {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-copy {
+    text-align: center;
+  }
+
+  .footer-nav {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .grid-two {

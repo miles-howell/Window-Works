@@ -15,29 +15,18 @@
     {% block extra_head %}{% endblock %}
   </head>
   <body>
-    <header class="app-header">
-      <div class="container">
-        <div class="branding">
-          <span class="logo">🏢</span>
-          <div>
-            <h1 class="app-title">Workspace Move Coordinator</h1>
-            <p class="app-subtitle">Manage temporary desk moves during construction</p>
-          </div>
-        </div>
-        <nav class="app-nav">
-          <a href="{% url 'floorplan:index' %}">Floor plan</a>
-          <a href="{% url 'floorplan:admin-console' %}">Admin console</a>
-        </nav>
-      </div>
-    </header>
     <main class="app-main">
       <div class="container">
         {% block content %}{% endblock %}
       </div>
     </main>
     <footer class="app-footer">
-      <div class="container">
-        <p>Need help? Contact Workplace Services.</p>
+      <div class="container footer-container">
+        <p class="footer-copy">Need help? Contact Workplace Services.</p>
+        <nav class="footer-nav" aria-label="Primary">
+          <a href="{% url 'floorplan:index' %}">Floor Plan</a>
+          <a href="{% url 'floorplan:admin-console' %}">Admin Panel</a>
+        </nav>
       </div>
     </footer>
     <script src="{% static 'js/csrf.js' %}"></script>
