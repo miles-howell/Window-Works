@@ -132,6 +132,10 @@
     pointerId: null,
     startRow: 0,
     startColumn: 0,
+    startKey: null,
+    startShiftKey: false,
+    startCtrlKey: false,
+    startMetaKey: false,
     startX: 0,
     startY: 0,
     lastRow: 0,
@@ -232,6 +236,39 @@
     refreshSelectedStyles();
   }
 
+  function applyCellClickSelection(cell, modifiers = {}) {
+    if (!cell) {
+      return;
+    }
+    const { row, column, key } = cell;
+    const shiftKey = Boolean(modifiers.shiftKey);
+    const ctrlKey = Boolean(modifiers.ctrlKey);
+    const metaKey = Boolean(modifiers.metaKey);
+
+    if (shiftKey && lastSelectedKey) {
+      const { row: lastRow, column: lastColumn } = parseKey(lastSelectedKey);
+      selectRange(lastRow, lastColumn, row, column);
+      handleSelectionChange(key);
+      return;
+    }
+
+    if (ctrlKey || metaKey) {
+      toggleCellSelection(key);
+      handleSelectionChange(key);
+      return;
+    }
+
+    if (selectedCells.size > 1 && !selectedCells.has(key)) {
+      selectedCells.clear();
+      selectedCells.add(key);
+      handleSelectionChange(key);
+      return;
+    }
+
+    toggleCellSelection(key);
+    handleSelectionChange(key);
+  }
+
   function endSelectionDrag(event, cancelled) {
     if (selectionDragState.pointerId === null || event.pointerId !== selectionDragState.pointerId) {
       return;
@@ -242,6 +279,10 @@
     selectionDragState.hasMoved = false;
     selectionDragState.startRow = 0;
     selectionDragState.startColumn = 0;
+    selectionDragState.startKey = null;
+    selectionDragState.startShiftKey = false;
+    selectionDragState.startCtrlKey = false;
+    selectionDragState.startMetaKey = false;
     selectionDragState.startX = 0;
     selectionDragState.startY = 0;
     selectionDragState.lastRow = 0;
@@ -384,25 +425,14 @@
             suppressNextClick = false;
             return;
           }
-          if (event.shiftKey && lastSelectedKey) {
-            const { row: lastRow, column: lastColumn } = parseKey(lastSelectedKey);
-            selectRange(lastRow, lastColumn, row, column);
-            handleSelectionChange(key);
-            return;
-          }
-          if (event.metaKey || event.ctrlKey) {
-            toggleCellSelection(key);
-            handleSelectionChange(key);
-            return;
-          }
-          if (selectedCells.size > 1 && !selectedCells.has(key)) {
-            selectedCells.clear();
-            selectedCells.add(key);
-            handleSelectionChange(key);
-            return;
-          }
-          toggleCellSelection(key);
-          handleSelectionChange(key);
+          applyCellClickSelection(
+            { row, column, key },
+            {
+              shiftKey: event.shiftKey,
+              ctrlKey: event.ctrlKey,
+              metaKey: event.metaKey,
+            },
+          );
         });
         canvas.appendChild(cell);
         cellMap.set(key, cell);
@@ -457,6 +487,10 @@
     selectionDragState.pointerId = event.pointerId;
     selectionDragState.startRow = parsed.row;
     selectionDragState.startColumn = parsed.column;
+    selectionDragState.startKey = parsed.key;
+    selectionDragState.startShiftKey = Boolean(event.shiftKey);
+    selectionDragState.startCtrlKey = Boolean(event.ctrlKey);
+    selectionDragState.startMetaKey = Boolean(event.metaKey);
     selectionDragState.lastRow = parsed.row;
     selectionDragState.lastColumn = parsed.column;
     selectionDragState.startX = event.clientX;
@@ -514,7 +548,36 @@
   canvas.addEventListener("pointerleave", cancelSelectionDrag);
   canvas.addEventListener("pointercancel", cancelSelectionDrag);
   canvas.addEventListener("pointerup", (event) => {
+    const {
+      pointerId,
+      hasMoved,
+      startRow,
+      startColumn,
+      startKey,
+      startShiftKey,
+      startCtrlKey,
+      startMetaKey,
+    } = selectionDragState;
+
+    if (pointerId === null || event.pointerId !== pointerId) {
+      endSelectionDrag(event, false);
+      return;
+    }
+
+    const startCell = startKey
+      ? { row: startRow, column: startColumn, key: startKey }
+      : null;
+
     endSelectionDrag(event, false);
+
+    if (!hasMoved && startCell) {
+      suppressNextClick = true;
+      applyCellClickSelection(startCell, {
+        shiftKey: startShiftKey,
+        ctrlKey: startCtrlKey,
+        metaKey: startMetaKey,
+      });
+    }
   });
 
   function getSelectedDesks() {

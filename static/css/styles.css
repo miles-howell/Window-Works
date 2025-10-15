@@ -390,6 +390,8 @@ body {
 
 .layout-editor > .floorplan-wrapper {
   grid-column: 1 / -1;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 @media (min-width: 960px) {
