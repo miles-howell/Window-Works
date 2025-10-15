@@ -137,8 +137,9 @@
     lastRow: 0,
     lastColumn: 0,
     hasMoved: false,
+    hasSelectedRange: false,
   };
-  let suppressNextClick = false;
+  let pointerHandledClick = false;
 
   const layoutForm = document.getElementById("layout-form");
   const departmentInput = document.getElementById("layout-department");
@@ -233,10 +234,18 @@
 
   function endSelectionDrag(event, cancelled) {
     if (selectionDragState.pointerId === null || event.pointerId !== selectionDragState.pointerId) {
-      return;
+      return null;
     }
+    const result = {
+      cancelled,
+      didMove: selectionDragState.hasMoved,
+      didSelectRange: selectionDragState.hasSelectedRange,
+      startRow: selectionDragState.startRow,
+      startColumn: selectionDragState.startColumn,
+      lastRow: selectionDragState.lastRow,
+      lastColumn: selectionDragState.lastColumn,
+    };
     releaseSelectionPointer(selectionDragState.pointerId);
-    const didMove = selectionDragState.hasMoved;
     selectionDragState.pointerId = null;
     selectionDragState.hasMoved = false;
     selectionDragState.startRow = 0;
@@ -245,12 +254,8 @@
     selectionDragState.startY = 0;
     selectionDragState.lastRow = 0;
     selectionDragState.lastColumn = 0;
-    if (!cancelled && didMove) {
-      const cell = getCellFromEvent(event);
-      if (parseCellElement(cell)) {
-        suppressNextClick = true;
-      }
-    }
+    selectionDragState.hasSelectedRange = false;
+    return result;
   }
 
   const rows = parseInt(canvas.dataset.rows || "13", 10);
@@ -378,35 +383,40 @@
         cell.dataset.column = String(column);
         const key = cellKey(row, column);
         cell.addEventListener("click", (event) => {
-          if (suppressNextClick) {
-            suppressNextClick = false;
+          if (pointerHandledClick) {
+            pointerHandledClick = false;
             return;
           }
-          if (event.shiftKey && lastSelectedKey) {
-            const { row: lastRow, column: lastColumn } = parseKey(lastSelectedKey);
-            selectRange(lastRow, lastColumn, row, column);
-            handleSelectionChange(key);
-            return;
-          }
-          if (event.metaKey || event.ctrlKey) {
-            toggleCellSelection(key);
-            handleSelectionChange(key);
-            return;
-          }
-          if (selectedCells.size > 1 && !selectedCells.has(key)) {
-            selectedCells.clear();
-            selectedCells.add(key);
-            handleSelectionChange(key);
-            return;
-          }
-          toggleCellSelection(key);
-          handleSelectionChange(key);
+          applyCellSelection(key, event);
         });
         canvas.appendChild(cell);
         cellMap.set(key, cell);
         renderCell(row, column);
       }
     }
+  }
+
+  function applyCellSelection(key, event) {
+    if (event.shiftKey && lastSelectedKey) {
+      const { row: lastRow, column: lastColumn } = parseKey(lastSelectedKey);
+      const { row, column } = parseKey(key);
+      selectRange(lastRow, lastColumn, row, column);
+      handleSelectionChange(key);
+      return;
+    }
+    if (event.metaKey || event.ctrlKey) {
+      toggleCellSelection(key);
+      handleSelectionChange(key);
+      return;
+    }
+    if (selectedCells.size > 1 && !selectedCells.has(key)) {
+      selectedCells.clear();
+      selectedCells.add(key);
+      handleSelectionChange(key);
+      return;
+    }
+    toggleCellSelection(key);
+    handleSelectionChange(key);
   }
 
   function toggleCellSelection(key) {
@@ -444,6 +454,7 @@
     if (event.button !== 0) {
       return;
     }
+    pointerHandledClick = false;
     const cell = getCellFromEvent(event);
     const parsed = parseCellElement(cell);
     if (!parsed) {
@@ -460,6 +471,7 @@
     selectionDragState.startX = event.clientX;
     selectionDragState.startY = event.clientY;
     selectionDragState.hasMoved = false;
+    selectionDragState.hasSelectedRange = false;
     try {
       if (typeof canvas.setPointerCapture === "function") {
         canvas.setPointerCapture(event.pointerId);
@@ -497,6 +509,8 @@
     selectionDragState.lastRow = parsed.row;
     selectionDragState.lastColumn = parsed.column;
     selectRange(selectionDragState.startRow, selectionDragState.startColumn, parsed.row, parsed.column);
+    selectionDragState.hasSelectedRange = true;
+    pointerHandledClick = true;
     handleSelectionChange(parsed.key);
     if (typeof event.preventDefault === "function") {
       event.preventDefault();
@@ -510,7 +524,23 @@
   canvas.addEventListener("pointerleave", cancelSelectionDrag);
   canvas.addEventListener("pointercancel", cancelSelectionDrag);
   canvas.addEventListener("pointerup", (event) => {
-    endSelectionDrag(event, false);
+    const dragResult = endSelectionDrag(event, false);
+    if (!dragResult || dragResult.cancelled) {
+      return;
+    }
+    if (dragResult.didSelectRange) {
+      pointerHandledClick = true;
+      return;
+    }
+    if (!dragResult.startRow || !dragResult.startColumn) {
+      return;
+    }
+    const key = cellKey(dragResult.startRow, dragResult.startColumn);
+    pointerHandledClick = true;
+    applyCellSelection(key, event);
+    if (typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
   });
 
   function getSelectedDesks() {
