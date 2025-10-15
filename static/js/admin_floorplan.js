@@ -5,12 +5,144 @@
     return;
   }
 
+  const floorplanWrapper = canvas.closest(".floorplan-wrapper");
+
+  if (floorplanWrapper) {
+    const dragState = {
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      scrollLeft: 0,
+      scrollTop: 0,
+      hasMoved: false,
+    };
+
+    const PAN_THRESHOLD_SQUARED = 9;
+
+    const releasePointer = (pointerId) => {
+      if (pointerId == null) {
+        return;
+      }
+      try {
+        const canRelease =
+          typeof floorplanWrapper.releasePointerCapture === "function" &&
+          (typeof floorplanWrapper.hasPointerCapture !== "function" ||
+            floorplanWrapper.hasPointerCapture(pointerId));
+        if (canRelease) {
+          floorplanWrapper.releasePointerCapture(pointerId);
+        }
+      } catch (error) {
+        // ignore browsers that do not support pointer capture
+      }
+    };
+
+    const endDrag = (event) => {
+      if (dragState.pointerId === null || event.pointerId !== dragState.pointerId) {
+        return;
+      }
+      releasePointer(dragState.pointerId);
+      dragState.pointerId = null;
+      dragState.hasMoved = false;
+      dragState.startX = 0;
+      dragState.startY = 0;
+      dragState.scrollLeft = 0;
+      dragState.scrollTop = 0;
+      floorplanWrapper.classList.remove("is-dragging");
+    };
+
+    floorplanWrapper.addEventListener("pointerdown", (event) => {
+      if (event.button !== 2) {
+        return;
+      }
+      if (event.pointerType && event.pointerType !== "mouse") {
+        return;
+      }
+      if (dragState.pointerId !== null) {
+        releasePointer(dragState.pointerId);
+        floorplanWrapper.classList.remove("is-dragging");
+      }
+      dragState.pointerId = event.pointerId;
+      dragState.startX = event.clientX;
+      dragState.startY = event.clientY;
+      dragState.scrollLeft = floorplanWrapper.scrollLeft;
+      dragState.scrollTop = floorplanWrapper.scrollTop;
+      dragState.hasMoved = false;
+      try {
+        if (typeof floorplanWrapper.setPointerCapture === "function") {
+          floorplanWrapper.setPointerCapture(event.pointerId);
+        }
+      } catch (error) {
+        // ignore browsers that do not support pointer capture
+      }
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+    });
+
+    floorplanWrapper.addEventListener("pointermove", (event) => {
+      if (dragState.pointerId === null || event.pointerId !== dragState.pointerId) {
+        return;
+      }
+      if (typeof event.buttons === "number" && (event.buttons & 2) === 0) {
+        endDrag(event);
+        return;
+      }
+      const deltaX = event.clientX - dragState.startX;
+      const deltaY = event.clientY - dragState.startY;
+      if (!dragState.hasMoved) {
+        const distanceSquared = deltaX * deltaX + deltaY * deltaY;
+        if (distanceSquared >= PAN_THRESHOLD_SQUARED) {
+          dragState.hasMoved = true;
+          floorplanWrapper.classList.add("is-dragging");
+        }
+      }
+      if (!dragState.hasMoved) {
+        return;
+      }
+      floorplanWrapper.scrollLeft = dragState.scrollLeft - deltaX;
+      floorplanWrapper.scrollTop = dragState.scrollTop - deltaY;
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+    });
+
+    const cancelDrag = (event) => {
+      endDrag(event);
+    };
+
+    floorplanWrapper.addEventListener("pointerleave", cancelDrag);
+    floorplanWrapper.addEventListener("pointercancel", cancelDrag);
+    floorplanWrapper.addEventListener("pointerup", (event) => {
+      endDrag(event);
+    });
+    floorplanWrapper.addEventListener("contextmenu", (event) => {
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+    });
+  }
+
   const desks = JSON.parse(deskDataElement.textContent || "[]");
   const cellMap = new Map();
   const deskByCell = new Map();
   const selectedCells = new Set();
   let lastSelectedKey = null;
   let activeMode = "layout";
+  const selectionDragState = {
+    pointerId: null,
+    startRow: 0,
+    startColumn: 0,
+    startKey: null,
+    startShiftKey: false,
+    startCtrlKey: false,
+    startMetaKey: false,
+    startX: 0,
+    startY: 0,
+    lastRow: 0,
+    lastColumn: 0,
+    hasMoved: false,
+  };
+  let suppressNextClick = false;
 
   const layoutForm = document.getElementById("layout-form");
   const departmentInput = document.getElementById("layout-department");
@@ -53,6 +185,114 @@
     assignment: assignmentFeedback,
     block: blockFeedback,
   };
+
+  const SELECTION_DRAG_THRESHOLD_SQUARED = 9;
+
+  function releaseSelectionPointer(pointerId) {
+    if (pointerId == null) {
+      return;
+    }
+    try {
+      const canRelease =
+        typeof canvas.releasePointerCapture === "function" &&
+        (typeof canvas.hasPointerCapture !== "function" || canvas.hasPointerCapture(pointerId));
+      if (canRelease) {
+        canvas.releasePointerCapture(pointerId);
+      }
+    } catch (error) {
+      // ignore browsers without pointer capture support
+    }
+  }
+
+  function getCellFromEvent(event) {
+    const target = event.target instanceof Element ? event.target : null;
+    const directCell = target ? target.closest(".grid-cell") : null;
+    if (directCell) {
+      return directCell;
+    }
+    const fallback = document.elementFromPoint(event.clientX, event.clientY);
+    return fallback instanceof Element ? fallback.closest(".grid-cell") : null;
+  }
+
+  function parseCellElement(cell) {
+    if (!cell) {
+      return null;
+    }
+    const row = parseInt(cell.dataset.row || "0", 10);
+    const column = parseInt(cell.dataset.column || "0", 10);
+    if (!row || !column) {
+      return null;
+    }
+    return { row, column, key: cellKey(row, column) };
+  }
+
+  function handleSelectionChange(lastKey) {
+    if (lastKey) {
+      lastSelectedKey = lastKey;
+    }
+    syncFormsWithSelection();
+    updateSelectionInfo();
+    refreshSelectedStyles();
+  }
+
+  function applyCellClickSelection(cell, modifiers = {}) {
+    if (!cell) {
+      return;
+    }
+    const { row, column, key } = cell;
+    const shiftKey = Boolean(modifiers.shiftKey);
+    const ctrlKey = Boolean(modifiers.ctrlKey);
+    const metaKey = Boolean(modifiers.metaKey);
+
+    if (shiftKey && lastSelectedKey) {
+      const { row: lastRow, column: lastColumn } = parseKey(lastSelectedKey);
+      selectRange(lastRow, lastColumn, row, column);
+      handleSelectionChange(key);
+      return;
+    }
+
+    if (ctrlKey || metaKey) {
+      toggleCellSelection(key);
+      handleSelectionChange(key);
+      return;
+    }
+
+    if (selectedCells.size > 1 && !selectedCells.has(key)) {
+      selectedCells.clear();
+      selectedCells.add(key);
+      handleSelectionChange(key);
+      return;
+    }
+
+    toggleCellSelection(key);
+    handleSelectionChange(key);
+  }
+
+  function endSelectionDrag(event, cancelled) {
+    if (selectionDragState.pointerId === null || event.pointerId !== selectionDragState.pointerId) {
+      return;
+    }
+    releaseSelectionPointer(selectionDragState.pointerId);
+    const didMove = selectionDragState.hasMoved;
+    selectionDragState.pointerId = null;
+    selectionDragState.hasMoved = false;
+    selectionDragState.startRow = 0;
+    selectionDragState.startColumn = 0;
+    selectionDragState.startKey = null;
+    selectionDragState.startShiftKey = false;
+    selectionDragState.startCtrlKey = false;
+    selectionDragState.startMetaKey = false;
+    selectionDragState.startX = 0;
+    selectionDragState.startY = 0;
+    selectionDragState.lastRow = 0;
+    selectionDragState.lastColumn = 0;
+    if (!cancelled && didMove) {
+      const cell = getCellFromEvent(event);
+      if (parseCellElement(cell)) {
+        suppressNextClick = true;
+      }
+    }
+  }
 
   const rows = parseInt(canvas.dataset.rows || "13", 10);
   const columns = parseInt(canvas.dataset.columns || "30", 10);
@@ -179,21 +419,18 @@
         cell.dataset.column = String(column);
         const key = cellKey(row, column);
         cell.addEventListener("click", (event) => {
-          if (event.shiftKey && lastSelectedKey) {
-            const { row: lastRow, column: lastColumn } = parseKey(lastSelectedKey);
-            selectRange(lastRow, lastColumn, row, column);
-          } else if (event.metaKey || event.ctrlKey) {
-            toggleCellSelection(key);
-          } else if (selectedCells.size > 1 && !selectedCells.has(key)) {
-            selectedCells.clear();
-            selectedCells.add(key);
-          } else {
-            toggleCellSelection(key);
+          if (suppressNextClick) {
+            suppressNextClick = false;
+            return;
           }
-          lastSelectedKey = key;
-          syncFormsWithSelection();
-          updateSelectionInfo();
-          refreshSelectedStyles();
+          applyCellClickSelection(
+            { row, column, key },
+            {
+              shiftKey: event.shiftKey,
+              ctrlKey: event.ctrlKey,
+              metaKey: event.metaKey,
+            },
+          );
         });
         canvas.appendChild(cell);
         cellMap.set(key, cell);
@@ -232,6 +469,112 @@
       }
     }
   }
+
+  canvas.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+    const cell = getCellFromEvent(event);
+    const parsed = parseCellElement(cell);
+    if (!parsed) {
+      return;
+    }
+    if (selectionDragState.pointerId !== null && selectionDragState.pointerId !== event.pointerId) {
+      releaseSelectionPointer(selectionDragState.pointerId);
+    }
+    selectionDragState.pointerId = event.pointerId;
+    selectionDragState.startRow = parsed.row;
+    selectionDragState.startColumn = parsed.column;
+    selectionDragState.startKey = parsed.key;
+    selectionDragState.startShiftKey = Boolean(event.shiftKey);
+    selectionDragState.startCtrlKey = Boolean(event.ctrlKey);
+    selectionDragState.startMetaKey = Boolean(event.metaKey);
+    selectionDragState.lastRow = parsed.row;
+    selectionDragState.lastColumn = parsed.column;
+    selectionDragState.startX = event.clientX;
+    selectionDragState.startY = event.clientY;
+    selectionDragState.hasMoved = false;
+    try {
+      if (typeof canvas.setPointerCapture === "function") {
+        canvas.setPointerCapture(event.pointerId);
+      }
+    } catch (error) {
+      // ignore browsers without pointer capture support
+    }
+  });
+
+  canvas.addEventListener("pointermove", (event) => {
+    if (selectionDragState.pointerId === null || event.pointerId !== selectionDragState.pointerId) {
+      return;
+    }
+    if (typeof event.buttons === "number" && (event.buttons & 1) === 0) {
+      endSelectionDrag(event, true);
+      return;
+    }
+    const deltaX = event.clientX - selectionDragState.startX;
+    const deltaY = event.clientY - selectionDragState.startY;
+    if (!selectionDragState.hasMoved) {
+      const distanceSquared = deltaX * deltaX + deltaY * deltaY;
+      if (distanceSquared < SELECTION_DRAG_THRESHOLD_SQUARED) {
+        return;
+      }
+      selectionDragState.hasMoved = true;
+    }
+    const cell = getCellFromEvent(event);
+    const parsed = parseCellElement(cell);
+    if (!parsed) {
+      return;
+    }
+    if (parsed.row === selectionDragState.lastRow && parsed.column === selectionDragState.lastColumn) {
+      return;
+    }
+    selectionDragState.lastRow = parsed.row;
+    selectionDragState.lastColumn = parsed.column;
+    selectRange(selectionDragState.startRow, selectionDragState.startColumn, parsed.row, parsed.column);
+    handleSelectionChange(parsed.key);
+    if (typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+  });
+
+  const cancelSelectionDrag = (event) => {
+    endSelectionDrag(event, true);
+  };
+
+  canvas.addEventListener("pointerleave", cancelSelectionDrag);
+  canvas.addEventListener("pointercancel", cancelSelectionDrag);
+  canvas.addEventListener("pointerup", (event) => {
+    const {
+      pointerId,
+      hasMoved,
+      startRow,
+      startColumn,
+      startKey,
+      startShiftKey,
+      startCtrlKey,
+      startMetaKey,
+    } = selectionDragState;
+
+    if (pointerId === null || event.pointerId !== pointerId) {
+      endSelectionDrag(event, false);
+      return;
+    }
+
+    const startCell = startKey
+      ? { row: startRow, column: startColumn, key: startKey }
+      : null;
+
+    endSelectionDrag(event, false);
+
+    if (!hasMoved && startCell) {
+      suppressNextClick = true;
+      applyCellClickSelection(startCell, {
+        shiftKey: startShiftKey,
+        ctrlKey: startCtrlKey,
+        metaKey: startMetaKey,
+      });
+    }
+  });
 
   function getSelectedDesks() {
     return [...selectedCells]
