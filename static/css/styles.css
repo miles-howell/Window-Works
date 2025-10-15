@@ -213,10 +213,6 @@ body {
   padding: 0.35rem;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  word-break: break-word;
 }
 
 .grid-cell.grid-cell-group {
@@ -268,21 +264,6 @@ body {
 
 .grid-cell .desk-label {
   color: inherit;
-  display: block;
-  width: 100%;
-  white-space: normal;
-  word-break: break-word;
-}
-
-.grid-cell.grid-cell-group-segment {
-  padding: clamp(0.35rem, 1vw, 0.9rem);
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
-}
-
-.grid-cell.grid-cell-group-segment .desk-label,
-.grid-cell.grid-cell-group-segment .status-pill,
-.grid-cell.grid-cell-group-segment .grid-cell-meta {
-  display: none;
 }
 
 .grid-cell .status-pill {
