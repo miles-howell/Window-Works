@@ -261,7 +261,7 @@
   localStorage.removeItem(LEGACY_KEY);
 
   let currentUser = readStoredUser();
-  let highlightedCellKey = null;
+  let highlightedGroupDeskId = null;
 
   function cellKey(row, column) {
     return `${row}-${column}`;
@@ -297,6 +297,93 @@
     ].join("||");
   }
 
+  function buildRectanglesFromPositions(positions) {
+    if (!Array.isArray(positions) || positions.length === 0) {
+      return [];
+    }
+
+    const pending = new Set(positions.map((position) => cellKey(position.row, position.column)));
+    const rectangles = [];
+
+    while (pending.size > 0) {
+      let startRow = Infinity;
+      let startColumn = Infinity;
+
+      pending.forEach((key) => {
+        const [rowString, columnString] = key.split("-");
+        const rowValue = parseInt(rowString, 10);
+        const columnValue = parseInt(columnString, 10);
+        if (Number.isNaN(rowValue) || Number.isNaN(columnValue)) {
+          return;
+        }
+        if (rowValue < startRow || (rowValue === startRow && columnValue < startColumn)) {
+          startRow = rowValue;
+          startColumn = columnValue;
+        }
+      });
+
+      if (!Number.isFinite(startRow) || !Number.isFinite(startColumn)) {
+        break;
+      }
+
+      let width = 0;
+      while (pending.has(cellKey(startRow, startColumn + width))) {
+        width += 1;
+      }
+      if (width <= 0) {
+        const fallbackKey = cellKey(startRow, startColumn);
+        pending.delete(fallbackKey);
+        rectangles.push({
+          row: startRow,
+          column: startColumn,
+          width: 1,
+          height: 1,
+          positions: [{ row: startRow, column: startColumn }],
+        });
+        continue;
+      }
+
+      let height = 1;
+      let canExtend = true;
+      while (canExtend) {
+        const targetRow = startRow + height;
+        for (let offset = 0; offset < width; offset += 1) {
+          const targetKey = cellKey(targetRow, startColumn + offset);
+          if (!pending.has(targetKey)) {
+            canExtend = false;
+            break;
+          }
+        }
+        if (canExtend) {
+          height += 1;
+        }
+      }
+
+      const rectanglePositions = [];
+      for (let rowOffset = 0; rowOffset < height; rowOffset += 1) {
+        for (let columnOffset = 0; columnOffset < width; columnOffset += 1) {
+          const absoluteRow = startRow + rowOffset;
+          const absoluteColumn = startColumn + columnOffset;
+          const key = cellKey(absoluteRow, absoluteColumn);
+          if (pending.has(key)) {
+            pending.delete(key);
+          }
+          rectanglePositions.push({ row: absoluteRow, column: absoluteColumn });
+        }
+      }
+
+      rectangles.push({
+        row: startRow,
+        column: startColumn,
+        width,
+        height,
+        positions: rectanglePositions,
+      });
+    }
+
+    return rectangles;
+  }
+
   function computeDeskGroups() {
     const positionToDesk = new Map();
     deskMap.forEach((desk) => {
@@ -317,83 +404,114 @@
         if (visited.has(key)) {
           continue;
         }
+
         const desk = positionToDesk.get(key);
         if (!desk) {
+          visited.add(key);
           continue;
         }
+
         const signature = groupingSignature(desk);
-        const isWalkwayDesk =
-          desk && typeof desk.department === "string"
-            ? desk.department.trim().toLowerCase() === "walkway"
-            : false;
-        let width = 1;
-        if (signature) {
-          for (let nextColumn = column + 1; nextColumn <= gridColumns; nextColumn += 1) {
-            const nextKey = cellKey(row, nextColumn);
-            const nextDesk = positionToDesk.get(nextKey);
-            if (!nextDesk || visited.has(nextKey) || groupingSignature(nextDesk) !== signature) {
-              break;
-            }
-            width += 1;
-          }
+        if (!signature) {
+          visited.add(key);
+          groups.push({
+            row,
+            column,
+            width: 1,
+            height: 1,
+            desks: [desk],
+            positions: [{ row, column }],
+            primaryDeskId: desk.identifier,
+            segments: [
+              {
+                row,
+                column,
+                width: 1,
+                height: 1,
+                positions: [{ row, column }],
+              },
+            ],
+          });
+          continue;
         }
 
-        let height = 1;
-        const allowVerticalGrouping = signature && (width > 1 || isWalkwayDesk);
-        if (allowVerticalGrouping) {
-          let canExtend = true;
-          while (canExtend && row + height <= gridRows) {
-            for (let offset = 0; offset < width; offset += 1) {
-              const targetRow = row + height;
-              const targetColumn = column + offset;
-              const targetKey = cellKey(targetRow, targetColumn);
-              const targetDesk = positionToDesk.get(targetKey);
-              if (!targetDesk || visited.has(targetKey) || groupingSignature(targetDesk) !== signature) {
-                canExtend = false;
-                break;
-              }
-            }
-            if (canExtend) {
-              height += 1;
-            }
-          }
-        }
-
-        if (width === 1 && !isWalkwayDesk) {
-          height = 1;
-        }
-
+        const queue = [{ row, column }];
+        const queued = new Set([key]);
         const memberPositions = [];
         const desksInGroup = [];
         const deskIds = new Set();
-        for (let rowOffset = 0; rowOffset < height; rowOffset += 1) {
-          for (let columnOffset = 0; columnOffset < width; columnOffset += 1) {
-            const memberRow = row + rowOffset;
-            const memberColumn = column + columnOffset;
-            const memberKey = cellKey(memberRow, memberColumn);
-            visited.add(memberKey);
-            memberPositions.push({ row: memberRow, column: memberColumn });
-            const memberDesk = positionToDesk.get(memberKey);
-            if (memberDesk && !deskIds.has(memberDesk.identifier)) {
-              deskIds.add(memberDesk.identifier);
-              desksInGroup.push(memberDesk);
-            }
+
+        while (queue.length > 0) {
+          const current = queue.shift();
+          if (!current) {
+            continue;
           }
+          const currentKey = cellKey(current.row, current.column);
+          if (visited.has(currentKey)) {
+            continue;
+          }
+          const currentDesk = positionToDesk.get(currentKey);
+          if (!currentDesk) {
+            continue;
+          }
+          if (groupingSignature(currentDesk) !== signature) {
+            continue;
+          }
+
+          visited.add(currentKey);
+          memberPositions.push({ row: current.row, column: current.column });
+          if (!deskIds.has(currentDesk.identifier)) {
+            deskIds.add(currentDesk.identifier);
+            desksInGroup.push(currentDesk);
+          }
+
+          const neighbors = [
+            { row: current.row - 1, column: current.column },
+            { row: current.row + 1, column: current.column },
+            { row: current.row, column: current.column - 1 },
+            { row: current.row, column: current.column + 1 },
+          ];
+
+          neighbors.forEach((neighbor) => {
+            if (
+              neighbor.row < 1 ||
+              neighbor.row > gridRows ||
+              neighbor.column < 1 ||
+              neighbor.column > gridColumns
+            ) {
+              return;
+            }
+            const neighborKey = cellKey(neighbor.row, neighbor.column);
+            if (!queued.has(neighborKey)) {
+              queued.add(neighborKey);
+              queue.push(neighbor);
+            }
+          });
         }
 
         if (!desksInGroup.length) {
+          visited.add(key);
           continue;
         }
 
+        const rowsInGroup = memberPositions.map((position) => position.row);
+        const columnsInGroup = memberPositions.map((position) => position.column);
+        const minRow = Math.min(...rowsInGroup);
+        const maxRow = Math.max(...rowsInGroup);
+        const minColumn = Math.min(...columnsInGroup);
+        const maxColumn = Math.max(...columnsInGroup);
+        const segments = buildRectanglesFromPositions(memberPositions);
         const primaryDesk = desksInGroup[0];
+
         groups.push({
-          row,
-          column,
-          width,
-          height,
+          row: minRow,
+          column: minColumn,
+          width: maxColumn - minColumn + 1,
+          height: maxRow - minRow + 1,
           desks: desksInGroup,
           positions: memberPositions,
           primaryDeskId: primaryDesk.identifier,
+          segments,
         });
       }
     }
@@ -463,26 +581,55 @@
   }
 
   function highlightDesk(identifier) {
-    if (highlightedCellKey && cellMap.has(highlightedCellKey)) {
-      const oldCell = cellMap.get(highlightedCellKey);
-      if (oldCell) {
-        oldCell.classList.remove("current-user");
+    if (highlightedGroupDeskId) {
+      const previousGroup = identifierToGroup.get(highlightedGroupDeskId);
+      if (previousGroup && Array.isArray(previousGroup.cells)) {
+        previousGroup.cells.forEach((groupCell) => {
+          if (groupCell) {
+            groupCell.classList.remove("current-user");
+          }
+        });
+      } else {
+        const previousDesk = deskMap.get(highlightedGroupDeskId);
+        if (previousDesk) {
+          const previousCell = cellMap.get(cellKey(previousDesk.row, previousDesk.column));
+          if (previousCell) {
+            previousCell.classList.remove("current-user");
+          }
+        }
       }
+      highlightedGroupDeskId = null;
     }
-    highlightedCellKey = null;
+
     if (!identifier) {
       return;
     }
+
     const desk = deskMap.get(identifier);
     if (!desk) {
       return;
     }
-    const key = cellKey(desk.row, desk.column);
-    const cell = cellMap.get(key);
-    if (cell) {
-      cell.classList.add("current-user");
-      highlightedCellKey = key;
+
+    const groupInfo = identifierToGroup.get(desk.identifier) || null;
+    const targetCells = groupInfo && Array.isArray(groupInfo.cells) && groupInfo.cells.length
+      ? groupInfo.cells
+      : [];
+
+    if (!targetCells.length) {
+      const fallbackCell = cellMap.get(cellKey(desk.row, desk.column));
+      if (fallbackCell) {
+        fallbackCell.classList.add("current-user");
+      }
+      highlightedGroupDeskId = desk.identifier;
+      return;
     }
+
+    targetCells.forEach((groupCell) => {
+      if (groupCell) {
+        groupCell.classList.add("current-user");
+      }
+    });
+    highlightedGroupDeskId = groupInfo ? groupInfo.primaryDeskId : desk.identifier;
   }
 
   function statusLabelForDesk(desk) {
@@ -497,20 +644,42 @@
 
   function updateCellForDesk(desk) {
     const key = cellKey(desk.row, desk.column);
-    const cell = cellMap.get(key);
-    if (!cell) {
+    const initialCell = cellMap.get(key);
+    if (!initialCell) {
       return;
     }
 
     const groupInfo = identifierToGroup.get(desk.identifier) || null;
     const primaryDeskId = groupInfo ? groupInfo.primaryDeskId : desk.identifier;
     const positions = groupInfo && groupInfo.positions ? groupInfo.positions : null;
-
-    const baseClasses = ["grid-cell", "has-desk"];
-    if (groupInfo && (groupInfo.width > 1 || groupInfo.height > 1)) {
-      baseClasses.push("grid-cell-group");
+    const groupCells = groupInfo && Array.isArray(groupInfo.cells) && groupInfo.cells.length
+      ? groupInfo.cells
+      : [initialCell];
+    const primaryCell = groupInfo && groupInfo.primaryCell ? groupInfo.primaryCell : groupCells[0];
+    if (groupInfo) {
+      groupInfo.primaryCell = primaryCell;
+      groupInfo.cells = groupCells;
     }
-    cell.className = baseClasses.join(" ");
+
+    const isGrouped =
+      groupInfo &&
+      ((groupInfo.width && groupInfo.width > 1) ||
+        (groupInfo.height && groupInfo.height > 1) ||
+        groupCells.length > 1);
+
+    groupCells.forEach((cell) => {
+      if (!cell) {
+        return;
+      }
+      const baseClasses = ["grid-cell", "has-desk"];
+      if (isGrouped) {
+        baseClasses.push("grid-cell-group");
+      }
+      cell.className = baseClasses.join(" ");
+      if (groupInfo && cell !== primaryCell) {
+        cell.classList.add("grid-cell-group-segment");
+      }
+    });
 
     const primaryPosition = positions && positions.get(primaryDeskId);
     const renderDesk = {
@@ -536,22 +705,35 @@
       });
     }
 
-    cell.dataset.deskId = primaryDeskId;
+    groupCells.forEach((cell) => {
+      if (cell) {
+        cell.dataset.deskId = primaryDeskId;
+      }
+    });
 
     const isAssignable = renderDesk.is_assignable !== false;
     const isWalkway = (renderDesk.department || "").toLowerCase() === "walkway";
     const fillColor = renderDesk.fill_color || renderDesk.department_color || "";
 
-    cell.classList.toggle("non-assignable", !isAssignable);
-    cell.classList.toggle("blocked", renderDesk.status === "blocked");
-    cell.classList.toggle("occupied", renderDesk.status === "occupied");
-    cell.classList.toggle("free", renderDesk.status === "free" && isAssignable);
-    cell.classList.toggle("walkway", isWalkway);
+    groupCells.forEach((cell) => {
+      if (!cell) {
+        return;
+      }
+      cell.classList.toggle("non-assignable", !isAssignable);
+      cell.classList.toggle("blocked", renderDesk.status === "blocked");
+      cell.classList.toggle("occupied", renderDesk.status === "occupied");
+      cell.classList.toggle("free", renderDesk.status === "free" && isAssignable);
+      cell.classList.toggle("walkway", isWalkway);
+    });
 
     if (renderDesk.status === "blocked") {
-      applyAccessibleCellStyles(cell, "");
+      groupCells.forEach((cell) => {
+        applyAccessibleCellStyles(cell, "");
+      });
     } else {
-      applyAccessibleCellStyles(cell, fillColor);
+      groupCells.forEach((cell) => {
+        applyAccessibleCellStyles(cell, fillColor);
+      });
     }
 
     const statusLabel = statusLabelForDesk(renderDesk);
@@ -563,15 +745,37 @@
         details.push(`<div class="status-pill${statusModifier}">${statusLabel}</div>`);
       }
     }
-    cell.innerHTML = details.join("");
-    cell.title = `${renderDesk.label} — ${renderDesk.department}`;
+
+    const contentHtml = details.join("");
+    groupCells.forEach((cell) => {
+      if (!cell) {
+        return;
+      }
+      if (cell === primaryCell) {
+        cell.innerHTML = contentHtml;
+      } else {
+        cell.innerHTML = "";
+      }
+      cell.title = `${renderDesk.label} — ${renderDesk.department}`;
+    });
 
     if (isAssignable) {
-      cell.onclick = () => openDeskModal(primaryDeskId);
-      cell.style.cursor = "pointer";
+      const handleClick = () => openDeskModal(primaryDeskId);
+      groupCells.forEach((cell) => {
+        if (!cell) {
+          return;
+        }
+        cell.onclick = handleClick;
+        cell.style.cursor = "pointer";
+      });
     } else {
-      cell.onclick = null;
-      cell.style.cursor = "default";
+      groupCells.forEach((cell) => {
+        if (!cell) {
+          return;
+        }
+        cell.onclick = null;
+        cell.style.cursor = "default";
+      });
     }
   }
 
@@ -579,25 +783,83 @@
     floorplanCanvas.innerHTML = "";
     cellMap.clear();
     identifierToGroup.clear();
+    highlightedGroupDeskId = null;
 
     const groups = computeDeskGroups();
     const occupiedKeys = new Set();
 
     groups.forEach((group) => {
-      const cell = document.createElement("div");
-      cell.className = "grid-cell";
-      cell.dataset.row = String(group.row);
-      cell.dataset.column = String(group.column);
-      cell.style.gridColumnStart = String(group.column);
-      cell.style.gridColumnEnd = `span ${group.width}`;
-      cell.style.gridRowStart = String(group.row);
-      cell.style.gridRowEnd = `span ${group.height}`;
-      cell.dataset.columnSpan = String(group.width);
-      cell.dataset.rowSpan = String(group.height);
-      if (group.width > 1 || group.height > 1) {
-        cell.classList.add("grid-cell-group");
-      }
-      floorplanCanvas.appendChild(cell);
+      const segments = Array.isArray(group.segments) && group.segments.length
+        ? group.segments
+        : [
+            {
+              row: group.row,
+              column: group.column,
+              width: group.width,
+              height: group.height,
+              positions: group.positions || [],
+            },
+          ];
+
+      let primarySegmentIndex = 0;
+      let largestArea = -1;
+      segments.forEach((segment, index) => {
+        const segmentWidth = segment && segment.width ? segment.width : 1;
+        const segmentHeight = segment && segment.height ? segment.height : 1;
+        const area = segmentWidth * segmentHeight;
+        if (area > largestArea) {
+          largestArea = area;
+          primarySegmentIndex = index;
+        }
+      });
+
+      const cellsForGroup = [];
+
+      segments.forEach((segment, index) => {
+        const segmentRow = segment && segment.row ? segment.row : group.row;
+        const segmentColumn = segment && segment.column ? segment.column : group.column;
+        const segmentWidth = segment && segment.width ? segment.width : 1;
+        const segmentHeight = segment && segment.height ? segment.height : 1;
+        const cell = document.createElement("div");
+        cell.className = "grid-cell";
+        cell.dataset.row = String(segmentRow);
+        cell.dataset.column = String(segmentColumn);
+        cell.style.gridColumnStart = String(segmentColumn);
+        cell.style.gridColumnEnd = `span ${segmentWidth}`;
+        cell.style.gridRowStart = String(segmentRow);
+        cell.style.gridRowEnd = `span ${segmentHeight}`;
+        cell.dataset.columnSpan = String(segmentWidth);
+        cell.dataset.rowSpan = String(segmentHeight);
+        if (segmentWidth > 1 || segmentHeight > 1 || segments.length > 1) {
+          cell.classList.add("grid-cell-group");
+        }
+        if (segments.length > 1) {
+          cell.dataset.segmentIndex = String(index);
+          cell.dataset.segmentRole = index === primarySegmentIndex ? "primary" : "auxiliary";
+          if (index !== primarySegmentIndex) {
+            cell.classList.add("grid-cell-group-segment");
+          }
+        }
+        floorplanCanvas.appendChild(cell);
+        cellsForGroup.push(cell);
+
+        const segmentPositions = Array.isArray(segment.positions) && segment.positions.length
+          ? segment.positions
+          : [
+              {
+                row: segmentRow,
+                column: segmentColumn,
+              },
+            ];
+
+        segmentPositions.forEach((position) => {
+          const mappedRow = position.row;
+          const mappedColumn = position.column;
+          const key = cellKey(mappedRow, mappedColumn);
+          cellMap.set(key, cell);
+          occupiedKeys.add(key);
+        });
+      });
 
       const deskIds = group.desks.map((desk) => desk.identifier);
       const positionMap = new Map();
@@ -609,22 +871,25 @@
           column: Number.isNaN(columnValue) ? desk.column : columnValue,
         });
       });
+
+      const primaryCell = cellsForGroup[primarySegmentIndex] || cellsForGroup[0] || null;
       const groupInfo = {
         primaryDeskId: group.primaryDeskId,
         deskIds,
         width: group.width,
         height: group.height,
         positions: positionMap,
+        cells: cellsForGroup,
+        primaryCell,
+        segments,
       };
-      cell.dataset.groupDeskId = groupInfo.primaryDeskId;
-      deskIds.forEach((identifier) => {
-        identifierToGroup.set(identifier, groupInfo);
+
+      cellsForGroup.forEach((cell) => {
+        cell.dataset.groupDeskId = groupInfo.primaryDeskId;
       });
 
-      group.positions.forEach((position) => {
-        const key = cellKey(position.row, position.column);
-        cellMap.set(key, cell);
-        occupiedKeys.add(key);
+      deskIds.forEach((identifier) => {
+        identifierToGroup.set(identifier, groupInfo);
       });
     });
 
