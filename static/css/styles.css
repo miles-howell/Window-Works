@@ -215,6 +215,14 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
+.grid-cell.grid-cell-group {
+  padding: clamp(0.5rem, 1.5vw, 1.25rem);
+}
+
+.grid-cell.grid-cell-group .desk-label {
+  font-size: 1rem;
+}
+
 .grid-cell[data-contrast="dark"] {
   border-color: rgba(255, 255, 255, 0.35);
 }
