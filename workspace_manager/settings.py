@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-z&%upe^3-gpqii^=5r9x*0ipn5qkykfz#kcrh@+pf63&5sw@d%"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -132,4 +132,4 @@ LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/admin-console/"
 SESSION_COOKIE_AGE = 60 * 60 * 8
 #CSRF_COOKIE_SECURE = True       
-#SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
