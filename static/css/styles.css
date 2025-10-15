@@ -407,6 +407,56 @@ body {
   gap: 1rem;
 }
 
+.combined-toggle {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  background: rgba(37, 99, 235, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.toggle-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle-control input[type="checkbox"] {
+  width: 2.5rem;
+  height: 1.35rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.toggle-label {
+  font-size: 0.95rem;
+}
+
+.layout-controls.combined-mode .mode-panel[data-mode-panel="layout"],
+.layout-controls.combined-mode .mode-panel[data-mode-panel="assignment"] {
+  display: block;
+}
+
+.layout-controls.combined-mode .mode-panel[data-mode-panel="assignment"] {
+  border-style: dashed;
+}
+
+.layout-controls.combined-mode .mode-panel[data-mode-panel="layout"] {
+  border-style: solid;
+}
+
+.layout-controls.combined-mode .mode-panel[data-mode-panel="assignment"] {
+  margin-top: 0;
+}
+
+.layout-controls.combined-mode .mode-panel[data-mode-panel="layout"] + .mode-panel[data-mode-panel="assignment"] {
+  margin-top: 1rem;
+}
+
 .selection-summary {
   background: rgba(148, 163, 184, 0.12);
   border: 1px solid rgba(15, 23, 42, 0.08);

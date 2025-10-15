@@ -356,7 +356,7 @@ def update_layout(request):
             seen.add(key)
             normalized_cells.append(key)
 
-    if action not in {"assign", "clear", "block", "assignment"}:
+    if action not in {"assign", "clear", "block", "assignment", "layout_assignment"}:
         return JsonResponse({"error": "Unsupported action."}, status=400)
 
     now = timezone.now()
@@ -365,178 +365,213 @@ def update_layout(request):
     cleared_cells: list[dict[str, int]] = []
     created_assignments: list[Assignment] = []
     blocked_count = 0
+    layout_updates = 0
+    assignment_creations = 0
 
-    with transaction.atomic():
-        if action == "assign":
-            data = payload.get("data") or {}
-            department_id = data.get("department")
-            if not department_id:
-                return JsonResponse({"error": "Department is required."}, status=400)
+    class LayoutUpdateError(Exception):
+        """Raised when a layout update cannot be completed."""
+
+        def __init__(self, message: str, status_code: int = 400) -> None:
+            super().__init__(message)
+            self.status_code = status_code
+
+    class AssignmentUpdateError(Exception):
+        """Raised when an assignment update cannot be completed."""
+
+        def __init__(self, message: str, status_code: int = 400) -> None:
+            super().__init__(message)
+            self.status_code = status_code
+
+    def perform_layout_update(data: dict) -> None:
+        nonlocal layout_updates
+        department_id = data.get("department")
+        if not department_id:
+            raise LayoutUpdateError("Department is required.")
+        try:
+            department = Department.objects.get(pk=department_id)
+        except Department.DoesNotExist as exc:
+            raise LayoutUpdateError("Department not found.", status_code=404) from exc
+
+        label_value = (data.get("label") or "").strip()
+        fill_color = (data.get("fill_color") or "").strip()
+        notes_value = (data.get("notes") or "").strip()
+
+        updated_count = 0
+        for row, column in normalized_cells:
+            left, top, width, height = grid_to_percentages(row, column)
+            desk, created = Desk.objects.select_for_update().get_or_create(
+                row_index=row,
+                column_index=column,
+                defaults={
+                    "identifier": cell_identifier(row, column),
+                    "label": label_value or f"{department.name} r{row:02d}c{column:02d}",
+                    "department": department,
+                    "fill_color": fill_color,
+                    "notes": notes_value,
+                    "row_span": 1,
+                    "column_span": 1,
+                    "left_percentage": left,
+                    "top_percentage": top,
+                    "width_percentage": width,
+                    "height_percentage": height,
+                },
+            )
+            if not created:
+                desk.department = department
+                if label_value:
+                    desk.label = label_value
+                elif not desk.label:
+                    desk.label = f"{department.name} r{row:02d}c{column:02d}"
+                desk.fill_color = fill_color
+                desk.notes = notes_value
+                desk.row_index = row
+                desk.column_index = column
+                desk.row_span = 1
+                desk.column_span = 1
+                desk.left_percentage = left
+                desk.top_percentage = top
+                desk.width_percentage = width
+                desk.height_percentage = height
+                desk.save()
+            updated_identifiers.add(desk.identifier)
+            updated_count += 1
+
+        layout_updates += updated_count
+
+    def perform_assignment_update(data: dict) -> None:
+        nonlocal assignment_creations
+        desks: list[Desk] = []
+        for row, column in normalized_cells:
             try:
-                department = Department.objects.get(pk=department_id)
-            except Department.DoesNotExist:
-                return JsonResponse({"error": "Department not found."}, status=404)
-
-            label_value = (data.get("label") or "").strip()
-            fill_color = (data.get("fill_color") or "").strip()
-            notes_value = (data.get("notes") or "").strip()
-
-            for row, column in normalized_cells:
-                left, top, width, height = grid_to_percentages(row, column)
-                desk, created = Desk.objects.select_for_update().get_or_create(
-                    row_index=row,
-                    column_index=column,
-                    defaults={
-                        "identifier": cell_identifier(row, column),
-                        "label": label_value or f"{department.name} r{row:02d}c{column:02d}",
-                        "department": department,
-                        "fill_color": fill_color,
-                        "notes": notes_value,
-                        "row_span": 1,
-                        "column_span": 1,
-                        "left_percentage": left,
-                        "top_percentage": top,
-                        "width_percentage": width,
-                        "height_percentage": height,
-                    },
+                desk = Desk.objects.select_for_update().get(
+                    row_index=row, column_index=column
                 )
-                if not created:
-                    desk.department = department
-                    if label_value:
-                        desk.label = label_value
-                    elif not desk.label:
-                        desk.label = f"{department.name} r{row:02d}c{column:02d}"
-                    desk.fill_color = fill_color
-                    desk.notes = notes_value
-                    desk.row_index = row
-                    desk.column_index = column
-                    desk.row_span = 1
-                    desk.column_span = 1
-                    desk.left_percentage = left
-                    desk.top_percentage = top
-                    desk.width_percentage = width
-                    desk.height_percentage = height
-                    desk.save()
-                else:
-                    updated_identifiers.add(desk.identifier)
-                    continue
-                updated_identifiers.add(desk.identifier)
-        elif action == "clear":
-            for row, column in normalized_cells:
-                try:
-                    desk = Desk.objects.select_for_update().get(
-                        row_index=row, column_index=column
-                    )
-                except Desk.DoesNotExist:
-                    continue
-                cleared_cells.append({"row": row, "column": column})
-                desk.delete()
-        elif action == "block":
-            data = payload.get("data") or {}
-            desks = []
-            for row, column in normalized_cells:
-                try:
-                    desk = Desk.objects.select_for_update().get(
-                        row_index=row, column_index=column
-                    )
-                except Desk.DoesNotExist:
-                    continue
-                desks.append(desk)
-            if not desks:
-                return JsonResponse(
-                    {"error": "Select desks with existing workspaces before blocking."},
-                    status=400,
-                )
+            except Desk.DoesNotExist:
+                continue
+            desks.append(desk)
 
+        assignable_desks = [
+            desk
+            for desk in desks
+            if desk.department.name not in {"Utility/Resource", "Walkway"}
+        ]
+
+        if not assignable_desks:
+            raise AssignmentUpdateError(
+                "Select at least one assignable desk before saving."
+            )
+
+        assignee_name = (data.get("assignee_name") or "").strip()
+        if not assignee_name:
+            raise AssignmentUpdateError(
+                "Employee name is required to create an assignment."
+            )
+
+        duration_choice = data.get("duration_choice") or "temporary"
+        start_value = data.get("start") or local_now.strftime("%Y-%m-%dT%H:%M")
+        end_value = data.get("end") if duration_choice != "permanent" else None
+
+        forms_to_save: list[tuple[AssignmentForm, Desk]] = []
+        for desk in assignable_desks:
             form_data = QueryDict("", mutable=True)
-            form_data["name"] = (data.get("name") or "").strip()
-            form_data["duration_choice"] = data.get("duration_choice") or "temporary"
-            form_data["start"] = data.get("start") or local_now.strftime("%Y-%m-%dT%H:%M")
-            if data.get("end"):
-                form_data["end"] = data["end"]
-            if data.get("reason"):
-                form_data["reason"] = data["reason"]
+            form_data["assignee_name"] = assignee_name
+            form_data["assignment_type"] = data.get(
+                "assignment_type", Assignment.TYPE_DESK
+            )
+            form_data["desk"] = str(desk.pk)
+            form_data["duration_choice"] = duration_choice
+            form_data["start"] = start_value
+            if end_value:
+                form_data["end"] = end_value
+            if data.get("note"):
+                form_data["note"] = data["note"]
             if data.get("created_by"):
                 form_data["created_by"] = data["created_by"]
-            form_data.setlist("desks", [str(desk.pk) for desk in desks])
 
-            block_form = BlockOutZoneForm(form_data)
-            if not block_form.is_valid():
-                return JsonResponse(
-                    {"error": _first_form_error(block_form, "Unable to save block-out zone.")},
-                    status=400,
+            assignment_form = AssignmentForm(form_data)
+            if not assignment_form.is_valid():
+                raise AssignmentUpdateError(
+                    _first_form_error(assignment_form, "Unable to save assignment.")
                 )
-            block = block_form.save()
-            blocked_count = block.desks.count()
-            updated_identifiers.update(block.desks.values_list("identifier", flat=True))
-        else:  # assignment
-            data = payload.get("data") or {}
-            desks = []
-            for row, column in normalized_cells:
-                try:
-                    desk = Desk.objects.select_for_update().get(
-                        row_index=row, column_index=column
-                    )
-                except Desk.DoesNotExist:
-                    continue
-                desks.append(desk)
+            forms_to_save.append((assignment_form, desk))
 
-            assignable_desks = [
-                desk
-                for desk in desks
-                if desk.department.name not in {"Utility/Resource", "Walkway"}
-            ]
+        for assignment_form, desk in forms_to_save:
+            assignment = assignment_form.save()
+            created_assignments.append(assignment)
+            updated_identifiers.add(desk.identifier)
+            assignment_creations += 1
 
-            if not assignable_desks:
-                return JsonResponse(
-                    {"error": "Select at least one assignable desk before saving."},
-                    status=400,
-                )
-
-            assignee_name = (data.get("assignee_name") or "").strip()
-            if not assignee_name:
-                return JsonResponse(
-                    {"error": "Employee name is required to create an assignment."},
-                    status=400,
-                )
-
-            duration_choice = data.get("duration_choice") or "temporary"
-            start_value = data.get("start") or local_now.strftime("%Y-%m-%dT%H:%M")
-            end_value = data.get("end") if duration_choice != "permanent" else None
-
-            forms_to_save: list[tuple[AssignmentForm, Desk]] = []
-            for desk in assignable_desks:
-                form_data = QueryDict("", mutable=True)
-                form_data["assignee_name"] = assignee_name
-                form_data["assignment_type"] = data.get(
-                    "assignment_type", Assignment.TYPE_DESK
-                )
-                form_data["desk"] = str(desk.pk)
-                form_data["duration_choice"] = duration_choice
-                form_data["start"] = start_value
-                if end_value:
-                    form_data["end"] = end_value
-                if data.get("note"):
-                    form_data["note"] = data["note"]
-                if data.get("created_by"):
-                    form_data["created_by"] = data["created_by"]
-
-                assignment_form = AssignmentForm(form_data)
-                if not assignment_form.is_valid():
+    try:
+        with transaction.atomic():
+            if action == "assign":
+                data = payload.get("data") or {}
+                perform_layout_update(data)
+            elif action == "clear":
+                for row, column in normalized_cells:
+                    try:
+                        desk = Desk.objects.select_for_update().get(
+                            row_index=row, column_index=column
+                        )
+                    except Desk.DoesNotExist:
+                        continue
+                    cleared_cells.append({"row": row, "column": column})
+                    desk.delete()
+            elif action == "block":
+                data = payload.get("data") or {}
+                desks = []
+                for row, column in normalized_cells:
+                    try:
+                        desk = Desk.objects.select_for_update().get(
+                            row_index=row, column_index=column
+                        )
+                    except Desk.DoesNotExist:
+                        continue
+                    desks.append(desk)
+                if not desks:
                     return JsonResponse(
-                        {
-                            "error": _first_form_error(
-                                assignment_form, "Unable to save assignment."
-                            )
-                        },
+                        {"error": "Select desks with existing workspaces before blocking."},
                         status=400,
                     )
-                forms_to_save.append((assignment_form, desk))
 
-            for assignment_form, desk in forms_to_save:
-                assignment = assignment_form.save()
-                created_assignments.append(assignment)
-                updated_identifiers.add(desk.identifier)
+                form_data = QueryDict("", mutable=True)
+                form_data["name"] = (data.get("name") or "").strip()
+                form_data["duration_choice"] = data.get("duration_choice") or "temporary"
+                form_data["start"] = data.get("start") or local_now.strftime(
+                    "%Y-%m-%dT%H:%M"
+                )
+                if data.get("end"):
+                    form_data["end"] = data["end"]
+                if data.get("reason"):
+                    form_data["reason"] = data["reason"]
+                if data.get("created_by"):
+                    form_data["created_by"] = data["created_by"]
+                form_data.setlist("desks", [str(desk.pk) for desk in desks])
+
+                block_form = BlockOutZoneForm(form_data)
+                if not block_form.is_valid():
+                    return JsonResponse(
+                        {"error": _first_form_error(block_form, "Unable to save block-out zone.")},
+                        status=400,
+                    )
+                block = block_form.save()
+                blocked_count = block.desks.count()
+                updated_identifiers.update(
+                    block.desks.values_list("identifier", flat=True)
+                )
+            elif action == "assignment":
+                data = payload.get("data") or {}
+                perform_assignment_update(data)
+            else:  # layout_assignment
+                data = payload.get("data") or {}
+                layout_data = data.get("layout") or {}
+                perform_layout_update(layout_data)
+                assignment_data = data.get("assignment") or {}
+                if (assignment_data.get("assignee_name") or "").strip():
+                    perform_assignment_update(assignment_data)
+    except LayoutUpdateError as error:
+        return JsonResponse({"error": str(error)}, status=error.status_code)
+    except AssignmentUpdateError as error:
+        return JsonResponse({"error": str(error)}, status=error.status_code)
 
     refreshed = (
         Desk.objects.select_related("department")
@@ -547,13 +582,25 @@ def update_layout(request):
 
     message = ""
     if action == "assign":
-        message = f"Updated {len(updated_identifiers)} cell(s)."
+        message = f"Updated {layout_updates} cell(s)."
     elif action == "clear":
         message = f"Cleared {len(cleared_cells)} cell(s)."
     elif action == "block":
         message = f"Blocked {blocked_count} desk(s)."
+    elif action == "assignment":
+        message = f"Created {assignment_creations} assignment(s)."
     else:
-        message = f"Created {len(created_assignments)} assignment(s)."
+        if layout_updates and assignment_creations:
+            message = (
+                f"Updated {layout_updates} cell(s) and "
+                f"created {assignment_creations} assignment(s)."
+            )
+        elif layout_updates:
+            message = f"Updated {layout_updates} cell(s)."
+        elif assignment_creations:
+            message = f"Created {assignment_creations} assignment(s)."
+        else:
+            message = "No changes applied."
 
     return JsonResponse(
         {
