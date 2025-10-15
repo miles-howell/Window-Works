@@ -19,6 +19,9 @@ from .layout import GRID_COLUMNS, GRID_ROWS, cell_identifier, grid_to_percentage
 from .models import Assignment, BlockOutZone, Department, Desk
 
 
+SESSION_EMPLOYEE_PROFILE_KEY = "floorplan_employee_profile"
+
+
 def _serialize_assignment(assignment: Assignment, now=None) -> dict | None:
     if not assignment:
         return None
@@ -189,13 +192,13 @@ def authenticate_employee(request):
             status=400,
         )
 
-    return JsonResponse(
-        {
-            "first_name": employee.first_name,
-            "last_name": employee.last_name,
-            "full_name": employee.full_name,
-        }
-    )
+    profile = {
+        "first_name": employee.first_name,
+        "last_name": employee.last_name,
+        "full_name": employee.full_name,
+    }
+    request.session[SESSION_EMPLOYEE_PROFILE_KEY] = profile
+    return JsonResponse(profile)
 
 
 @require_GET
@@ -210,9 +213,15 @@ def desk_detail(request, identifier: str):
 @require_POST
 def assign_to_desk(request, identifier: str):
     desk = get_object_or_404(Desk, identifier=identifier)
-    assignee_name = request.POST.get("assignee_name", "").strip()
+    profile = request.session.get(SESSION_EMPLOYEE_PROFILE_KEY) or {}
+    assignee_name = (profile.get("full_name") or "").strip()
     if not assignee_name:
-        return JsonResponse({"error": "Please enter a name."}, status=400)
+        return JsonResponse(
+            {
+                "error": "Please verify your employee information before reserving a seat.",
+            },
+            status=403,
+        )
 
     now = timezone.now()
     if desk.is_blocked(now):

@@ -195,7 +195,6 @@
   const extensionInput = document.getElementById("employee-extension");
   const nameFeedback = document.getElementById("name-feedback");
   const nameSubmitButton = nameForm ? nameForm.querySelector("button[type=\"submit\"]") : null;
-  const changeNameButton = document.getElementById("change-name");
   const statusBanner = document.getElementById("user-status");
   const statusTitle = document.getElementById("status-title");
   const statusBody = document.getElementById("status-body");
@@ -485,14 +484,18 @@
 
   function renderAssignModal(desk) {
     const safeName = getCurrentFullName();
+    if (!safeName) {
+      deskModalContent.innerHTML = `
+        <h2>Reserve ${desk.label}</h2>
+        <p class="note-text">Please verify your employee information before reserving a seat.</p>
+      `;
+      return;
+    }
     deskModalContent.innerHTML = `
       <h2>Reserve ${desk.label}</h2>
-      <p>Free seat in ${desk.department}. Enter your name to reserve this desk until the end of the day.</p>
-      <form id="assign-form" class="form-grid">
-        <div>
-          <label for="assign-name">Employee name</label>
-          <input type="text" id="assign-name" name="assignee_name" required value="${safeName}" />
-        </div>
+      <p>Free seat in ${desk.department}. Confirm to reserve this desk until the end of the day.</p>
+      <p><strong>Employee:</strong> ${safeName}</p>
+      <form id="assign-form">
         <div class="modal-actions">
           <button type="submit" class="button primary">Reserve seat</button>
         </div>
@@ -501,16 +504,9 @@
     `;
 
     const assignForm = document.getElementById("assign-form");
-    const assignNameInput = document.getElementById("assign-name");
     const assignError = document.getElementById("assign-error");
     assignForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const nameValue = assignNameInput.value.trim();
-      if (!nameValue) {
-        assignError.textContent = "Please provide a name.";
-        assignError.classList.remove("hidden");
-        return;
-      }
       assignError.classList.add("hidden");
       try {
         const response = await fetch(`/api/desks/${desk.identifier}/assign/`, {
@@ -519,7 +515,7 @@
             "Content-Type": "application/x-www-form-urlencoded",
             "X-CSRFToken": window.getCsrfToken(),
           },
-          body: new URLSearchParams({ assignee_name: nameValue }).toString(),
+          body: new URLSearchParams({ assignee_name: safeName }).toString(),
         });
         if (!response.ok) {
           const payload = await response.json().catch(() => ({ error: "Unable to reserve seat." }));
@@ -529,19 +525,28 @@
             deskMap.set(payload.desk.identifier, payload.desk);
             updateCellForDesk(payload.desk);
           }
+          if (response.status === 403) {
+            setCurrentUser(null);
+            hideModal(deskModal);
+            if (nameModal && lastNameInput) {
+              showModal(nameModal, lastNameInput);
+            }
+            await loadAssignmentInfo();
+          }
           return;
         }
         const result = await response.json();
         deskMap.set(result.desk.identifier, result.desk);
         updateCellForDesk(result.desk);
+        const assignedName = (result.assignment && result.assignment.assignee) || safeName;
         if (currentUser) {
           setCurrentUser({
             firstName: currentUser.firstName,
             lastName: currentUser.lastName,
-            fullName: nameValue,
+            fullName: assignedName,
           });
         } else {
-          setCurrentUser({ fullName: nameValue });
+          setCurrentUser({ fullName: assignedName });
         }
         hideModal(deskModal);
         await loadAssignmentInfo();
@@ -706,16 +711,6 @@
       }
     });
 
-    if (changeNameButton) {
-      changeNameButton.addEventListener("click", () => {
-        if (currentUser) {
-          lastNameInput.value = currentUser.lastName;
-        }
-        extensionInput.value = "";
-        updateNameFeedback("");
-        showModal(nameModal, lastNameInput);
-      });
-    }
   }
 
   deskModalClose.addEventListener("click", () => hideModal(deskModal));
