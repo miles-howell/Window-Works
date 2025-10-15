@@ -75,34 +75,46 @@
   <script id="current-time" type="application/json">"{{ now_iso }}"</script>
 
   <div id="name-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <h2>Verify your assignment</h2>
-      <p>Please enter your last name and the last four digits of your phone extension so we can confirm your seat assignment.</p>
-      <form id="name-form">
-        <div class="form-grid">
-          <div>
-            <label for="employee-last-name">Last name</label>
-            <input type="text" id="employee-last-name" name="last_name" required placeholder="Lovelace" autocomplete="family-name" />
-          </div>
-          <div>
-            <label for="employee-extension">Phone extension</label>
-            <input
-              type="text"
-              id="employee-extension"
-              name="extension"
-              required
-              placeholder="Last 4 digits"
-              inputmode="numeric"
-              autocomplete="tel-extension"
-            />
-            <p class="note-text">Tip: type only the last four digits. We'll ignore any prefix such as “69-”.</p>
-          </div>
+    <div class="modal-card welcome-modal">
+      <div class="welcome-hero">
+        <span class="logo" aria-hidden="true">🏢</span>
+        <div>
+          <h1 class="app-title">Workspace Move Coordinator</h1>
+          <p class="app-subtitle">Manage temporary desk moves during construction</p>
         </div>
-        <div id="name-feedback" class="alert-item hidden" role="alert"></div>
-        <div class="modal-actions">
-          <button type="submit" class="button primary">Verify details</button>
-        </div>
-      </form>
+      </div>
+      <div class="welcome-body">
+        <h2>Welcome!</h2>
+        <p>
+          Before we load the floor plan, confirm who you are so we can highlight your current assignment and any important
+          updates.
+        </p>
+        <form id="name-form">
+          <div class="form-grid">
+            <div>
+              <label for="employee-last-name">Last name</label>
+              <input type="text" id="employee-last-name" name="last_name" required placeholder="Lovelace" autocomplete="family-name" />
+            </div>
+            <div>
+              <label for="employee-extension">Phone extension</label>
+              <input
+                type="text"
+                id="employee-extension"
+                name="extension"
+                required
+                placeholder="Last 4 digits"
+                inputmode="numeric"
+                autocomplete="tel-extension"
+              />
+              <p class="note-text">Tip: type only the last four digits. We'll ignore any prefix such as “69-”.</p>
+            </div>
+          </div>
+          <div id="name-feedback" class="alert-item hidden" role="alert"></div>
+          <div class="modal-actions">
+            <button type="submit" class="button primary">Continue</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
