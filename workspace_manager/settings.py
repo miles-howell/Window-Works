@@ -124,6 +124,10 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+MEDIA_ROOT = Path(BASE_DIR) / "media"
+MEDIA_URL = "/media/"
+EMP_CSV_PATH = str(MEDIA_ROOT / "employees.csv")
+
 LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/admin-console/"
 SESSION_COOKIE_AGE = 60 * 60 * 8
