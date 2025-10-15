@@ -5,6 +5,123 @@
     return;
   }
 
+  const floorplanWrapper = floorplanCanvas.closest(".floorplan-wrapper");
+
+  if (floorplanWrapper) {
+    const dragState = {
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      scrollLeft: 0,
+      scrollTop: 0,
+      hasMoved: false,
+    };
+
+    const PAN_THRESHOLD_SQUARED = 9;
+
+    const releasePointer = (pointerId) => {
+      if (pointerId == null) {
+        return;
+      }
+      try {
+        const canRelease =
+          typeof floorplanWrapper.releasePointerCapture === "function" &&
+          (typeof floorplanWrapper.hasPointerCapture !== "function" ||
+            floorplanWrapper.hasPointerCapture(pointerId));
+        if (canRelease) {
+          floorplanWrapper.releasePointerCapture(pointerId);
+        }
+      } catch (error) {
+        // ignore browsers that do not support pointer capture
+      }
+    };
+
+    const endDrag = (event, cancelled) => {
+      if (dragState.pointerId === null || event.pointerId !== dragState.pointerId) {
+        return;
+      }
+      releasePointer(dragState.pointerId);
+      dragState.pointerId = null;
+      dragState.hasMoved = false;
+      dragState.startX = 0;
+      dragState.startY = 0;
+      dragState.scrollLeft = 0;
+      dragState.scrollTop = 0;
+      floorplanWrapper.classList.remove("is-dragging");
+    };
+
+    floorplanWrapper.addEventListener("pointerdown", (event) => {
+      if (event.button !== 2) {
+        return;
+      }
+      if (event.pointerType && event.pointerType !== "mouse") {
+        return;
+      }
+      if (dragState.pointerId !== null) {
+        releasePointer(dragState.pointerId);
+        floorplanWrapper.classList.remove("is-dragging");
+      }
+      dragState.pointerId = event.pointerId;
+      dragState.startX = event.clientX;
+      dragState.startY = event.clientY;
+      dragState.scrollLeft = floorplanWrapper.scrollLeft;
+      dragState.scrollTop = floorplanWrapper.scrollTop;
+      dragState.hasMoved = false;
+      try {
+        if (typeof floorplanWrapper.setPointerCapture === "function") {
+          floorplanWrapper.setPointerCapture(event.pointerId);
+        }
+      } catch (error) {
+        // ignore browsers that do not support pointer capture
+      }
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+    });
+
+    floorplanWrapper.addEventListener("pointermove", (event) => {
+      if (dragState.pointerId === null || event.pointerId !== dragState.pointerId) {
+        return;
+      }
+      if (typeof event.buttons === "number" && (event.buttons & 2) === 0) {
+        endDrag(event, true);
+        return;
+      }
+      const deltaX = event.clientX - dragState.startX;
+      const deltaY = event.clientY - dragState.startY;
+      if (!dragState.hasMoved) {
+        const distanceSquared = deltaX * deltaX + deltaY * deltaY;
+        if (distanceSquared >= PAN_THRESHOLD_SQUARED) {
+          dragState.hasMoved = true;
+          floorplanWrapper.classList.add("is-dragging");
+        }
+      }
+      if (!dragState.hasMoved) {
+        return;
+      }
+      floorplanWrapper.scrollLeft = dragState.scrollLeft - deltaX;
+      floorplanWrapper.scrollTop = dragState.scrollTop - deltaY;
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+    });
+
+    const cancelDrag = (event) => {
+      endDrag(event, true);
+    };
+
+    floorplanWrapper.addEventListener("pointerleave", cancelDrag);
+    floorplanWrapper.addEventListener("pointercancel", cancelDrag);
+    floorplanWrapper.addEventListener("pointerup", (event) => {
+      endDrag(event, false);
+    });
+    floorplanWrapper.addEventListener("contextmenu", (event) => {
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+    });
+  }
+
   const desks = JSON.parse(deskDataElement.textContent || "[]");
   const deskMap = new Map();
   desks.forEach((desk) => deskMap.set(desk.identifier, desk));
