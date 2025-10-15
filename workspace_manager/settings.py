@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-z&%upe^3-gpqii^=5r9x*0ipn5qkykfz#kcrh@+pf63&5sw@d%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -122,3 +122,10 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+LOGIN_URL = "/admin/login/"
+LOGIN_REDIRECT_URL = "/admin-console/"
+SESSION_COOKIE_AGE = 60 * 60 * 8
+CSRF_COOKIE_SECURE = True       
+SESSION_COOKIE_SECURE = True

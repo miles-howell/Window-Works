@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_POST
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 
 from .forms import AssignmentForm, BlockOutZoneForm
 from .layout import GRID_COLUMNS, GRID_ROWS, cell_identifier, grid_to_percentages
@@ -228,7 +230,7 @@ def assign_to_desk(request, identifier: str):
         }
     )
 
-
+@staff_member_required
 def admin_console(request):
     now = timezone.now()
     local_now = timezone.localtime(now)
@@ -258,7 +260,7 @@ def admin_console(request):
     }
     return render(request, "floorplan/admin_console.html", context)
 
-
+@staff_member_required
 @require_POST
 def delete_block_zone(request, pk: int):
     block_zone = get_object_or_404(BlockOutZone, pk=pk)
@@ -266,7 +268,7 @@ def delete_block_zone(request, pk: int):
     messages.success(request, f"Block-out zone '{block_zone.name}' deleted.")
     return redirect("floorplan:admin-console")
 
-
+@staff_member_required
 @require_POST
 def end_assignment(request, pk: int):
     assignment = get_object_or_404(Assignment, pk=pk)
@@ -276,7 +278,7 @@ def end_assignment(request, pk: int):
     messages.success(request, f"Assignment for {assignment.assignee_name} has been ended.")
     return redirect("floorplan:admin-console")
 
-
+@staff_member_required
 @require_POST
 def update_layout(request):
     try:
