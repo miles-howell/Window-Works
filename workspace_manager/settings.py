@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -116,7 +117,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -131,5 +139,5 @@ EMP_CSV_PATH = str(MEDIA_ROOT / "employees.csv")
 LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/admin-console/"
 SESSION_COOKIE_AGE = 60 * 60 * 8
-#CSRF_COOKIE_SECURE = True       
+#CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
