@@ -7,8 +7,6 @@
 
   const floorplanWrapper = floorplanCanvas.closest(".floorplan-wrapper");
 
-  let suppressCanvasClick = false;
-
   if (floorplanWrapper) {
     const dragState = {
       pointerId: null,
@@ -43,9 +41,6 @@
         return;
       }
       releasePointer(dragState.pointerId);
-      if (dragState.hasMoved && !cancelled) {
-        suppressCanvasClick = true;
-      }
       dragState.pointerId = null;
       dragState.hasMoved = false;
       dragState.startX = 0;
@@ -56,13 +51,12 @@
     };
 
     floorplanWrapper.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) {
+      if (event.button !== 2) {
         return;
       }
       if (event.pointerType && event.pointerType !== "mouse") {
         return;
       }
-      suppressCanvasClick = false;
       if (dragState.pointerId !== null) {
         releasePointer(dragState.pointerId);
         floorplanWrapper.classList.remove("is-dragging");
@@ -80,10 +74,17 @@
       } catch (error) {
         // ignore browsers that do not support pointer capture
       }
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
     });
 
     floorplanWrapper.addEventListener("pointermove", (event) => {
       if (dragState.pointerId === null || event.pointerId !== dragState.pointerId) {
+        return;
+      }
+      if (typeof event.buttons === "number" && (event.buttons & 2) === 0) {
+        endDrag(event, true);
         return;
       }
       const deltaX = event.clientX - dragState.startX;
@@ -114,19 +115,11 @@
     floorplanWrapper.addEventListener("pointerup", (event) => {
       endDrag(event, false);
     });
-
-    floorplanCanvas.addEventListener(
-      "click",
-      (event) => {
-        if (!suppressCanvasClick) {
-          return;
-        }
+    floorplanWrapper.addEventListener("contextmenu", (event) => {
+      if (typeof event.preventDefault === "function") {
         event.preventDefault();
-        event.stopImmediatePropagation();
-        suppressCanvasClick = false;
-      },
-      true,
-    );
+      }
+    });
   }
 
   const desks = JSON.parse(deskDataElement.textContent || "[]");
