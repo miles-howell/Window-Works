@@ -223,6 +223,15 @@ body {
   font-size: 1rem;
 }
 
+.grid-cell.grid-cell-multi {
+  padding: clamp(0.45rem, 1.4vw, 1.15rem);
+}
+
+.grid-cell.grid-cell-segment {
+  padding: 0;
+  box-shadow: none;
+}
+
 .grid-cell[data-contrast="dark"] {
   border-color: rgba(255, 255, 255, 0.35);
 }
@@ -264,6 +273,9 @@ body {
 
 .grid-cell .desk-label {
   color: inherit;
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .grid-cell .status-pill {
