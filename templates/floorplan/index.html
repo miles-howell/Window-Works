@@ -18,10 +18,10 @@
       <div id="user-status" class="status-banner info">
         <div>
           <strong id="status-title">Welcome!</strong>
-          <span id="status-body">Enter your name to load your assignment details.</span>
+          <span id="status-body">Enter your last name and extension to load your assignment details.</span>
         </div>
       </div>
-      <button id="change-name" class="button secondary" type="button">Update employee name</button>
+      <button id="change-name" class="button secondary" type="button">Update employee info</button>
       <div id="assignment-details" class="hidden">
         <table class="table-like">
           <tbody>
@@ -77,15 +77,31 @@
 
   <div id="name-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal-card">
-      <h2>Welcome!</h2>
-      <p>Please let us know who you are so we can show the correct seat assignment.</p>
+      <h2>Verify your assignment</h2>
+      <p>Please enter your last name and the last four digits of your phone extension so we can confirm your seat assignment.</p>
       <form id="name-form">
-        <div>
-          <label for="employee-name">Full name</label>
-          <input type="text" id="employee-name" name="employee_name" required placeholder="Ada Lovelace" />
+        <div class="form-grid">
+          <div>
+            <label for="employee-last-name">Last name</label>
+            <input type="text" id="employee-last-name" name="last_name" required placeholder="Lovelace" autocomplete="family-name" />
+          </div>
+          <div>
+            <label for="employee-extension">Phone extension</label>
+            <input
+              type="text"
+              id="employee-extension"
+              name="extension"
+              required
+              placeholder="Last 4 digits"
+              inputmode="numeric"
+              autocomplete="tel-extension"
+            />
+            <p class="note-text">Tip: type only the last four digits. We'll ignore any prefix such as “69-”.</p>
+          </div>
         </div>
+        <div id="name-feedback" class="alert-item hidden" role="alert"></div>
         <div class="modal-actions">
-          <button type="submit" class="button primary">Continue</button>
+          <button type="submit" class="button primary">Verify details</button>
         </div>
       </form>
     </div>

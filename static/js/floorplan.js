@@ -191,7 +191,10 @@
   const deskModalContent = document.getElementById("desk-modal-content");
   const deskModalClose = document.getElementById("desk-modal-close");
   const nameForm = document.getElementById("name-form");
-  const nameInput = document.getElementById("employee-name");
+  const lastNameInput = document.getElementById("employee-last-name");
+  const extensionInput = document.getElementById("employee-extension");
+  const nameFeedback = document.getElementById("name-feedback");
+  const nameSubmitButton = nameForm ? nameForm.querySelector("button[type=\"submit\"]") : null;
   const changeNameButton = document.getElementById("change-name");
   const statusBanner = document.getElementById("user-status");
   const statusTitle = document.getElementById("status-title");
@@ -203,15 +206,73 @@
   const detailDuration = document.getElementById("detail-duration");
   const alertList = document.getElementById("alert-list");
 
-  let currentUserName = localStorage.getItem("workspaceEmployeeName") || "";
+  const STORAGE_KEY = "workspaceEmployeeProfile";
+  const LEGACY_KEY = "workspaceEmployeeName";
+
+  function normalizeUserProfile(rawValue) {
+    if (!rawValue) {
+      return null;
+    }
+    let parsed = rawValue;
+    if (typeof rawValue === "string") {
+      try {
+        parsed = JSON.parse(rawValue);
+      } catch (error) {
+        return null;
+      }
+    }
+    const firstName = (parsed.firstName || parsed.first_name || "").trim();
+    const lastName = (parsed.lastName || parsed.last_name || "").trim();
+    let fullName = (parsed.fullName || parsed.full_name || "").trim();
+    if (!fullName) {
+      fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
+    }
+    if (!fullName) {
+      return null;
+    }
+    return {
+      firstName,
+      lastName,
+      fullName,
+    };
+  }
+
+  function readStoredUser() {
+    const storedValue = localStorage.getItem(STORAGE_KEY);
+    const user = storedValue ? normalizeUserProfile(storedValue) : null;
+    return user;
+  }
+
+  function setCurrentUser(user) {
+    const normalized = normalizeUserProfile(user);
+    if (!normalized) {
+      currentUser = null;
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    currentUser = normalized;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+  }
+
+  function getCurrentFullName() {
+    return currentUser ? currentUser.fullName : "";
+  }
+
+  localStorage.removeItem(LEGACY_KEY);
+
+  let currentUser = readStoredUser();
   let highlightedCellKey = null;
 
   function cellKey(row, column) {
     return `${row}-${column}`;
   }
 
-  function showModal(modal) {
+  function showModal(modal, focusTarget) {
     modal.classList.remove("hidden");
+    const target = focusTarget || modal.querySelector("input, button, [tabindex]");
+    if (target && typeof target.focus === "function") {
+      target.focus();
+    }
   }
 
   function hideModal(modal) {
@@ -423,7 +484,7 @@
   }
 
   function renderAssignModal(desk) {
-    const safeName = currentUserName || "";
+    const safeName = getCurrentFullName();
     deskModalContent.innerHTML = `
       <h2>Reserve ${desk.label}</h2>
       <p>Free seat in ${desk.department}. Enter your name to reserve this desk until the end of the day.</p>
@@ -473,8 +534,15 @@
         const result = await response.json();
         deskMap.set(result.desk.identifier, result.desk);
         updateCellForDesk(result.desk);
-        currentUserName = nameValue;
-        localStorage.setItem("workspaceEmployeeName", currentUserName);
+        if (currentUser) {
+          setCurrentUser({
+            firstName: currentUser.firstName,
+            lastName: currentUser.lastName,
+            fullName: nameValue,
+          });
+        } else {
+          setCurrentUser({ fullName: nameValue });
+        }
         hideModal(deskModal);
         await loadAssignmentInfo();
       } catch (error) {
@@ -499,13 +567,20 @@
   }
 
   async function loadAssignmentInfo() {
-    if (!currentUserName) {
-      setStatus("info", "Welcome!", "Enter your name to load your assignment details.");
+    const fullName = getCurrentFullName();
+    if (!fullName) {
+      setStatus(
+        "info",
+        "Welcome!",
+        "Enter your last name and extension to load your assignment details.",
+      );
       updateAssignmentDetails(null);
       return;
     }
-    nameInput.value = currentUserName;
-    const params = new URLSearchParams({ name: currentUserName });
+    if (lastNameInput && currentUser) {
+      lastNameInput.value = currentUser.lastName;
+    }
+    const params = new URLSearchParams({ name: fullName });
     try {
       const response = await fetch("/api/assignment-info/", {
         method: "POST",
@@ -536,27 +611,111 @@
     }
   }
 
-  function initNameModal() {
-    if (!currentUserName) {
-      showModal(nameModal);
+  function updateNameFeedback(message) {
+    if (!nameFeedback) {
+      return;
     }
-    nameForm.addEventListener("submit", (event) => {
+    if (message) {
+      nameFeedback.textContent = message;
+      nameFeedback.classList.remove("hidden");
+    } else {
+      nameFeedback.textContent = "";
+      nameFeedback.classList.add("hidden");
+    }
+  }
+
+  function setVerificationBusy(isBusy) {
+    if (!nameSubmitButton) {
+      return;
+    }
+    if (!nameSubmitButton.dataset.originalLabel) {
+      nameSubmitButton.dataset.originalLabel = nameSubmitButton.textContent || "";
+    }
+    if (isBusy) {
+      nameSubmitButton.disabled = true;
+      nameSubmitButton.textContent = "Verifying…";
+    } else {
+      nameSubmitButton.disabled = false;
+      nameSubmitButton.textContent = nameSubmitButton.dataset.originalLabel || "Verify details";
+    }
+  }
+
+  function initNameModal() {
+    if (!nameModal || !nameForm || !lastNameInput || !extensionInput) {
+      return;
+    }
+    if (!getCurrentFullName()) {
+      showModal(nameModal, lastNameInput);
+    } else if (currentUser) {
+      lastNameInput.value = currentUser.lastName;
+    }
+
+    nameForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const value = nameInput.value.trim();
-      if (!value) {
+      const lastNameValue = lastNameInput.value.trim();
+      const extensionValue = extensionInput.value.trim();
+      if (!lastNameValue) {
+        updateNameFeedback("Please enter your last name.");
+        lastNameInput.focus();
         return;
       }
-      currentUserName = value;
-      localStorage.setItem("workspaceEmployeeName", currentUserName);
-      hideModal(nameModal);
-      loadAssignmentInfo();
+      if (!extensionValue) {
+        updateNameFeedback("Please enter the last four digits of your extension.");
+        extensionInput.focus();
+        return;
+      }
+      updateNameFeedback("");
+      setVerificationBusy(true);
+      setStatus("info", "Verifying details", "Hang tight while we match your information.");
+      try {
+        const response = await fetch("/api/employee-auth/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": window.getCsrfToken(),
+          },
+          body: new URLSearchParams({ last_name: lastNameValue, extension: extensionValue }).toString(),
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          const message = payload.error || "We couldn't verify those details. Please try again.";
+          updateNameFeedback(message);
+          setStatus("danger", "Verification failed", message);
+          return;
+        }
+        const data = await response.json();
+        setCurrentUser({
+          firstName: data.first_name,
+          lastName: data.last_name,
+          fullName: data.full_name,
+        });
+        setStatus(
+          "success",
+          "Verification complete",
+          `Welcome back, ${getCurrentFullName()}. Loading your assignment details now.`,
+        );
+        updateNameFeedback("");
+        extensionInput.value = "";
+        hideModal(nameModal);
+        await loadAssignmentInfo();
+      } catch (error) {
+        updateNameFeedback("Network error. Please try again.");
+        setStatus("danger", "Network error", "We couldn't verify your details. Please try again.");
+      } finally {
+        setVerificationBusy(false);
+      }
     });
 
-    changeNameButton.addEventListener("click", () => {
-      nameInput.value = currentUserName;
-      showModal(nameModal);
-      nameInput.focus();
-    });
+    if (changeNameButton) {
+      changeNameButton.addEventListener("click", () => {
+        if (currentUser) {
+          lastNameInput.value = currentUser.lastName;
+        }
+        extensionInput.value = "";
+        updateNameFeedback("");
+        showModal(nameModal, lastNameInput);
+      });
+    }
   }
 
   deskModalClose.addEventListener("click", () => hideModal(deskModal));

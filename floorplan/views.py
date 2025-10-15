@@ -13,6 +13,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 
+from .employees import match_employee, normalize_extension_input
 from .forms import AssignmentForm, BlockOutZoneForm
 from .layout import GRID_COLUMNS, GRID_ROWS, cell_identifier, grid_to_percentages
 from .models import Assignment, BlockOutZone, Department, Desk
@@ -155,6 +156,46 @@ def assignment_info(request):
             response["message"] = f"You are assigned to {desk.label} in {desk.department.name}."
 
     return JsonResponse(response)
+
+
+@require_POST
+def authenticate_employee(request):
+    last_name = (request.POST.get("last_name") or "").strip()
+    extension = (request.POST.get("extension") or "").strip()
+
+    if not last_name or not extension:
+        return JsonResponse(
+            {
+                "error": "Please enter your last name and the last four digits of your phone extension.",
+            },
+            status=400,
+        )
+
+    normalized_extension = normalize_extension_input(extension)
+    if len(normalized_extension) != 4:
+        return JsonResponse(
+            {
+                "error": "Please double-check that you're using only the last four digits of your extension.",
+            },
+            status=400,
+        )
+
+    employee = match_employee(last_name, extension)
+    if employee is None:
+        return JsonResponse(
+            {
+                "error": "We couldn't find a match for those details. Verify your last name and extension and try again.",
+            },
+            status=400,
+        )
+
+    return JsonResponse(
+        {
+            "first_name": employee.first_name,
+            "last_name": employee.last_name,
+            "full_name": employee.full_name,
+        }
+    )
 
 
 @require_GET
