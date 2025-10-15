@@ -322,6 +322,10 @@
           continue;
         }
         const signature = groupingSignature(desk);
+        const isWalkwayDesk =
+          desk && typeof desk.department === "string"
+            ? desk.department.trim().toLowerCase() === "walkway"
+            : false;
         let width = 1;
         if (signature) {
           for (let nextColumn = column + 1; nextColumn <= gridColumns; nextColumn += 1) {
@@ -335,7 +339,8 @@
         }
 
         let height = 1;
-        if (signature && width > 1) {
+        const allowVerticalGrouping = signature && (width > 1 || isWalkwayDesk);
+        if (allowVerticalGrouping) {
           let canExtend = true;
           while (canExtend && row + height <= gridRows) {
             for (let offset = 0; offset < width; offset += 1) {
@@ -354,7 +359,7 @@
           }
         }
 
-        if (width === 1) {
+        if (width === 1 && !isWalkwayDesk) {
           height = 1;
         }
 
