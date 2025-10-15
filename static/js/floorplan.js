@@ -456,7 +456,27 @@
         }
 
         let height = 1;
-        const allowVerticalGrouping = signature && (width > 1 || isWalkwayDesk);
+        let hasMatchingVerticalNeighbor = false;
+        if (signature && row + 1 <= gridRows) {
+          hasMatchingVerticalNeighbor = true;
+          for (let offset = 0; offset < width; offset += 1) {
+            const neighborRow = row + 1;
+            const neighborColumn = column + offset;
+            const neighborKey = cellKey(neighborRow, neighborColumn);
+            const neighborDesk = positionToDesk.get(neighborKey);
+            if (
+              !neighborDesk ||
+              visited.has(neighborKey) ||
+              groupingSignature(neighborDesk) !== signature
+            ) {
+              hasMatchingVerticalNeighbor = false;
+              break;
+            }
+          }
+        }
+
+        const allowVerticalGrouping =
+          signature && (width > 1 || isWalkwayDesk || hasMatchingVerticalNeighbor);
         if (allowVerticalGrouping) {
           let canExtend = true;
           while (canExtend && row + height <= gridRows) {
@@ -474,10 +494,6 @@
               height += 1;
             }
           }
-        }
-
-        if (width === 1 && !isWalkwayDesk) {
-          height = 1;
         }
 
         const memberPositions = [];
