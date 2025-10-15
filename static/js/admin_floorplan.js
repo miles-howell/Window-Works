@@ -137,6 +137,7 @@
     lastRow: 0,
     lastColumn: 0,
     hasMoved: false,
+    hasSelectedRange: false,
   };
   let suppressNextClick = false;
 
@@ -236,7 +237,7 @@
       return;
     }
     releaseSelectionPointer(selectionDragState.pointerId);
-    const didMove = selectionDragState.hasMoved;
+    const didSelectRange = selectionDragState.hasSelectedRange;
     selectionDragState.pointerId = null;
     selectionDragState.hasMoved = false;
     selectionDragState.startRow = 0;
@@ -245,7 +246,8 @@
     selectionDragState.startY = 0;
     selectionDragState.lastRow = 0;
     selectionDragState.lastColumn = 0;
-    if (!cancelled && didMove) {
+    selectionDragState.hasSelectedRange = false;
+    if (!cancelled && didSelectRange) {
       const cell = getCellFromEvent(event);
       if (parseCellElement(cell)) {
         suppressNextClick = true;
@@ -460,6 +462,7 @@
     selectionDragState.startX = event.clientX;
     selectionDragState.startY = event.clientY;
     selectionDragState.hasMoved = false;
+    selectionDragState.hasSelectedRange = false;
     try {
       if (typeof canvas.setPointerCapture === "function") {
         canvas.setPointerCapture(event.pointerId);
@@ -497,6 +500,7 @@
     selectionDragState.lastRow = parsed.row;
     selectionDragState.lastColumn = parsed.column;
     selectRange(selectionDragState.startRow, selectionDragState.startColumn, parsed.row, parsed.column);
+    selectionDragState.hasSelectedRange = true;
     handleSelectionChange(parsed.key);
     if (typeof event.preventDefault === "function") {
       event.preventDefault();
