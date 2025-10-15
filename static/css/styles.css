@@ -336,7 +336,7 @@ body {
 
 .grid-cell.blocked {
   background: repeating-linear-gradient(-45deg, rgba(217, 45, 32, 0.6), rgba(217, 45, 32, 0.6) 12px, rgba(255, 255, 255, 0.4) 12px, rgba(255, 255, 255, 0.4) 24px);
-  color: #fff;
+  /*color: #fff;*/
 }
 
 .grid-cell.blocked .status-pill {
