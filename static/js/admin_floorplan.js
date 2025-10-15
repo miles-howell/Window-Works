@@ -47,39 +47,12 @@
 
   const modeButtons = document.querySelectorAll(".admin-mode-button");
   const modePanels = document.querySelectorAll(".mode-panel");
-  const layoutControls = document.querySelector(".layout-controls");
-  const combinedToggle = document.getElementById("layout-assignment-toggle");
-  const layoutPrimaryButton = layoutForm
-    ? layoutForm.querySelector(".button.primary")
-    : null;
 
   const feedbackTargets = {
     layout: layoutFeedback,
     assignment: assignmentFeedback,
     block: blockFeedback,
   };
-
-  function isCombinedModeEnabled() {
-    return Boolean(combinedToggle && combinedToggle.checked);
-  }
-
-  function updateCombinedModeUI() {
-    const enabled = isCombinedModeEnabled();
-    if (layoutControls) {
-      layoutControls.classList.toggle("combined-mode", enabled);
-    }
-    if (assignmentSubmit) {
-      assignmentSubmit.textContent = enabled
-        ? "Save layout & assignment"
-        : "Save assignment";
-    }
-    if (layoutPrimaryButton) {
-      layoutPrimaryButton.textContent = enabled
-        ? "Update layout only"
-        : "Assign selected cells";
-    }
-    setActiveMode(activeMode, { preserveFeedback: true });
-  }
 
   const rows = parseInt(canvas.dataset.rows || "13", 10);
   const columns = parseInt(canvas.dataset.columns || "30", 10);
@@ -125,47 +98,22 @@
     setFeedback("", "", mode);
   }
 
-  function setActiveMode(mode, options = {}) {
+  function setActiveMode(mode) {
     if (!mode) {
       return;
     }
     activeMode = mode;
-    const combined = isCombinedModeEnabled();
     modeButtons.forEach((button) => {
-      const buttonMode = button.dataset.adminMode;
-      if (!buttonMode) {
-        return;
-      }
-      const isLayoutOrAssignment =
-        buttonMode === "layout" || buttonMode === "assignment";
-      const isActive = buttonMode === mode;
-      if (combined && isLayoutOrAssignment) {
-        button.classList.toggle("active", isActive);
-        button.setAttribute("aria-selected", isActive ? "true" : "false");
-      } else {
-        button.classList.toggle("active", isActive);
-        button.setAttribute("aria-selected", isActive ? "true" : "false");
-      }
+      const isActive = button.dataset.adminMode === mode;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-selected", isActive ? "true" : "false");
     });
     modePanels.forEach((panel) => {
-      const panelMode = panel.dataset.modePanel;
-      if (!panelMode) {
-        return;
-      }
-      const isLayoutOrAssignment =
-        panelMode === "layout" || panelMode === "assignment";
-      if (combined && isLayoutOrAssignment) {
-        panel.classList.add("active");
-        panel.setAttribute("aria-hidden", "false");
-      } else {
-        const isActive = panelMode === mode;
-        panel.classList.toggle("active", isActive);
-        panel.setAttribute("aria-hidden", isActive ? "false" : "true");
-      }
+      const isActive = panel.dataset.modePanel === mode;
+      panel.classList.toggle("active", isActive);
+      panel.setAttribute("aria-hidden", isActive ? "false" : "true");
     });
-    if (!options.preserveFeedback) {
-      clearFeedback(mode);
-    }
+    clearFeedback(mode);
   }
 
   function renderCell(row, column) {
@@ -398,70 +346,6 @@
     return [...selectedCells].map((key) => parseKey(key));
   }
 
-  function createLayoutPayload(options = {}) {
-    if (!layoutForm) {
-      return null;
-    }
-    if (selectedCells.size === 0) {
-      setFeedback("Select at least one cell before assigning.", "warning", "layout");
-      return null;
-    }
-    if (!departmentInput || !departmentInput.value) {
-      setFeedback("Choose a department for the selected cells.", "warning", "layout");
-      if (departmentInput) {
-        departmentInput.focus();
-      }
-      return null;
-    }
-    const departmentValue = parseInt(departmentInput.value, 10);
-    if (Number.isNaN(departmentValue)) {
-      setFeedback("Choose a department for the selected cells.", "warning", "layout");
-      if (departmentInput) {
-        departmentInput.focus();
-      }
-      return null;
-    }
-    const layoutData = {
-      department: departmentValue,
-      label: labelInput ? labelInput.value.trim() : "",
-      fill_color: fillInput ? fillInput.value.trim() : "",
-      notes: notesInput ? notesInput.value.trim() : "",
-    };
-    if (options.asDataOnly) {
-      return layoutData;
-    }
-    return {
-      action: "assign",
-      cells: selectedCellsPayload(),
-      data: layoutData,
-    };
-  }
-
-  function collectAssignmentData() {
-    if (!assignmentForm || !assignmentName) {
-      return null;
-    }
-    const assigneeName = assignmentName.value.trim();
-    if (!assigneeName) {
-      setFeedback("Enter an employee name before saving.", "warning", "assignment");
-      assignmentName.focus();
-      return null;
-    }
-    const durationValue = assignmentDuration ? assignmentDuration.value : "temporary";
-    const startValue = assignmentStart ? assignmentStart.value : "";
-    const endValue =
-      durationValue === "permanent" || !assignmentEnd ? "" : assignmentEnd.value;
-    return {
-      assignee_name: assigneeName,
-      assignment_type: assignmentType ? assignmentType.value : "desk",
-      duration_choice: durationValue,
-      start: startValue,
-      end: endValue,
-      note: assignmentNote ? assignmentNote.value.trim() : "",
-      created_by: assignmentCreatedBy ? assignmentCreatedBy.value.trim() : "",
-    };
-  }
-
   function setDefaultStart(form, input) {
     if (!form || !input) {
       return;
@@ -533,10 +417,24 @@
   if (layoutForm) {
     layoutForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const payload = createLayoutPayload();
-      if (!payload) {
+      if (selectedCells.size === 0) {
+        setFeedback("Select at least one cell before assigning.", "warning", "layout");
         return;
       }
+      if (!departmentInput || !departmentInput.value) {
+        setFeedback("Choose a department for the selected cells.", "warning", "layout");
+        return;
+      }
+      const payload = {
+        action: "assign",
+        cells: selectedCellsPayload(),
+        data: {
+          department: parseInt(departmentInput.value, 10),
+          label: labelInput ? labelInput.value.trim() : "",
+          fill_color: fillInput ? fillInput.value.trim() : "",
+          notes: notesInput ? notesInput.value.trim() : "",
+        },
+      };
       try {
         const result = await sendUpdate(payload);
         applyServerResult(result);
@@ -589,47 +487,39 @@
         );
         return;
       }
-      const assignmentData = collectAssignmentData();
-      if (!assignmentData) {
+      if (!assignmentName) {
         return;
       }
-      const combined = isCombinedModeEnabled();
-      let payload;
-      if (combined) {
-        const layoutData = createLayoutPayload({ asDataOnly: true });
-        if (!layoutData) {
-          return;
-        }
-        payload = {
-          action: "layout_assignment",
-          cells: selectedCellsPayload(),
-          data: {
-            layout: layoutData,
-            assignment: assignmentData,
-          },
-        };
-      } else {
-        payload = {
-          action: "assignment",
-          cells: selectedCellsPayload(),
-          data: assignmentData,
-        };
+      const assigneeName = assignmentName.value.trim();
+      if (!assigneeName) {
+        setFeedback("Enter an employee name before saving.", "warning", "assignment");
+        assignmentName.focus();
+        return;
       }
+      const durationValue = assignmentDuration ? assignmentDuration.value : "temporary";
+      const startValue = assignmentStart ? assignmentStart.value : "";
+      const endValue =
+        durationValue === "permanent" || !assignmentEnd ? "" : assignmentEnd.value;
+      const payload = {
+        action: "assignment",
+        cells: selectedCellsPayload(),
+        data: {
+          assignee_name: assigneeName,
+          assignment_type: assignmentType ? assignmentType.value : "desk",
+          duration_choice: durationValue,
+          start: startValue,
+          end: endValue,
+          note: assignmentNote ? assignmentNote.value.trim() : "",
+          created_by: assignmentCreatedBy ? assignmentCreatedBy.value.trim() : "",
+        },
+      };
       try {
         const result = await sendUpdate(payload);
         applyServerResult(result);
         assignmentForm.reset();
         setDefaultStart(assignmentForm, assignmentStart);
         bindDurationToggle(assignmentDuration, assignmentEnd);
-        if (combined) {
-          clearFeedback("layout");
-        }
-        setFeedback(
-          result.message ||
-            (combined ? "Layout and assignment saved." : "Assignment saved."),
-          "success",
-          "assignment",
-        );
+        setFeedback(result.message || "Assignment saved.", "success", "assignment");
       } catch (error) {
         setFeedback(error.message, "danger", "assignment");
       }
@@ -685,23 +575,15 @@
   modeButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const mode = button.dataset.adminMode;
-      if (!mode || mode === activeMode) {
-        return;
+      if (mode && mode !== activeMode) {
+        setActiveMode(mode);
       }
-      setActiveMode(mode);
     });
   });
-
-  if (combinedToggle) {
-    combinedToggle.addEventListener("change", () => {
-      updateCombinedModeUI();
-    });
-  }
 
   buildGrid();
   updateSelectionInfo();
   setActiveMode(activeMode);
-  updateCombinedModeUI();
   setDefaultStart(assignmentForm, assignmentStart);
   setDefaultStart(blockForm, blockStart);
   bindDurationToggle(assignmentDuration, assignmentEnd);
