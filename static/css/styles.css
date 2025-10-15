@@ -166,6 +166,16 @@ body {
   background: linear-gradient(135deg, #e9eef6, #f8fbff);
   border: 1px solid var(--border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  cursor: grab;
+}
+
+.floorplan-wrapper.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.floorplan-wrapper.is-dragging .grid-cell {
+  user-select: none;
 }
 
 .floorplan-canvas {
