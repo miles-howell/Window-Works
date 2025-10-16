@@ -104,7 +104,7 @@ These JSON endpoints power the front-end interactions and can be reused for inte
 
 - **Floor plan layout:** Edit `floorplan/fixtures/sample_floorplan.json` or use the admin console layout editor, then export updates with `python manage.py dumpdata floorplan --indent 2 > floorplan/fixtures/custom_floorplan.json`.
 - **Departments:** Manage via the Django admin (`/admin/`) or fixtures to adjust names and colours.
-- **Employee roster:** Replace `media/employees.csv` with your organisation’s roster. Columns must include `First`, `Last`, and `Extension`. The extension can include prefixes (e.g. `69-2853`) — only the last four digits are used for matching.
+- **Employee roster:** Replace `media/employees.csv` with your organisation’s roster. Columns must include `First`, `Last`, and `Extension`. The extension can include prefixes (e.g. `777-777-1234`) — only the last four digits are used for matching.
 
 ## Testing
 
