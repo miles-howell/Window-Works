@@ -131,3 +131,25 @@ class DeskPayloadTests(TestCase):
 
         self.assertTrue(payload["is_kiosk"])
         self.assertTrue(payload["is_assignable"])
+
+    def test_kiosk_detected_from_identifier(self):
+        desk = Desk.objects.create(
+            identifier="utility-temp-kiosk",
+            label="Shared space",
+            department=self.utility,
+            fill_color="#CCCCCC",
+            row_index=2,
+            column_index=3,
+            row_span=1,
+            column_span=1,
+            left_percentage=25,
+            top_percentage=5,
+            width_percentage=10,
+            height_percentage=10,
+            notes="Temporary information desk",
+        )
+
+        payload = _desk_payload(desk, now=timezone.now())
+
+        self.assertTrue(payload["is_kiosk"])
+        self.assertTrue(payload["is_assignable"])
