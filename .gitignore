@@ -3,5 +3,7 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 staticfiles/
+media/
 .DS_Store
 .env
+*.csv
