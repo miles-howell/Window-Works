@@ -207,9 +207,14 @@
     if (typeof desk.is_kiosk === "boolean") {
       return desk.is_kiosk;
     }
+    const identifier = (desk.identifier || "").toString().toLowerCase();
     const label = (desk.label || "").toString().toLowerCase();
     const notes = (desk.notes || "").toString().toLowerCase();
-    return label.includes("kiosk") || notes.includes("kiosk");
+    return (
+      identifier.includes("kiosk") ||
+      label.includes("kiosk") ||
+      notes.includes("kiosk")
+    );
   }
 
   function renderKioskList() {

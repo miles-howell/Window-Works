@@ -50,9 +50,10 @@ def _serialize_assignment(assignment: Assignment, now=None) -> dict | None:
 
 
 def _is_kiosk_desk(desk: Desk) -> bool:
+    identifier = (desk.identifier or "").strip().casefold()
     label = (desk.label or "").strip().casefold()
     notes = (desk.notes or "").strip().casefold()
-    return "kiosk" in label or "kiosk" in notes
+    return "kiosk" in identifier or "kiosk" in label or "kiosk" in notes
 
 
 def _desk_payload(desk: Desk, now=None) -> dict:
