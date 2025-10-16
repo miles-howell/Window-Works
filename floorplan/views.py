@@ -22,6 +22,35 @@ from .models import Assignment, BlockOutZone, Department, Desk
 SESSION_EMPLOYEE_PROFILE_KEY = "floorplan_employee_profile"
 
 
+def _localized_datetime(value):
+    if not value:
+        return None
+    return timezone.localtime(value)
+
+
+def _datetime_input_value(value):
+    localized = _localized_datetime(value)
+    if not localized:
+        return ""
+    return localized.strftime("%Y-%m-%dT%H:%M")
+
+
+def _datetime_display_value(value):
+    localized = _localized_datetime(value)
+    if not localized:
+        return ""
+    return localized.strftime("%b %d, %Y %I:%M %p")
+
+
+def _block_zone_duration_display(zone: BlockOutZone) -> str:
+    if zone.is_permanent:
+        return "Permanent block"
+    end_display = _datetime_display_value(zone.end)
+    if end_display:
+        return f"Until {end_display}"
+    return "Open ended"
+
+
 def _serialize_assignment(assignment: Assignment, now=None) -> dict | None:
     if not assignment:
         return None
@@ -299,8 +328,35 @@ def admin_console(request):
         .order_by("assignee_name", "-start")
     )
     active_assignments = [assignment for assignment in assignments if assignment.is_active(now)]
-    block_zones = BlockOutZone.objects.prefetch_related("desks")
-    active_blocks = [zone for zone in block_zones if zone.is_active(now)]
+    block_zone_queryset = (
+        BlockOutZone.objects.prefetch_related("desks").order_by("start", "name")
+    )
+    scheduled_blocks: list[BlockOutZone] = []
+    block_zone_payload: list[dict] = []
+    for zone in block_zone_queryset:
+        is_active = zone.is_active(now)
+        starts_in_future = bool(zone.start and zone.start > now)
+        if not is_active and not starts_in_future:
+            continue
+        setattr(zone, "admin_is_active", is_active)
+        scheduled_blocks.append(zone)
+        block_zone_payload.append(
+            {
+                "id": zone.pk,
+                "name": zone.name,
+                "desk_count": zone.desks.count(),
+                "is_permanent": zone.is_permanent,
+                "duration_choice": "permanent" if zone.is_permanent else "temporary",
+                "reason": zone.reason or "",
+                "created_by": zone.created_by or "",
+                "start": _datetime_input_value(zone.start),
+                "end": "" if zone.is_permanent else _datetime_input_value(zone.end),
+                "start_display": _datetime_display_value(zone.start),
+                "end_display": _datetime_display_value(zone.end),
+                "is_active": is_active,
+                "duration_display": _block_zone_duration_display(zone),
+            }
+        )
     desks = (
         Desk.objects.select_related("department")
         .prefetch_related("block_zones", "assignments")
@@ -310,7 +366,8 @@ def admin_console(request):
 
     context = {
         "active_assignments": active_assignments,
-        "active_blocks": active_blocks,
+        "block_zones": scheduled_blocks,
+        "block_zone_data": json.dumps(block_zone_payload),
         "now": local_now,
         "layout_desks": json.dumps(layout_desks),
         "grid_rows": GRID_ROWS,
@@ -326,6 +383,69 @@ def delete_block_zone(request, pk: int):
     block_zone.delete()
     messages.success(request, f"Block-out zone '{block_zone.name}' deleted.")
     return redirect("floorplan:admin-console")
+
+
+@staff_member_required
+@require_POST
+def update_block_zone(request, pk: int):
+    block_zone = get_object_or_404(BlockOutZone, pk=pk)
+
+    name = (request.POST.get("name") or "").strip()
+    if not name:
+        messages.error(request, "Enter a name for this block-out zone before saving.")
+        return redirect("floorplan:admin-console")
+
+    duration_choice = request.POST.get("duration_choice") or "temporary"
+    is_permanent = duration_choice == "permanent"
+
+    start_raw = (request.POST.get("start") or "").strip()
+    end_raw = (request.POST.get("end") or "").strip()
+
+    try:
+        if start_raw:
+            parsed_start = datetime.fromisoformat(start_raw)
+            if timezone.is_naive(parsed_start):
+                parsed_start = timezone.make_aware(
+                    parsed_start, timezone.get_current_timezone()
+                )
+        else:
+            parsed_start = block_zone.start or timezone.now()
+    except ValueError:
+        messages.error(request, "Invalid start date for this block-out zone.")
+        return redirect("floorplan:admin-console")
+
+    parsed_end = None
+    if not is_permanent and end_raw:
+        try:
+            parsed_end = datetime.fromisoformat(end_raw)
+            if timezone.is_naive(parsed_end):
+                parsed_end = timezone.make_aware(
+                    parsed_end, timezone.get_current_timezone()
+                )
+        except ValueError:
+            messages.error(request, "Invalid end date for this block-out zone.")
+            return redirect("floorplan:admin-console")
+
+    if not is_permanent and parsed_end and parsed_end <= parsed_start:
+        messages.error(
+            request,
+            "The block-out zone must end after it begins. Adjust the end time and try again.",
+        )
+        return redirect("floorplan:admin-console")
+
+    block_zone.name = name
+    block_zone.start = parsed_start
+    block_zone.is_permanent = is_permanent
+    block_zone.end = None if is_permanent else parsed_end
+    block_zone.reason = (request.POST.get("reason") or "").strip()
+    block_zone.created_by = (request.POST.get("created_by") or "").strip()
+    block_zone.save(
+        update_fields=["name", "start", "end", "is_permanent", "reason", "created_by"]
+    )
+
+    messages.success(request, f"Block-out zone '{block_zone.name}' updated.")
+    return redirect("floorplan:admin-console")
+
 
 @staff_member_required
 @require_POST

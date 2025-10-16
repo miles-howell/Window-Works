@@ -225,14 +225,28 @@
     </section>
 
     <section class="card">
-      <h3>Active Block-Out Zones</h3>
-      {% if active_blocks %}
+      <h3>Scheduled Block-Out Zones</h3>
+      <p class="note-text">
+        Click a block-out zone to review its schedule, make changes, or delete it.
+      </p>
+      {% if block_zones %}
         <ul class="block-list">
-          {% for block in active_blocks %}
-            <li class="block-item">
+          {% for block in block_zones %}
+            <li
+              class="block-item"
+              role="button"
+              tabindex="0"
+              data-block-id="{{ block.pk }}"
+              aria-label="Edit block-out zone {{ block.name }}"
+            >
               <strong>{{ block.name }}</strong>
               <div class="assignment-meta">
                 <span>{{ block.desks.count }} desks affected</span>
+                {% if block.admin_is_active %}
+                  <span class="badge success">Active</span>
+                {% elif block.start %}
+                  <span>Starts {{ block.start|date:'M d, Y H:i' }}</span>
+                {% endif %}
                 {% if block.is_permanent %}
                   <span class="badge warning">Permanent</span>
                 {% elif block.end %}
@@ -242,23 +256,86 @@
               {% if block.reason %}
                 <p class="note-text">{{ block.reason }}</p>
               {% endif %}
-              <form
-                method="post"
-                action="{% url 'floorplan:delete-block-zone' block.pk %}"
-                style="margin-top: 0.75rem;"
-              >
-                {% csrf_token %}
-                <button type="submit" class="button secondary">Remove block-out zone</button>
-              </form>
             </li>
           {% endfor %}
         </ul>
       {% else %}
-        <p class="note-text">There are no active block-out zones.</p>
+        <p class="note-text">There are no scheduled block-out zones.</p>
       {% endif %}
     </section>
   </div>
+  <script id="block-zone-data" type="application/json">{{ block_zone_data|safe }}</script>
   <script id="layout-desk-data" type="application/json">{{ layout_desks|safe }}</script>
+  {% url 'floorplan:update-block-zone' 0 as update_block_zone_template %}
+  {% url 'floorplan:delete-block-zone' 0 as delete_block_zone_template %}
+  <div
+    id="block-zone-modal"
+    class="modal-backdrop hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="block-zone-modal-title"
+    data-update-url-template="{{ update_block_zone_template }}"
+    data-delete-url-template="{{ delete_block_zone_template }}"
+  >
+    <div class="modal-card" id="block-zone-modal-card">
+      <div class="modal-card-header">
+        <h2 id="block-zone-modal-title">Edit block-out zone</h2>
+        <span id="block-zone-modal-status" class="badge">Active</span>
+      </div>
+      <p id="block-zone-modal-schedule" class="note-text"></p>
+      <p id="block-zone-modal-desk-count" class="note-text"></p>
+      <form
+        id="block-zone-modal-form"
+        method="post"
+        class="form-grid"
+        aria-describedby="block-zone-modal-schedule"
+      >
+        {% csrf_token %}
+        <div>
+          <label for="block-zone-modal-name">Zone name</label>
+          <input type="text" id="block-zone-modal-name" name="name" required />
+        </div>
+        <div class="form-grid two-col">
+          <div>
+            <label for="block-zone-modal-duration">Duration</label>
+            <select id="block-zone-modal-duration" name="duration_choice">
+              <option value="temporary">Temporary</option>
+              <option value="permanent">Permanent</option>
+            </select>
+          </div>
+          <div>
+            <label for="block-zone-modal-start">Start</label>
+            <input type="datetime-local" id="block-zone-modal-start" name="start" />
+          </div>
+        </div>
+        <div>
+          <label for="block-zone-modal-end">End</label>
+          <input type="datetime-local" id="block-zone-modal-end" name="end" />
+        </div>
+        <div>
+          <label for="block-zone-modal-reason">Reason / notes</label>
+          <textarea id="block-zone-modal-reason" name="reason" rows="2"></textarea>
+        </div>
+        <div>
+          <label for="block-zone-modal-created-by">Recorded by</label>
+          <input type="text" id="block-zone-modal-created-by" name="created_by" />
+        </div>
+      </form>
+      <div class="modal-actions">
+        <button type="submit" form="block-zone-modal-form" class="button primary">
+          Save changes
+        </button>
+        <button type="button" class="button secondary" id="block-zone-modal-cancel">
+          Cancel
+        </button>
+        <form id="block-zone-delete-form" method="post">
+          {% csrf_token %}
+          <button type="submit" class="button danger">Delete block-out zone</button>
+        </form>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 {% block extra_scripts %}
   {{ block.super }}
