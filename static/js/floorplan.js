@@ -6,9 +6,6 @@
   }
 
   const floorplanWrapper = floorplanCanvas.closest(".floorplan-wrapper");
-  const kioskSection = document.getElementById("kiosk-availability");
-  const kioskList = document.getElementById("kiosk-availability-list");
-  const kioskEmptyState = document.getElementById("kiosk-availability-empty");
 
   if (floorplanWrapper) {
     const dragState = {
@@ -382,141 +379,9 @@
 
   let currentUser = readStoredUser();
   let highlightedCellKey = null;
-  let kioskHighlightKey = null;
-  let kioskHighlightTimeout = null;
-  let kioskUpdateScheduled = false;
-
-  const KIOSK_FOCUS_CLASS = "kiosk-focus";
 
   function cellKey(row, column) {
     return `${row}-${column}`;
-  }
-
-  function scheduleKioskUpdate() {
-    if (kioskUpdateScheduled) {
-      return;
-    }
-    kioskUpdateScheduled = true;
-    window.requestAnimationFrame(() => {
-      kioskUpdateScheduled = false;
-      updateKioskAvailability();
-    });
-  }
-
-  function isKioskDesk(desk) {
-    if (!desk || typeof desk.label !== "string") {
-      return false;
-    }
-    return desk.label.toLowerCase().includes("kiosk");
-  }
-
-  function focusDesk(identifier) {
-    const desk = deskMap.get(identifier);
-    if (!desk) {
-      return;
-    }
-    const key = cellKey(desk.row, desk.column);
-    const cell = cellMap.get(key);
-    if (!cell) {
-      return;
-    }
-
-    if (floorplanWrapper) {
-      const wrapperRect = floorplanWrapper.getBoundingClientRect();
-      const cellRect = cell.getBoundingClientRect();
-      const offsetLeft = cellRect.left - wrapperRect.left + floorplanWrapper.scrollLeft;
-      const offsetTop = cellRect.top - wrapperRect.top + floorplanWrapper.scrollTop;
-      const targetLeft = Math.max(offsetLeft - wrapperRect.width / 2 + cellRect.width / 2, 0);
-      const targetTop = Math.max(offsetTop - wrapperRect.height / 2 + cellRect.height / 2, 0);
-      floorplanWrapper.scrollTo({
-        left: targetLeft,
-        top: targetTop,
-        behavior: "smooth",
-      });
-    }
-
-    if (kioskHighlightKey && cellMap.has(kioskHighlightKey)) {
-      const previous = cellMap.get(kioskHighlightKey);
-      previous.classList.remove(KIOSK_FOCUS_CLASS);
-    }
-
-    if (kioskHighlightTimeout) {
-      window.clearTimeout(kioskHighlightTimeout);
-      kioskHighlightTimeout = null;
-    }
-
-    cell.classList.add(KIOSK_FOCUS_CLASS);
-    kioskHighlightKey = key;
-    kioskHighlightTimeout = window.setTimeout(() => {
-      if (kioskHighlightKey && cellMap.has(kioskHighlightKey)) {
-        const focusedCell = cellMap.get(kioskHighlightKey);
-        focusedCell.classList.remove(KIOSK_FOCUS_CLASS);
-      }
-      kioskHighlightKey = null;
-      kioskHighlightTimeout = null;
-    }, 2000);
-  }
-
-  function updateKioskAvailability() {
-    if (!kioskSection || !kioskList || !kioskEmptyState) {
-      return;
-    }
-
-    const kiosks = [];
-    const seen = new Set();
-    deskMap.forEach((desk) => {
-      if (!isKioskDesk(desk)) {
-        return;
-      }
-      if (seen.has(desk.identifier)) {
-        return;
-      }
-      seen.add(desk.identifier);
-      if (desk.status !== "free" || desk.is_assignable === false || desk.is_blocked) {
-        return;
-      }
-      kiosks.push({
-        identifier: desk.identifier,
-        label: desk.label,
-        department: desk.department || "",
-      });
-    });
-
-    kiosks.sort((a, b) => {
-      const labelCompare = a.label.localeCompare(b.label, undefined, { numeric: true });
-      if (labelCompare !== 0) {
-        return labelCompare;
-      }
-      return a.department.localeCompare(b.department, undefined, { numeric: true });
-    });
-
-    kioskList.innerHTML = "";
-
-    if (!kiosks.length) {
-      kioskList.classList.add("hidden");
-      kioskEmptyState.classList.remove("hidden");
-      kioskSection.classList.add("is-empty");
-      return;
-    }
-
-    kioskList.classList.remove("hidden");
-    kioskEmptyState.classList.add("hidden");
-    kioskSection.classList.remove("is-empty");
-
-    kiosks.forEach((kiosk) => {
-      const listItem = document.createElement("li");
-      listItem.className = "kiosk-item";
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "kiosk-button";
-      button.innerHTML = `
-        <span class="kiosk-label">${kiosk.label}</span>
-        <span class="kiosk-department">${kiosk.department}</span>
-      `;
-      button.addEventListener("click", () => focusDesk(kiosk.identifier));
-      listItem.appendChild(button);
-      kioskList.appendChild(listItem);
-    });
   }
 
   function groupingSignature(desk) {
@@ -841,8 +706,6 @@
       cell.onclick = null;
       cell.style.cursor = "default";
     }
-
-    scheduleKioskUpdate();
   }
 
   function renderFloorplan() {
@@ -1222,5 +1085,4 @@
   adjustLegendColors();
   initNameModal();
   loadAssignmentInfo();
-  updateKioskAvailability();
 })();

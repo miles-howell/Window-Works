@@ -74,19 +74,6 @@
     </aside>
   </div>
 
-  <section class="card kiosk-card" id="kiosk-availability" aria-live="polite">
-    <div class="kiosk-card-header">
-      <h2>Available Kiosks</h2>
-      <p class="note-text">
-        Select a kiosk to jump to its location on the floor plan and reserve it if it’s free.
-      </p>
-    </div>
-    <ul id="kiosk-availability-list" class="kiosk-list" aria-label="Free kiosks"></ul>
-    <p id="kiosk-availability-empty" class="note-text kiosk-empty hidden">
-      All kiosks are currently occupied. Check back soon for availability.
-    </p>
-  </section>
-
   <script id="desk-data" type="application/json">{{ desks|safe }}</script>
   <script id="current-time" type="application/json">"{{ now_iso }}"</script>
 
