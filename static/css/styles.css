@@ -547,6 +547,96 @@ body {
   border: 1px solid rgba(15, 23, 42, 0.1);
 }
 
+.kiosk-card {
+  margin-top: 2rem;
+}
+
+.kiosk-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.kiosk-card-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.kiosk-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.kiosk-list li {
+  margin: 0;
+}
+
+.kiosk-button {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.kiosk-button:hover,
+.kiosk-button:focus {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.kiosk-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -4px;
+}
+
+.kiosk-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.kiosk-meta {
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.kiosk-note {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.grid-cell.kiosk-target {
+  animation: kioskPulse 1.4s ease-in-out 2;
+  outline: 3px solid var(--accent);
+  outline-offset: -2px;
+}
+
+@keyframes kioskPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(37, 99, 235, 0);
+  }
+}
+
 .sidebar-card h2 {
   margin-top: 0;
   font-size: 1.1rem;

@@ -74,6 +74,17 @@
     </aside>
   </div>
 
+  <section class="card kiosk-card" aria-labelledby="kiosk-card-title">
+    <div class="kiosk-card-header">
+      <h2 id="kiosk-card-title">Available kiosks</h2>
+      <p class="note-text">
+        Select a kiosk to jump directly to its location on the floor plan.
+      </p>
+    </div>
+    <ul id="kiosk-list" class="kiosk-list hidden" aria-live="polite"></ul>
+    <p id="kiosk-empty" class="note-text hidden">All kiosks are currently in use. Check back soon!</p>
+  </section>
+
   <script id="desk-data" type="application/json">{{ desks|safe }}</script>
   <script id="current-time" type="application/json">"{{ now_iso }}"</script>
 
