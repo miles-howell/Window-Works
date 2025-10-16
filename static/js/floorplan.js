@@ -6,6 +6,11 @@
   }
 
   const floorplanWrapper = floorplanCanvas.closest(".floorplan-wrapper");
+  const kioskList = document.getElementById("kiosk-list");
+  const kioskEmpty = document.getElementById("kiosk-empty");
+  let kioskHighlightCell = null;
+  let kioskHighlightTimeout = null;
+  let isRenderingFloorplan = false;
 
   if (floorplanWrapper) {
     const dragState = {
@@ -133,6 +138,152 @@
 
   const cellMap = new Map();
   const identifierToGroup = new Map();
+
+  function clearKioskHighlight() {
+    if (kioskHighlightTimeout) {
+      window.clearTimeout(kioskHighlightTimeout);
+      kioskHighlightTimeout = null;
+    }
+    if (kioskHighlightCell) {
+      kioskHighlightCell.classList.remove("kiosk-target");
+      kioskHighlightCell = null;
+    }
+  }
+
+  function focusKioskDesk(identifier) {
+    if (!identifier) {
+      return;
+    }
+    const desk = deskMap.get(identifier);
+    if (!desk) {
+      return;
+    }
+    const key = cellKey(desk.row, desk.column);
+    const cell = cellMap.get(key);
+    if (!cell) {
+      return;
+    }
+
+    if (kioskHighlightCell && kioskHighlightCell !== cell) {
+      kioskHighlightCell.classList.remove("kiosk-target");
+    }
+    kioskHighlightCell = cell;
+    kioskHighlightCell.classList.add("kiosk-target");
+
+    if (floorplanWrapper) {
+      const targetLeft = Math.max(
+        cell.offsetLeft + cell.offsetWidth / 2 - floorplanWrapper.clientWidth / 2,
+        0,
+      );
+      const targetTop = Math.max(
+        cell.offsetTop + cell.offsetHeight / 2 - floorplanWrapper.clientHeight / 2,
+        0,
+      );
+      if (typeof floorplanWrapper.scrollTo === "function") {
+        floorplanWrapper.scrollTo({ left: targetLeft, top: targetTop, behavior: "smooth" });
+      } else {
+        floorplanWrapper.scrollLeft = targetLeft;
+        floorplanWrapper.scrollTop = targetTop;
+      }
+    } else if (typeof cell.scrollIntoView === "function") {
+      cell.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    }
+
+    if (kioskHighlightTimeout) {
+      window.clearTimeout(kioskHighlightTimeout);
+    }
+    kioskHighlightTimeout = window.setTimeout(() => {
+      if (kioskHighlightCell) {
+        kioskHighlightCell.classList.remove("kiosk-target");
+        kioskHighlightCell = null;
+      }
+    }, 1800);
+  }
+
+  function isKioskDesk(desk) {
+    if (!desk) {
+      return false;
+    }
+    const label = (desk.label || "").toLowerCase();
+    const notes = (desk.notes || "").toLowerCase();
+    return label.includes("kiosk") || notes.includes("kiosk");
+  }
+
+  function renderKioskList() {
+    if (!kioskList) {
+      return;
+    }
+    const kiosks = [];
+    deskMap.forEach((desk) => {
+      if (!isKioskDesk(desk)) {
+        return;
+      }
+      if (desk.status !== "free") {
+        return;
+      }
+      if (desk.is_assignable === false) {
+        return;
+      }
+      kiosks.push(desk);
+    });
+
+    kiosks.sort((a, b) => {
+      const labelA = ((a.label && a.label.toString().trim()) || a.identifier || "").toString();
+      const labelB = ((b.label && b.label.toString().trim()) || b.identifier || "").toString();
+      const labelCompare = labelA.localeCompare(labelB, undefined, { numeric: true, sensitivity: "base" });
+      if (labelCompare !== 0) {
+        return labelCompare;
+      }
+      const identifierA = (a.identifier || "").toString();
+      const identifierB = (b.identifier || "").toString();
+      return identifierA.localeCompare(identifierB, undefined, { sensitivity: "base" });
+    });
+
+    kioskList.innerHTML = "";
+    if (!kiosks.length) {
+      kioskList.classList.add("hidden");
+      if (kioskEmpty) {
+        kioskEmpty.classList.remove("hidden");
+      }
+      clearKioskHighlight();
+      return;
+    }
+
+    kioskList.classList.remove("hidden");
+    if (kioskEmpty) {
+      kioskEmpty.classList.add("hidden");
+    }
+
+    kiosks.forEach((desk) => {
+      const listItem = document.createElement("li");
+      const displayLabel = (desk.label && desk.label.toString().trim()) || desk.identifier;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "kiosk-button";
+      button.setAttribute("aria-label", `Show ${displayLabel} kiosk on the floor plan`);
+      button.title = `Show ${displayLabel} on the floor plan`;
+      button.addEventListener("click", () => focusKioskDesk(desk.identifier));
+
+      const title = document.createElement("span");
+      title.className = "kiosk-title";
+      title.textContent = displayLabel;
+      const meta = document.createElement("span");
+      meta.className = "kiosk-meta";
+      meta.textContent = desk.department;
+
+      button.appendChild(title);
+      button.appendChild(meta);
+      const noteText = desk.notes && desk.notes.toString().trim();
+      if (noteText) {
+        const note = document.createElement("span");
+        note.className = "kiosk-meta kiosk-note";
+        note.textContent = noteText;
+        button.appendChild(note);
+      }
+      listItem.appendChild(button);
+      kioskList.appendChild(listItem);
+    });
+  }
 
   const DEFAULT_TEXT_COLOR = "#0f172a";
   const LIGHT_TEXT_COLOR = "#ffffff";
@@ -706,9 +857,15 @@
       cell.onclick = null;
       cell.style.cursor = "default";
     }
+
+    if (!isRenderingFloorplan) {
+      renderKioskList();
+    }
   }
 
   function renderFloorplan() {
+    isRenderingFloorplan = true;
+    clearKioskHighlight();
     floorplanCanvas.innerHTML = "";
     cellMap.clear();
     identifierToGroup.clear();
@@ -783,6 +940,9 @@
     deskMap.forEach((desk) => {
       updateCellForDesk(desk);
     });
+
+    isRenderingFloorplan = false;
+    renderKioskList();
   }
 
   function adjustLegendColors() {
