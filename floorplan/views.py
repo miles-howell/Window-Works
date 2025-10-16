@@ -49,6 +49,12 @@ def _serialize_assignment(assignment: Assignment, now=None) -> dict | None:
     return data
 
 
+def _is_kiosk_desk(desk: Desk) -> bool:
+    label = (desk.label or "").strip().casefold()
+    notes = (desk.notes or "").strip().casefold()
+    return "kiosk" in label or "kiosk" in notes
+
+
 def _desk_payload(desk: Desk, now=None) -> dict:
     now = now or timezone.now()
     active_assignment = desk.active_assignment(now)
@@ -58,7 +64,8 @@ def _desk_payload(desk: Desk, now=None) -> dict:
         status = "occupied"
     if block_zones:
         status = "blocked"
-    is_assignable = desk.department.name not in {"Utility/Resource", "Walkway"}
+    is_kiosk = _is_kiosk_desk(desk)
+    is_assignable = is_kiosk or desk.department.name not in {"Utility/Resource", "Walkway"}
     left, top, width, height = grid_to_percentages(
         desk.row_index,
         desk.column_index,
@@ -73,6 +80,7 @@ def _desk_payload(desk: Desk, now=None) -> dict:
         "fill_color": desk.fill_color or desk.department.color,
         "notes": desk.notes,
         "is_assignable": is_assignable,
+        "is_kiosk": is_kiosk,
         "row": desk.row_index,
         "column": desk.column_index,
         "row_span": desk.row_span,
