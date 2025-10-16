@@ -3,8 +3,11 @@ from pathlib import Path
 
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
 
 from .employees import clear_employee_cache, normalize_extension_input
+from .models import Department, Desk
+from .views import _desk_payload
 
 
 class EmployeeAuthenticationTests(TestCase):
@@ -54,3 +57,77 @@ class EmployeeAuthenticationTests(TestCase):
         self.assertEqual(response.status_code, 400)
         payload = response.json()
         self.assertIn("error", payload)
+
+
+class DeskPayloadTests(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.walkway = Department.objects.create(name="Walkway", color="#FFFFFF")
+        self.utility = Department.objects.create(name="Utility/Resource", color="#EEEEEE")
+
+    def test_walkway_kiosk_is_treated_as_assignable(self):
+        desk = Desk.objects.create(
+            identifier="walkway-kiosk",
+            label="Kiosk",
+            department=self.walkway,
+            fill_color="#000000",
+            row_index=1,
+            column_index=1,
+            row_span=1,
+            column_span=1,
+            left_percentage=0,
+            top_percentage=0,
+            width_percentage=10,
+            height_percentage=10,
+            notes="",
+        )
+
+        payload = _desk_payload(desk, now=timezone.now())
+
+        self.assertTrue(payload["is_kiosk"])
+        self.assertTrue(payload["is_assignable"])
+        self.assertEqual(payload["status"], "free")
+
+    def test_walkway_desk_without_kiosk_label_stays_non_assignable(self):
+        desk = Desk.objects.create(
+            identifier="walkway-seat",
+            label="Hallway",
+            department=self.walkway,
+            fill_color="#FFFFFF",
+            row_index=1,
+            column_index=2,
+            row_span=1,
+            column_span=1,
+            left_percentage=10,
+            top_percentage=0,
+            width_percentage=10,
+            height_percentage=10,
+            notes="",
+        )
+
+        payload = _desk_payload(desk, now=timezone.now())
+
+        self.assertFalse(payload["is_kiosk"])
+        self.assertFalse(payload["is_assignable"])
+
+    def test_kiosk_detected_from_notes(self):
+        desk = Desk.objects.create(
+            identifier="utility-kiosk",
+            label="Shared space",
+            department=self.utility,
+            fill_color="#CCCCCC",
+            row_index=1,
+            column_index=3,
+            row_span=1,
+            column_span=1,
+            left_percentage=20,
+            top_percentage=0,
+            width_percentage=10,
+            height_percentage=10,
+            notes="Temporary kiosk location",
+        )
+
+        payload = _desk_payload(desk, now=timezone.now())
+
+        self.assertTrue(payload["is_kiosk"])
+        self.assertTrue(payload["is_assignable"])

@@ -204,8 +204,11 @@
     if (!desk) {
       return false;
     }
-    const label = (desk.label || "").toLowerCase();
-    const notes = (desk.notes || "").toLowerCase();
+    if (typeof desk.is_kiosk === "boolean") {
+      return desk.is_kiosk;
+    }
+    const label = (desk.label || "").toString().toLowerCase();
+    const notes = (desk.notes || "").toString().toLowerCase();
     return label.includes("kiosk") || notes.includes("kiosk");
   }
 
@@ -823,7 +826,8 @@
     cell.dataset.deskId = primaryDeskId;
 
     const isAssignable = renderDesk.is_assignable !== false;
-    const isWalkway = (renderDesk.department || "").toLowerCase() === "walkway";
+    const isWalkway =
+      (renderDesk.department || "").toLowerCase() === "walkway" && !isKioskDesk(renderDesk);
     const fillColor = renderDesk.fill_color || renderDesk.department_color || "";
 
     cell.classList.toggle("non-assignable", !isAssignable);
