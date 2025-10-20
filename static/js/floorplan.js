@@ -226,7 +226,7 @@
       if (!isKioskDesk(desk)) {
         return;
       }
-      if (desk.status !== "free") {
+      if (desk.status !== "FREE") {
         return;
       }
       if (desk.is_assignable === false) {
