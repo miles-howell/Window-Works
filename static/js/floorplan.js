@@ -229,7 +229,8 @@
       if (!isKioskDesk(desk)) {
         return;
       }
-      if (desk.status !== "FREE") {
+      const status = (desk.status || "").toString().toLowerCase();
+      if (status !== "free") {
         return;
       }
       if (desk.is_assignable === false) {
