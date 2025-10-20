@@ -41,16 +41,27 @@ source venv/bin/activate
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run database migrations
+# 3. Create a .env file for Django settings (safe defaults shown)
+cat <<'ENV' > .env
+DJANGO_SECRET_KEY=change-me-in-production
+DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
+# Future Microsoft SSO integration
+MICROSOFT_SSO_TENANT_ID=
+MICROSOFT_SSO_CLIENT_ID=
+MICROSOFT_SSO_CLIENT_SECRET=
+MICROSOFT_SSO_REDIRECT_URI=http://127.0.0.1:8000/auth/callback
+ENV
+
+# 4. Run database migrations
 python manage.py migrate
 
-# 4. Load the sample floor plan (optional but helpful for demoing)
+# 5. Load the sample floor plan (optional but helpful for demoing)
 python manage.py loaddata floorplan/fixtures/sample_floorplan.json
 
-# 5. Load the reference production layout (matches the spreadsheet)
+# 6. Load the reference production layout (matches the spreadsheet)
 python manage.py loaddata floorplan/fixtures/floorplan_layout.json
 
-# 6. Provide an employee roster for authentication
+# 7. Provide an employee roster for authentication
 mkdir -p media
 cat <<CSV > media/employees.csv
 First,Last,Extension
@@ -58,7 +69,7 @@ Jordan,Smith,5551
 Taylor,Nguyen,5562
 CSV
 
-# 7. Launch the development server
+# 8. Launch the development server
 python manage.py runserver
 ```
 
@@ -69,6 +80,10 @@ python manage.py createsuperuser
 ```
 
 Then sign in at [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/).
+
+### Environment configuration
+
+Window-Works reads configuration from environment variables with the help of [`python-dotenv`](https://pypi.org/project/python-dotenv/), so values placed in `.env` are loaded before Django evaluates the settings module. The defaults currently live in [`workspace_manager/settings.py`](workspace_manager/settings.py) for local development—review those names and update your `.env` values when promoting to staging or production. In particular, replace `DJANGO_SECRET_KEY`, tune `DJANGO_ALLOWED_HOSTS`, and populate the reserved Microsoft SSO fields once that integration is enabled.
 
 ## Using the application
 
