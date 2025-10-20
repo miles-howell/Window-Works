@@ -1,13 +1,37 @@
 import tempfile
 from pathlib import Path
 
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
+
+from workspace_manager import settings as project_settings
 
 from .employees import clear_employee_cache, normalize_extension_input
 from .models import Department, Desk
 from .views import _desk_payload
+
+
+class AllowedHostsParsingTests(SimpleTestCase):
+    def test_parse_handles_quoted_values(self):
+        parser = project_settings._parse_allowed_hosts
+        self.assertEqual(parser('"example.com"'), ["example.com"])
+        self.assertEqual(
+            parser(" example.com , '.example.org' "),
+            ["example.com", ".example.org"],
+        )
+
+    def test_parse_handles_json_array(self):
+        parser = project_settings._parse_allowed_hosts
+        self.assertEqual(
+            parser('["example.com", "api.example.com"]'),
+            ["example.com", "api.example.com"],
+        )
+
+    def test_parse_ignores_empty_values(self):
+        parser = project_settings._parse_allowed_hosts
+        self.assertEqual(parser(""), [])
+        self.assertEqual(parser(",,example.com, ,"), ["example.com"])
 
 
 class EmployeeAuthenticationTests(TestCase):
