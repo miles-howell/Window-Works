@@ -791,46 +791,65 @@
     return "Free";
   }
 
+  function mergeDeskDetails(baseDesk, overrideDesk) {
+    const result = { ...(baseDesk || {}) };
+    if (!overrideDesk) {
+      return result;
+    }
+    Object.keys(overrideDesk).forEach((key) => {
+      const value = overrideDesk[key];
+      if (value !== undefined) {
+        result[key] = value;
+      }
+    });
+    return result;
+  }
+
   function updateCellForDesk(desk) {
-    const key = cellKey(desk.row, desk.column);
+    const groupInfo = identifierToGroup.get(desk.identifier) || null;
+    const primaryDeskId = groupInfo ? groupInfo.primaryDeskId : desk.identifier;
+    const positions = groupInfo && groupInfo.positions ? groupInfo.positions : null;
+    const originalDesk =
+      groupInfo && groupInfo.desksById ? groupInfo.desksById.get(desk.identifier) : null;
+
+    const positionOverride = positions ? positions.get(desk.identifier) : null;
+    const positionedDesk = {
+      ...mergeDeskDetails(originalDesk, desk),
+      identifier: desk.identifier,
+      row: positionOverride ? positionOverride.row : desk.row,
+      column: positionOverride ? positionOverride.column : desk.column,
+    };
+
+    deskMap.set(desk.identifier, positionedDesk);
+
+    if (groupInfo && desk.identifier !== primaryDeskId) {
+      if (!isRenderingFloorplan) {
+        renderKioskList();
+      }
+      return;
+    }
+
+    const primaryPosition = positions && positions.get(primaryDeskId);
+    const renderDesk = {
+      ...positionedDesk,
+      identifier: primaryDeskId,
+      row: primaryPosition ? primaryPosition.row : positionedDesk.row,
+      column: primaryPosition ? primaryPosition.column : positionedDesk.column,
+    };
+
+    deskMap.set(primaryDeskId, renderDesk);
+
+    const key = cellKey(renderDesk.row, renderDesk.column);
     const cell = cellMap.get(key);
     if (!cell) {
       return;
     }
-
-    const groupInfo = identifierToGroup.get(desk.identifier) || null;
-    const primaryDeskId = groupInfo ? groupInfo.primaryDeskId : desk.identifier;
-    const positions = groupInfo && groupInfo.positions ? groupInfo.positions : null;
 
     const baseClasses = ["grid-cell", "has-desk"];
     if (groupInfo && (groupInfo.width > 1 || groupInfo.height > 1)) {
       baseClasses.push("grid-cell-group");
     }
     cell.className = baseClasses.join(" ");
-
-    const primaryPosition = positions && positions.get(primaryDeskId);
-    const renderDesk = {
-      ...desk,
-      identifier: primaryDeskId,
-      row: primaryPosition ? primaryPosition.row : desk.row,
-      column: primaryPosition ? primaryPosition.column : desk.column,
-    };
-
-    deskMap.set(primaryDeskId, renderDesk);
-    if (groupInfo) {
-      groupInfo.deskIds.forEach((identifier) => {
-        if (identifier === primaryDeskId) {
-          return;
-        }
-        const position = positions ? positions.get(identifier) : null;
-        deskMap.set(identifier, {
-          ...renderDesk,
-          identifier,
-          row: position ? position.row : desk.row,
-          column: position ? position.column : desk.column,
-        });
-      });
-    }
 
     cell.dataset.deskId = primaryDeskId;
 
@@ -912,12 +931,17 @@
           column: Number.isNaN(columnValue) ? desk.column : columnValue,
         });
       });
+      const desksById = new Map();
+      group.desks.forEach((desk) => {
+        desksById.set(desk.identifier, desk);
+      });
       const groupInfo = {
         primaryDeskId: group.primaryDeskId,
         deskIds,
         width: group.width,
         height: group.height,
         positions: positionMap,
+        desksById,
       };
       cell.dataset.groupDeskId = groupInfo.primaryDeskId;
       deskIds.forEach((identifier) => {
