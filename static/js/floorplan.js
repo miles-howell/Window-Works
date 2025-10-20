@@ -131,6 +131,9 @@
   const deskMap = new Map();
   desks.forEach((desk) => deskMap.set(desk.identifier, desk));
 
+  // Ensure “Available kiosks” renders immediately, even if floorplan rendering is delayed/aborted
+  renderKioskList();
+
   const gridRows = parseInt(floorplanCanvas.dataset.rows || "13", 10);
   const gridColumns = parseInt(floorplanCanvas.dataset.columns || "30", 10);
   floorplanCanvas.style.setProperty("--grid-rows", String(gridRows));
@@ -277,7 +280,7 @@
       title.textContent = displayLabel;
       const meta = document.createElement("span");
       meta.className = "kiosk-meta";
-      meta.textContent = desk.department;
+      meta.textContent = desk.department || "";
 
       button.appendChild(title);
       button.appendChild(meta);
