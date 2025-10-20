@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-import json
 import os
 from pathlib import Path
 
@@ -39,40 +38,9 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() in {
     "on",
 }
 
-def _parse_allowed_hosts(raw_value: str | None) -> list[str]:
-    """Return a list of hosts from an environment variable value."""
-
-    if not raw_value:
-        return []
-
-    cleaned_value = raw_value.strip()
-    if not cleaned_value:
-        return []
-
-    if cleaned_value.startswith("[") and cleaned_value.endswith("]"):
-        try:
-            parsed = json.loads(cleaned_value)
-        except json.JSONDecodeError:
-            pass
-        else:
-            return [
-                item.strip()
-                for item in parsed
-                if isinstance(item, str) and item.strip()
-            ]
-
-    hosts: list[str] = []
-    for host in cleaned_value.split(","):
-        candidate = host.strip().strip("\"'")
-        if candidate:
-            hosts.append(candidate)
-    return hosts
-
-
 allowed_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS")
 if allowed_hosts:
-    parsed_hosts = _parse_allowed_hosts(allowed_hosts)
-    ALLOWED_HOSTS = parsed_hosts or ["localhost", "127.0.0.1"]
+    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(",") if host.strip()]
 else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
