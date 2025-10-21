@@ -25,6 +25,21 @@
         Select cells to assign departments, update labels, or clear areas. Changes are saved
         immediately for the interactive floor plan and assignment tools.
       </p>
+      <form method="get" class="schedule-date-form" aria-label="Choose schedule date">
+        <div class="schedule-date-field">
+          <label for="view-date">Schedule date</label>
+          <input type="date" id="view-date" name="view_date" value="{{ view_date|date:'Y-m-d' }}" />
+        </div>
+        <div class="schedule-date-actions">
+          <button type="submit" class="button secondary">Show date</button>
+          {% if not is_today_selected %}
+            <a class="button secondary" href="{% url 'floorplan:admin-console' %}" role="button">Today</a>
+          {% endif %}
+        </div>
+      </form>
+      <p class="note-text schedule-date-message">
+        Showing scheduled floor plan for {{ view_date_display }}.
+      </p>
     </div>
     <div class="layout-editor">
       <div class="floorplan-wrapper">
@@ -194,6 +209,9 @@
   <div class="grid" style="margin-top: 2rem;">
     <section class="card">
       <h3>Active Assignments</h3>
+      <p class="note-text schedule-date-message">
+        Showing assignments scheduled for {{ view_date_display }}.
+      </p>
       {% if active_assignments %}
         <ul class="assignment-list">
           {% for assignment in active_assignments %}
@@ -228,6 +246,9 @@
       <h3>Scheduled Block-Out Zones</h3>
       <p class="note-text">
         Click a block-out zone to review its schedule, make changes, or delete it.
+      </p>
+      <p class="note-text schedule-date-message">
+        Showing block-out zones scheduled for {{ view_date_display }}.
       </p>
       {% if block_zones %}
         <ul class="block-list">

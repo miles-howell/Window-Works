@@ -322,20 +322,38 @@ def assign_to_desk(request, identifier: str):
 def admin_console(request):
     now = timezone.now()
     local_now = timezone.localtime(now)
+    today = local_now.date()
+
+    selected_date_str = (request.GET.get("view_date") or "").strip()
+    selected_date = today
+    if selected_date_str:
+        try:
+            selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
+        except ValueError:
+            messages.error(request, "Invalid date provided. Showing today's schedule instead.")
+            selected_date = today
+
+    evaluation_naive = datetime.combine(selected_date, time(12, 0))
+    evaluation_time = timezone.make_aware(
+        evaluation_naive, timezone.get_current_timezone()
+    )
+    localized_evaluation_time = timezone.localtime(evaluation_time)
 
     assignments = (
         Assignment.objects.select_related("desk", "desk__department")
         .order_by("assignee_name", "-start")
     )
-    active_assignments = [assignment for assignment in assignments if assignment.is_active(now)]
+    active_assignments = [
+        assignment for assignment in assignments if assignment.is_active(evaluation_time)
+    ]
     block_zone_queryset = (
         BlockOutZone.objects.prefetch_related("desks").order_by("start", "name")
     )
     scheduled_blocks: list[BlockOutZone] = []
     block_zone_payload: list[dict] = []
     for zone in block_zone_queryset:
-        is_active = zone.is_active(now)
-        starts_in_future = bool(zone.start and zone.start > now)
+        is_active = zone.is_active(evaluation_time)
+        starts_in_future = bool(zone.start and zone.start > evaluation_time)
         if not is_active and not starts_in_future:
             continue
         setattr(zone, "admin_is_active", is_active)
@@ -362,13 +380,17 @@ def admin_console(request):
         .prefetch_related("block_zones", "assignments")
         .all()
     )
-    layout_desks = [_desk_payload(desk, now) for desk in desks]
+    layout_desks = [_desk_payload(desk, evaluation_time) for desk in desks]
 
     context = {
         "active_assignments": active_assignments,
         "block_zones": scheduled_blocks,
         "block_zone_data": json.dumps(block_zone_payload),
         "now": local_now,
+        "view_datetime": localized_evaluation_time,
+        "view_date": selected_date,
+        "view_date_display": localized_evaluation_time.strftime("%B %d, %Y"),
+        "is_today_selected": selected_date == today,
         "layout_desks": json.dumps(layout_desks),
         "grid_rows": GRID_ROWS,
         "grid_columns": GRID_COLUMNS,
