@@ -425,6 +425,48 @@ body {
   gap: 1rem;
 }
 
+.schedule-date-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-top: 1rem;
+}
+
+.schedule-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 200px;
+}
+
+.schedule-date-field label {
+  font-weight: 600;
+}
+
+.schedule-date-form .schedule-date-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.schedule-date-form input[type="date"] {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  font: inherit;
+  color: inherit;
+}
+
+.schedule-date-form .button.secondary {
+  margin-top: 0;
+}
+
+.schedule-date-message {
+  margin-top: 0.75rem;
+}
+
 .selection-summary {
   background: rgba(148, 163, 184, 0.12);
   border: 1px solid rgba(15, 23, 42, 0.08);
