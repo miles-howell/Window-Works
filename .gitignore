@@ -7,3 +7,4 @@ media/
 .DS_Store
 .env
 *.csv
+static/img/
