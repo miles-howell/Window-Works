@@ -1,65 +1,13 @@
 import json
-import tempfile
 from datetime import datetime, time, timedelta
-from pathlib import Path
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from .employees import clear_employee_cache, normalize_extension_input
-from .models import Assignment, BlockOutZone, Department, Desk
+from .models import Assignment, Department, Desk
 from .views import _desk_payload
-
-
-class EmployeeAuthenticationTests(TestCase):
-    def setUp(self):
-        super().setUp()
-        self.tempdir = tempfile.TemporaryDirectory()
-        self.addCleanup(self.tempdir.cleanup)
-        self.csv_path = Path(self.tempdir.name) / "employees.csv"
-        self.csv_path.write_text(
-            """First,Last,Extension\nJohn,Doe,417-234-1234\nPickle,Rick,+1 (417) 234- 6969\nMiles,Howell,69-2853\n""",
-            encoding="utf-8",
-        )
-        self.override = override_settings(EMP_CSV_PATH=str(self.csv_path))
-        self.override.enable()
-        self.addCleanup(self.override.disable)
-        clear_employee_cache()
-        self.addCleanup(clear_employee_cache)
-
-    def test_normalize_extension_trims_common_prefix(self):
-        self.assertEqual(normalize_extension_input("69-2853"), "2853")
-
-    def test_authentication_matches_case_insensitive_last_name(self):
-        response = self.client.post(
-            reverse("floorplan:employee-auth"),
-            {"last_name": "doe", "extension": "1234"},
-        )
-        self.assertEqual(response.status_code, 200)
-        payload = response.json()
-        self.assertEqual(payload["full_name"], "John Doe")
-        self.assertEqual(payload["first_name"], "John")
-        self.assertEqual(payload["last_name"], "Doe")
-
-    def test_authentication_accepts_extension_with_prefix(self):
-        response = self.client.post(
-            reverse("floorplan:employee-auth"),
-            {"last_name": "Howell", "extension": "69-2853"},
-        )
-        self.assertEqual(response.status_code, 200)
-        payload = response.json()
-        self.assertEqual(payload["full_name"], "Miles Howell")
-
-    def test_authentication_rejects_unknown_extension(self):
-        response = self.client.post(
-            reverse("floorplan:employee-auth"),
-            {"last_name": "Doe", "extension": "9999"},
-        )
-        self.assertEqual(response.status_code, 400)
-        payload = response.json()
-        self.assertIn("error", payload)
 
 
 class DeskPayloadTests(TestCase):
@@ -207,13 +155,6 @@ class AdminConsoleScheduleTests(TestCase):
             end=end,
         )
 
-        block_zone = BlockOutZone.objects.create(
-            name="Renovation",
-            start=start,
-            end=end,
-        )
-        block_zone.desks.add(self.desk)
-
         response = self.client.get(
             reverse("floorplan:admin-console"), {"view_date": target_date.isoformat()}
         )
@@ -221,14 +162,8 @@ class AdminConsoleScheduleTests(TestCase):
         self.assertEqual(response.status_code, 200)
         layout_desks = json.loads(response.context["layout_desks"])
         desk_payload = next(item for item in layout_desks if item["identifier"] == "ops-1")
-        self.assertTrue(desk_payload["is_blocked"])
         self.assertIsNotNone(desk_payload["assignment"])
         self.assertEqual(desk_payload["assignment"]["assignee"], "Future Teammate")
-
-        block_zone_payload = json.loads(response.context["block_zone_data"])
-        self.assertEqual(len(block_zone_payload), 1)
-        self.assertTrue(block_zone_payload[0]["is_active"])
-        self.assertEqual(block_zone_payload[0]["name"], "Renovation")
 
         active_assignments = response.context["active_assignments"]
         self.assertIn(assignment, active_assignments)

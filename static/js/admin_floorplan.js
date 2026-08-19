@@ -163,66 +163,13 @@
   const assignmentFeedback = document.getElementById("assignment-feedback");
   const assignmentSubmit = document.getElementById("assignment-submit");
 
-  const blockForm = document.getElementById("block-form");
-  const blockSelectionInfo = document.getElementById("block-selection-info");
-  const blockName = document.getElementById("block-name");
-  const blockDuration = document.getElementById("block-duration");
-  const blockStart = document.getElementById("block-start");
-  const blockEnd = document.getElementById("block-end");
-  const blockReason = document.getElementById("block-reason");
-  const blockCreatedBy = document.getElementById("block-created-by");
-  const blockFeedback = document.getElementById("block-feedback");
-  const blockSubmit = document.getElementById("block-submit");
-  const blockZoneDataElement = document.getElementById("block-zone-data");
-  const blockZoneModal = document.getElementById("block-zone-modal");
-  const blockZoneForm = document.getElementById("block-zone-modal-form");
-  const blockZoneModalTitle = document.getElementById("block-zone-modal-title");
-  const blockZoneNameInput = document.getElementById("block-zone-modal-name");
-  const blockZoneDurationSelect = document.getElementById(
-    "block-zone-modal-duration",
-  );
-  const blockZoneStartInput = document.getElementById("block-zone-modal-start");
-  const blockZoneEndInput = document.getElementById("block-zone-modal-end");
-  const blockZoneReasonInput = document.getElementById("block-zone-modal-reason");
-  const blockZoneCreatedByInput = document.getElementById(
-    "block-zone-modal-created-by",
-  );
-  const blockZoneSchedule = document.getElementById("block-zone-modal-schedule");
-  const blockZoneDeskCount = document.getElementById("block-zone-modal-desk-count");
-  const blockZoneStatusBadge = document.getElementById("block-zone-modal-status");
-  const blockZoneCancelButton = document.getElementById("block-zone-modal-cancel");
-  const blockZoneDeleteForm = document.getElementById("block-zone-delete-form");
-  const blockZoneUpdateUrlTemplate = blockZoneModal
-    ? blockZoneModal.dataset.updateUrlTemplate || ""
-    : "";
-  const blockZoneDeleteUrlTemplate = blockZoneModal
-    ? blockZoneModal.dataset.deleteUrlTemplate || ""
-    : "";
-
   const modeButtons = document.querySelectorAll(".admin-mode-button");
   const modePanels = document.querySelectorAll(".mode-panel");
 
   const feedbackTargets = {
     layout: layoutFeedback,
     assignment: assignmentFeedback,
-    block: blockFeedback,
   };
-
-  const blockZoneLookup = new Map();
-  if (blockZoneDataElement) {
-    try {
-      const parsedZones = JSON.parse(blockZoneDataElement.textContent || "[]");
-      if (Array.isArray(parsedZones)) {
-        parsedZones.forEach((zone) => {
-          if (zone && zone.id != null) {
-            blockZoneLookup.set(String(zone.id), zone);
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Unable to parse block-out zone data", error);
-    }
-  }
 
   const SELECTION_DRAG_THRESHOLD_SQUARED = 9;
 
@@ -318,9 +265,6 @@
   }
 
   function statusLabel(desk) {
-    if (desk.status === "blocked") {
-      return "Blocked";
-    }
     if (desk.status === "occupied") {
       return "Occupied";
     }
@@ -382,13 +326,12 @@
 
       cell.classList.add("has-desk");
       cell.classList.toggle("non-assignable", !isAssignable);
-      cell.classList.toggle("blocked", desk.status === "blocked");
       cell.classList.toggle("occupied", desk.status === "occupied");
       cell.classList.toggle("free", desk.status === "free" && isAssignable);
       cell.classList.toggle("walkway", isWalkway);
       cell.dataset.deskId = desk.identifier;
 
-      if (desk.status !== "blocked" && fill) {
+      if (fill) {
         cell.style.background = fill;
       }
 
@@ -633,7 +576,6 @@
   function syncFormsWithSelection() {
     clearFeedback("layout");
     clearFeedback("assignment");
-    clearFeedback("block");
     if (layoutForm) {
       if (selectedCells.size !== 1) {
         layoutForm.reset();
@@ -662,9 +604,7 @@
   }
 
   function updateActionAvailability() {
-    const desks = getSelectedDesks();
     const assignable = getAssignableDesks();
-    const ignoredCount = selectedCells.size - desks.length;
 
     if (assignmentSelectionInfo) {
       if (assignable.length === 0) {
@@ -677,19 +617,6 @@
     }
     if (assignmentSubmit) {
       assignmentSubmit.disabled = assignable.length === 0;
-    }
-
-    if (blockSelectionInfo) {
-      if (desks.length === 0) {
-        blockSelectionInfo.textContent = "Select the desks you want to block.";
-      } else if (ignoredCount > 0) {
-        blockSelectionInfo.textContent = `${desks.length} desk(s) will be blocked. ${ignoredCount} empty cell(s) ignored.`;
-      } else {
-        blockSelectionInfo.textContent = `${desks.length} desk(s) will be blocked.`;
-      }
-    }
-    if (blockSubmit) {
-      blockSubmit.disabled = desks.length === 0;
     }
   }
 
@@ -877,230 +804,6 @@
     });
   }
 
-  if (blockForm) {
-    blockForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const desks = getSelectedDesks();
-      if (desks.length === 0) {
-        setFeedback("Select at least one desk to block.", "warning", "block");
-        return;
-      }
-      if (!blockName) {
-        return;
-      }
-      const zoneName = blockName.value.trim();
-      if (!zoneName) {
-        setFeedback("Enter a name for this block-out zone.", "warning", "block");
-        blockName.focus();
-        return;
-      }
-      const blockDurationValue = blockDuration ? blockDuration.value : "temporary";
-      const blockStartValue = blockStart ? blockStart.value : "";
-      const blockEndValue =
-        blockDurationValue === "permanent" || !blockEnd ? "" : blockEnd.value;
-      const payload = {
-        action: "block",
-        cells: selectedCellsPayload(),
-        data: {
-          name: zoneName,
-          duration_choice: blockDurationValue,
-          start: blockStartValue,
-          end: blockEndValue,
-          reason: blockReason ? blockReason.value.trim() : "",
-          created_by: blockCreatedBy ? blockCreatedBy.value.trim() : "",
-        },
-      };
-      try {
-        const result = await sendUpdate(payload);
-        applyServerResult(result);
-        blockForm.reset();
-        setDefaultStart(blockForm, blockStart);
-        bindDurationToggle(blockDuration, blockEnd);
-        setFeedback(result.message || "Block-out zone saved.", "success", "block");
-      } catch (error) {
-        setFeedback(error.message, "danger", "block");
-      }
-    });
-  }
-
-  function applyIdToTemplate(template, id) {
-    if (!template) {
-      return "";
-    }
-    return template.replace(/\/0\//, `/${String(id)}/`);
-  }
-
-  function blockZoneScheduleSummary(zone) {
-    if (!zone) {
-      return "";
-    }
-    const parts = [];
-    if (zone.is_active) {
-      parts.push("Active now");
-    } else if (zone.start_display) {
-      parts.push(`Begins ${zone.start_display}`);
-    }
-    if (zone.is_permanent) {
-      parts.push("Permanent block");
-    } else if (zone.end_display) {
-      parts.push(`Ends ${zone.end_display}`);
-    }
-    if (parts.length === 0 && zone.duration_display) {
-      parts.push(zone.duration_display);
-    }
-    return parts.join(" • ");
-  }
-
-  function blockZoneDeskSummary(count) {
-    const deskCount = Number(count) || 0;
-    if (deskCount === 1) {
-      return "1 desk included in this zone.";
-    }
-    return `${deskCount} desks included in this zone.`;
-  }
-
-  function closeBlockZoneModal() {
-    if (!blockZoneModal) {
-      return;
-    }
-    blockZoneModal.classList.add("hidden");
-    blockZoneModal.setAttribute("aria-hidden", "true");
-    delete blockZoneModal.dataset.currentZoneId;
-    if (blockZoneForm) {
-      blockZoneForm.reset();
-      blockZoneForm.action = blockZoneUpdateUrlTemplate;
-    }
-    if (blockZoneEndInput) {
-      blockZoneEndInput.disabled = false;
-    }
-    if (blockZoneDeleteForm) {
-      blockZoneDeleteForm.action = blockZoneDeleteUrlTemplate;
-    }
-    if (blockZoneSchedule) {
-      blockZoneSchedule.textContent = "";
-    }
-    if (blockZoneDeskCount) {
-      blockZoneDeskCount.textContent = "";
-    }
-    if (blockZoneStatusBadge) {
-      blockZoneStatusBadge.textContent = "";
-      blockZoneStatusBadge.classList.remove("success", "warning");
-    }
-    if (blockZoneModalTitle) {
-      blockZoneModalTitle.textContent = "Edit block-out zone";
-    }
-  }
-
-  function openBlockZoneModal(zoneId) {
-    if (!blockZoneModal || !blockZoneForm) {
-      return;
-    }
-    const zone = blockZoneLookup.get(String(zoneId));
-    if (!zone) {
-      return;
-    }
-    blockZoneModal.classList.remove("hidden");
-    blockZoneModal.setAttribute("aria-hidden", "false");
-    blockZoneModal.dataset.currentZoneId = String(zoneId);
-    blockZoneForm.action = applyIdToTemplate(blockZoneUpdateUrlTemplate, zoneId);
-    if (blockZoneDeleteForm) {
-      blockZoneDeleteForm.action = applyIdToTemplate(
-        blockZoneDeleteUrlTemplate,
-        zoneId,
-      );
-    }
-    if (blockZoneModalTitle) {
-      blockZoneModalTitle.textContent = `Edit ${zone.name}`;
-    }
-    if (blockZoneNameInput) {
-      blockZoneNameInput.value = zone.name || "";
-    }
-    if (blockZoneDurationSelect) {
-      blockZoneDurationSelect.value = zone.is_permanent
-        ? "permanent"
-        : zone.duration_choice || "temporary";
-    }
-    if (blockZoneStartInput) {
-      blockZoneStartInput.value = zone.start || "";
-    }
-    if (blockZoneEndInput) {
-      blockZoneEndInput.value = zone.is_permanent ? "" : zone.end || "";
-    }
-    if (blockZoneReasonInput) {
-      blockZoneReasonInput.value = zone.reason || "";
-    }
-    if (blockZoneCreatedByInput) {
-      blockZoneCreatedByInput.value = zone.created_by || "";
-    }
-    if (blockZoneSchedule) {
-      blockZoneSchedule.textContent = blockZoneScheduleSummary(zone);
-    }
-    if (blockZoneDeskCount) {
-      blockZoneDeskCount.textContent = blockZoneDeskSummary(zone.desk_count);
-    }
-    if (blockZoneStatusBadge) {
-      blockZoneStatusBadge.textContent = zone.is_active ? "Active" : "Scheduled";
-      blockZoneStatusBadge.classList.remove("success", "warning");
-      blockZoneStatusBadge.classList.add(zone.is_active ? "success" : "warning");
-    }
-    bindDurationToggle(blockZoneDurationSelect, blockZoneEndInput);
-    if (blockZoneEndInput && blockZoneDurationSelect) {
-      blockZoneEndInput.disabled = blockZoneDurationSelect.value === "permanent";
-    }
-    window.setTimeout(() => {
-      if (blockZoneNameInput && typeof blockZoneNameInput.focus === "function") {
-        blockZoneNameInput.focus();
-        if (typeof blockZoneNameInput.select === "function") {
-          blockZoneNameInput.select();
-        }
-      }
-    }, 0);
-  }
-
-  const blockZoneItems = document.querySelectorAll(
-    ".block-item[data-block-id]",
-  );
-  blockZoneItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      const zoneId = item.dataset.blockId;
-      if (zoneId != null) {
-        openBlockZoneModal(zoneId);
-      }
-    });
-    item.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        const zoneId = item.dataset.blockId;
-        if (zoneId != null) {
-          openBlockZoneModal(zoneId);
-        }
-      }
-    });
-  });
-
-  if (blockZoneCancelButton) {
-    blockZoneCancelButton.addEventListener("click", () => {
-      closeBlockZoneModal();
-    });
-  }
-
-  if (blockZoneModal) {
-    blockZoneModal.addEventListener("click", (event) => {
-      if (event.target === blockZoneModal) {
-        closeBlockZoneModal();
-      }
-    });
-  }
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && blockZoneModal) {
-      const isHidden = blockZoneModal.classList.contains("hidden");
-      if (!isHidden) {
-        closeBlockZoneModal();
-      }
-    }
-  });
-
   modeButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const mode = button.dataset.adminMode;
@@ -1114,9 +817,6 @@
   updateSelectionInfo();
   setActiveMode(activeMode);
   setDefaultStart(assignmentForm, assignmentStart);
-  setDefaultStart(blockForm, blockStart);
   bindDurationToggle(assignmentDuration, assignmentEnd);
-  bindDurationToggle(blockDuration, blockEnd);
-  bindDurationToggle(blockZoneDurationSelect, blockZoneEndInput);
   updateActionAvailability();
 })();

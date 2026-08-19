@@ -1,7 +1,6 @@
 from django import forms
-from django.utils import timezone
 
-from .models import Assignment, BlockOutZone
+from .models import Assignment
 
 
 class AssignmentForm(forms.ModelForm):
@@ -74,49 +73,4 @@ class AssignmentForm(forms.ModelForm):
                     .exclude(pk=instance.pk)
                     .update(end=instance.start, is_permanent=False)
                 )
-        return instance
-
-
-class BlockOutZoneForm(forms.ModelForm):
-    duration_choice = forms.ChoiceField(
-        choices=[
-            ("temporary", "Temporary"),
-            ("permanent", "Permanent"),
-        ],
-        label="Block Duration",
-        initial="temporary",
-    )
-
-    class Meta:
-        model = BlockOutZone
-        fields = ["name", "desks", "start", "end", "duration_choice", "reason", "created_by"]
-        widgets = {
-            "desks": forms.CheckboxSelectMultiple(),
-            "start": forms.DateTimeInput(attrs={"type": "datetime-local"}),
-            "end": forms.DateTimeInput(attrs={"type": "datetime-local"}),
-            "reason": forms.Textarea(attrs={"rows": 2}),
-        }
-
-    def clean(self):
-        cleaned = super().clean()
-        if cleaned.get("duration_choice") == "permanent":
-            cleaned["is_permanent"] = True
-            cleaned["end"] = None
-        else:
-            cleaned["is_permanent"] = False
-        start = cleaned.get("start") or timezone.now()
-        cleaned["start"] = start
-        end = cleaned.get("end")
-        if not cleaned.get("is_permanent") and end and end < start:
-            self.add_error("end", "End time must be after the start time.")
-        return cleaned
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.is_permanent = self.cleaned_data.get("is_permanent", False)
-        if instance.is_permanent:
-            instance.end = None
-        if commit:
-            instance.save()
-            self.save_m2m()
         return instance

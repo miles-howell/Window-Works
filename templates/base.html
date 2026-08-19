@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Workspace Manager{% endblock %}</title>
+    <title>{% block title %}Floorplan Tracker{% endblock %}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,7 @@
     </main>
     <footer class="app-footer">
       <div class="container footer-container">
-        <p class="footer-copy">Need help? Contact Workplace Services.</p>
+        <p class="footer-copy">Need help? Contact your workspace administrator.</p>
         <nav class="footer-nav" aria-label="Primary">
           <a href="{% url 'floorplan:index' %}">Floor Plan</a>
           <a href="{% url 'floorplan:admin-console' %}">Admin Panel</a>

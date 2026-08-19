@@ -467,15 +467,11 @@
     return accessible;
   }
 
-  const nameModal = document.getElementById("name-modal");
   const deskModal = document.getElementById("desk-modal");
   const deskModalContent = document.getElementById("desk-modal-content");
   const deskModalClose = document.getElementById("desk-modal-close");
   const nameForm = document.getElementById("name-form");
-  const lastNameInput = document.getElementById("employee-last-name");
-  const extensionInput = document.getElementById("employee-extension");
-  const nameFeedback = document.getElementById("name-feedback");
-  const nameSubmitButton = nameForm ? nameForm.querySelector("button[type=\"submit\"]") : null;
+  const nameInput = document.getElementById("employee-name");
   const statusBanner = document.getElementById("user-status");
   const statusTitle = document.getElementById("status-title");
   const statusBody = document.getElementById("status-body");
@@ -484,61 +480,28 @@
   const detailLocation = document.getElementById("detail-location");
   const detailDepartment = document.getElementById("detail-department");
   const detailDuration = document.getElementById("detail-duration");
-  const alertList = document.getElementById("alert-list");
 
-  const STORAGE_KEY = "workspaceEmployeeProfile";
-  const LEGACY_KEY = "workspaceEmployeeName";
-
-  function normalizeUserProfile(rawValue) {
-    if (!rawValue) {
-      return null;
-    }
-    let parsed = rawValue;
-    if (typeof rawValue === "string") {
-      try {
-        parsed = JSON.parse(rawValue);
-      } catch (error) {
-        return null;
-      }
-    }
-    const firstName = (parsed.firstName || parsed.first_name || "").trim();
-    const lastName = (parsed.lastName || parsed.last_name || "").trim();
-    let fullName = (parsed.fullName || parsed.full_name || "").trim();
-    if (!fullName) {
-      fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
-    }
-    if (!fullName) {
-      return null;
-    }
-    return {
-      firstName,
-      lastName,
-      fullName,
-    };
-  }
+  const STORAGE_KEY = "floorplanUserName";
 
   function readStoredUser() {
-    const storedValue = localStorage.getItem(STORAGE_KEY);
-    const user = storedValue ? normalizeUserProfile(storedValue) : null;
-    return user;
+    const storedValue = (localStorage.getItem(STORAGE_KEY) || "").trim();
+    return storedValue || null;
   }
 
-  function setCurrentUser(user) {
-    const normalized = normalizeUserProfile(user);
+  function setCurrentUser(name) {
+    const normalized = (name || "").trim();
     if (!normalized) {
       currentUser = null;
       localStorage.removeItem(STORAGE_KEY);
       return;
     }
     currentUser = normalized;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+    localStorage.setItem(STORAGE_KEY, normalized);
   }
 
   function getCurrentFullName() {
-    return currentUser ? currentUser.fullName : "";
+    return currentUser || "";
   }
-
-  localStorage.removeItem(LEGACY_KEY);
 
   let currentUser = readStoredUser();
   let highlightedCellKey = null;
@@ -561,7 +524,6 @@
     const assignmentKey = assignment
       ? [assignment.assignee || "", assignment.assignment_type || ""].join("|")
       : "";
-    const blockKey = Array.isArray(desk.block_zones) ? desk.block_zones.join("|") : "";
     return [
       normalizedLabel,
       desk.status || "",
@@ -569,10 +531,8 @@
       desk.department_color || "",
       desk.fill_color || "",
       desk.is_assignable ? "assignable" : "locked",
-      desk.is_blocked ? "blocked" : "clear",
       isWalkway ? "walkway" : "",
       assignmentKey,
-      blockKey,
       desk.notes || "",
     ].join("||");
   }
@@ -721,8 +681,6 @@
   function updateAssignmentDetails(assignment) {
     if (!assignment) {
       assignmentDetails.classList.add("hidden");
-      alertList.classList.add("hidden");
-      alertList.innerHTML = "";
       highlightDesk(null);
       return;
     }
@@ -742,19 +700,6 @@
       highlightDesk(assignment.desk_identifier);
     } else {
       highlightDesk(null);
-    }
-
-    alertList.innerHTML = "";
-    if (assignment.blocked_zones && assignment.blocked_zones.length) {
-      assignment.blocked_zones.forEach((zone) => {
-        const li = document.createElement("li");
-        li.className = "alert-item";
-        li.textContent = `${assignment.desk} is currently blocked because of ${zone}. Please choose a new location.`;
-        alertList.appendChild(li);
-      });
-      alertList.classList.remove("hidden");
-    } else {
-      alertList.classList.add("hidden");
     }
   }
 
@@ -782,9 +727,6 @@
   }
 
   function statusLabelForDesk(desk) {
-    if (desk.status === "blocked") {
-      return "Blocked";
-    }
     if (desk.status === "occupied") {
       return "Occupied";
     }
@@ -859,16 +801,11 @@
     const fillColor = renderDesk.fill_color || renderDesk.department_color || "";
 
     cell.classList.toggle("non-assignable", !isAssignable);
-    cell.classList.toggle("blocked", renderDesk.status === "blocked");
     cell.classList.toggle("occupied", renderDesk.status === "occupied");
     cell.classList.toggle("free", renderDesk.status === "free" && isAssignable);
     cell.classList.toggle("walkway", isWalkway);
 
-    if (renderDesk.status === "blocked") {
-      applyAccessibleCellStyles(cell, "");
-    } else {
-      applyAccessibleCellStyles(cell, fillColor);
-    }
+    applyAccessibleCellStyles(cell, fillColor);
 
     const statusLabel = statusLabelForDesk(renderDesk);
     const statusModifier = renderDesk.status ? ` status-${renderDesk.status}` : "";
@@ -1013,25 +950,16 @@
 
   function renderDeskDetailsModal(desk) {
     const assignment = desk.assignment;
-    const blockList = desk.block_zones || [];
     const lines = [];
     lines.push(`<h2>${desk.label}</h2>`);
     lines.push(`<p><strong>Department:</strong> ${desk.department}</p>`);
-    if (desk.status === "blocked") {
-      lines.push(`<p class="note-text">This desk is currently unavailable because of the following zones:</p>`);
-      lines.push("<ul class=\"alert-list\">");
-      blockList.forEach((zone) => {
-        lines.push(`<li class="alert-item">${zone}</li>`);
-      });
-      lines.push("</ul>");
-    }
     if (assignment) {
       lines.push(`<p><strong>Assigned to:</strong> ${assignment.assignee}</p>`);
       lines.push(`<p><strong>Duration:</strong> ${assignment.duration}</p>`);
       if (assignment.note) {
         lines.push(`<p class="note-text">${assignment.note}</p>`);
       }
-    } else if (desk.status !== "blocked") {
+    } else {
       lines.push("<p>This desk is currently unassigned.</p>");
     }
     if (desk.notes) {
@@ -1040,20 +968,20 @@
     deskModalContent.innerHTML = lines.join("");
   }
 
+  function escapeAttribute(value) {
+    return (value || "").toString().replace(/"/g, "&quot;");
+  }
+
   function renderAssignModal(desk) {
-    const safeName = getCurrentFullName();
-    if (!safeName) {
-      deskModalContent.innerHTML = `
-        <h2>Reserve ${desk.label}</h2>
-        <p class="note-text">Please verify your employee information before reserving a seat.</p>
-      `;
-      return;
-    }
+    const storedName = getCurrentFullName();
     deskModalContent.innerHTML = `
       <h2>Reserve ${desk.label}</h2>
       <p>Free seat in ${desk.department}. Confirm to reserve this desk until the end of the day.</p>
-      <p><strong>Employee:</strong> ${safeName}</p>
       <form id="assign-form">
+        <div>
+          <label for="assign-name">Your name</label>
+          <input type="text" id="assign-name" name="assignee_name" required placeholder="Jordan Smith" value="${escapeAttribute(storedName)}" />
+        </div>
         <div class="modal-actions">
           <button type="submit" class="button primary">Reserve seat</button>
         </div>
@@ -1062,10 +990,18 @@
     `;
 
     const assignForm = document.getElementById("assign-form");
+    const assignNameInput = document.getElementById("assign-name");
     const assignError = document.getElementById("assign-error");
     assignForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       assignError.classList.add("hidden");
+      const enteredName = assignNameInput.value.trim();
+      if (!enteredName) {
+        assignError.textContent = "Please enter your name.";
+        assignError.classList.remove("hidden");
+        assignNameInput.focus();
+        return;
+      }
       try {
         const response = await fetch(`/api/desks/${desk.identifier}/assign/`, {
           method: "POST",
@@ -1073,7 +1009,7 @@
             "Content-Type": "application/x-www-form-urlencoded",
             "X-CSRFToken": window.getCsrfToken(),
           },
-          body: new URLSearchParams({ assignee_name: safeName }).toString(),
+          body: new URLSearchParams({ assignee_name: enteredName }).toString(),
         });
         if (!response.ok) {
           const payload = await response.json().catch(() => ({ error: "Unable to reserve seat." }));
@@ -1083,28 +1019,15 @@
             deskMap.set(payload.desk.identifier, payload.desk);
             updateCellForDesk(payload.desk);
           }
-          if (response.status === 403) {
-            setCurrentUser(null);
-            hideModal(deskModal);
-            if (nameModal && lastNameInput) {
-              showModal(nameModal, lastNameInput);
-            }
-            await loadAssignmentInfo();
-          }
           return;
         }
         const result = await response.json();
         deskMap.set(result.desk.identifier, result.desk);
         updateCellForDesk(result.desk);
-        const assignedName = (result.assignment && result.assignment.assignee) || safeName;
-        if (currentUser) {
-          setCurrentUser({
-            firstName: currentUser.firstName,
-            lastName: currentUser.lastName,
-            fullName: assignedName,
-          });
-        } else {
-          setCurrentUser({ fullName: assignedName });
+        const assignedName = (result.assignment && result.assignment.assignee) || enteredName;
+        setCurrentUser(assignedName);
+        if (nameInput) {
+          nameInput.value = assignedName;
         }
         hideModal(deskModal);
         await loadAssignmentInfo();
@@ -1135,13 +1058,13 @@
       setStatus(
         "info",
         "Welcome!",
-        "Enter your last name and extension to load your assignment details.",
+        "Enter your name above to load your assignment details.",
       );
       updateAssignmentDetails(null);
       return;
     }
-    if (lastNameInput && currentUser) {
-      lastNameInput.value = currentUser.lastName;
+    if (nameInput) {
+      nameInput.value = fullName;
     }
     const params = new URLSearchParams({ name: fullName });
     try {
@@ -1174,101 +1097,24 @@
     }
   }
 
-  function updateNameFeedback(message) {
-    if (!nameFeedback) {
+  function initNameForm() {
+    if (!nameForm || !nameInput) {
       return;
     }
-    if (message) {
-      nameFeedback.textContent = message;
-      nameFeedback.classList.remove("hidden");
-    } else {
-      nameFeedback.textContent = "";
-      nameFeedback.classList.add("hidden");
-    }
-  }
-
-  function setVerificationBusy(isBusy) {
-    if (!nameSubmitButton) {
-      return;
-    }
-    if (!nameSubmitButton.dataset.originalLabel) {
-      nameSubmitButton.dataset.originalLabel = nameSubmitButton.textContent || "";
-    }
-    if (isBusy) {
-      nameSubmitButton.disabled = true;
-      nameSubmitButton.textContent = "Verifying…";
-    } else {
-      nameSubmitButton.disabled = false;
-      nameSubmitButton.textContent = nameSubmitButton.dataset.originalLabel || "Verify details";
-    }
-  }
-
-  function initNameModal() {
-    if (!nameModal || !nameForm || !lastNameInput || !extensionInput) {
-      return;
-    }
-    if (!getCurrentFullName()) {
-      showModal(nameModal, lastNameInput);
-    } else if (currentUser) {
-      lastNameInput.value = currentUser.lastName;
+    const currentName = getCurrentFullName();
+    if (currentName) {
+      nameInput.value = currentName;
     }
 
-    nameForm.addEventListener("submit", async (event) => {
+    nameForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      const lastNameValue = lastNameInput.value.trim();
-      const extensionValue = extensionInput.value.trim();
-      if (!lastNameValue) {
-        updateNameFeedback("Please enter your last name.");
-        lastNameInput.focus();
-        return;
-      }
-      if (!extensionValue) {
-        updateNameFeedback("Please enter the last four digits of your extension.");
-        extensionInput.focus();
-        return;
-      }
-      updateNameFeedback("");
-      setVerificationBusy(true);
-      setStatus("info", "Verifying details", "Hang tight while we match your information.");
-      try {
-        const response = await fetch("/api/employee-auth/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-CSRFToken": window.getCsrfToken(),
-          },
-          body: new URLSearchParams({ last_name: lastNameValue, extension: extensionValue }).toString(),
-        });
-        if (!response.ok) {
-          const payload = await response.json().catch(() => ({}));
-          const message = payload.error || "We couldn't verify those details. Please try again.";
-          updateNameFeedback(message);
-          setStatus("danger", "Verification failed", message);
-          return;
-        }
-        const data = await response.json();
-        setCurrentUser({
-          firstName: data.first_name,
-          lastName: data.last_name,
-          fullName: data.full_name,
-        });
-        setStatus(
-          "success",
-          "Verification complete",
-          `Welcome back, ${getCurrentFullName()}. Loading your assignment details now.`,
-        );
-        updateNameFeedback("");
-        extensionInput.value = "";
-        hideModal(nameModal);
-        await loadAssignmentInfo();
-      } catch (error) {
-        updateNameFeedback("Network error. Please try again.");
-        setStatus("danger", "Network error", "We couldn't verify your details. Please try again.");
-      } finally {
-        setVerificationBusy(false);
-      }
+      setCurrentUser(nameInput.value);
+      loadAssignmentInfo();
     });
-
+    nameInput.addEventListener("blur", () => {
+      setCurrentUser(nameInput.value);
+      loadAssignmentInfo();
+    });
   }
 
   deskModalClose.addEventListener("click", () => hideModal(deskModal));
@@ -1280,6 +1126,6 @@
 
   renderFloorplan();
   adjustLegendColors();
-  initNameModal();
+  initNameForm();
   loadAssignmentInfo();
 })();

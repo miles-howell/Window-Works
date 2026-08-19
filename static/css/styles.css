@@ -28,28 +28,6 @@ body {
   width: 100%;
 }
 
-.branding {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo {
-  font-size: 2rem;
-}
-
-.app-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.app-subtitle {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-
 .app-main {
   flex: 1;
   padding: 0.5rem 0 4rem;
@@ -324,10 +302,6 @@ body {
   --status-accent: var(--warning);
 }
 
-.grid-cell .status-pill.status-blocked {
-  --status-accent: var(--danger);
-}
-
 .grid-cell[data-contrast="dark"] .status-pill {
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.4);
 }
@@ -362,17 +336,6 @@ body {
 
 .grid-cell .empty-cell {
   font-size: 0.75rem;
-}
-
-.grid-cell.blocked {
-  background: repeating-linear-gradient(-45deg, rgba(217, 45, 32, 0.6), rgba(217, 45, 32, 0.6) 12px, rgba(255, 255, 255, 0.4) 12px, rgba(255, 255, 255, 0.4) 24px);
-  /*color: #fff;*/
-}
-
-.grid-cell.blocked .status-pill {
-  background: rgba(15, 23, 42, 0.85);
-  color: #fff;
-  border-color: rgba(15, 23, 42, 0.6);
 }
 
 .grid-cell.free {
@@ -684,8 +647,7 @@ body {
   font-size: 1.1rem;
 }
 
-.assignment-list,
-.block-list {
+.assignment-list {
   list-style: none;
   padding: 0;
   margin: 1rem 0 0;
@@ -693,34 +655,16 @@ body {
   gap: 0.75rem;
 }
 
-.assignment-item,
-.block-item {
+.assignment-item {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.75rem 1rem;
   background: rgba(249, 250, 251, 0.8);
 }
 
-.assignment-item strong,
-.block-item strong {
+.assignment-item strong {
   display: block;
   font-weight: 600;
-}
-
-.block-item[role="button"] {
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.block-item[role="button"]:hover {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-}
-
-.block-item[role="button"]:focus-visible {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .assignment-meta {
@@ -829,32 +773,6 @@ body {
 .modal-card h2 {
   margin-top: 0;
   margin-bottom: 0.75rem;
-}
-
-.welcome-modal {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.welcome-hero {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.welcome-hero .logo {
-  font-size: 2.5rem;
-}
-
-.welcome-body h2 {
-  margin: 0 0 0.75rem;
-}
-
-.welcome-body p {
-  margin: 0 0 1.5rem;
-  color: var(--muted);
 }
 
 .modal-card form {
