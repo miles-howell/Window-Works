@@ -1,10 +1,56 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+
+# Virtual environment
 venv/
+.venv/
+env/
+ENV/
+
+# Python
 __pycache__/
 *.py[cod]
-*.sqlite3
-staticfiles/
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 media/
-.DS_Store
+staticfiles/
+/static/
+
+# Environment variables / secrets
 .env
-*.csv
-static/img/
+.env.*
+!.env.example
+*.pem
+
+# Migrations (usually keep these — see note below)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Coverage / testing
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+nogc.log
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
