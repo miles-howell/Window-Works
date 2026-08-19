@@ -17,45 +17,6 @@
       </div>
     </section>
     <aside class="card sidebar-card">
-      <h2>Your Assignment</h2>
-      <form id="name-form" class="form-grid">
-        <div>
-          <label for="employee-name">Your name</label>
-          <input type="text" id="employee-name" name="name" placeholder="Jordan Smith" autocomplete="name" />
-        </div>
-      </form>
-      <div id="user-status" class="status-banner info">
-        <div>
-          <strong id="status-title">Welcome!</strong>
-          <span id="status-body">Enter your name above to load your assignment details.</span>
-        </div>
-      </div>
-      <div id="assignment-details" class="hidden">
-        <table class="table-like">
-          <tbody>
-            <tr>
-              <th scope="row">Employee</th>
-              <td id="detail-employee"></td>
-            </tr>
-            <tr>
-              <th scope="row">Location</th>
-              <td id="detail-location"></td>
-            </tr>
-            <tr>
-              <th scope="row">Department</th>
-              <td id="detail-department"></td>
-            </tr>
-            <tr>
-              <th scope="row">Duration</th>
-              <td id="detail-duration"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="note-text" style="margin-top: 1.5rem;">
-        Need a change? Select any available seat (marked Free) to reserve it for yourself for the
-        rest of the day.
-      </p>
       <div class="legend">
         {% for department in departments %}
           <div class="legend-item">
