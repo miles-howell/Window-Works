@@ -93,10 +93,6 @@ class Desk(models.Model):
             .first()
         )
 
-    def is_blocked(self, reference_time=None) -> bool:
-        reference_time = reference_time or timezone.now()
-        return any(zone.is_active(reference_time) for zone in self.block_zones.all())
-
 
 class Assignment(models.Model):
     """Represents a user occupying a desk or working remotely."""
@@ -152,32 +148,3 @@ class Assignment(models.Model):
         if self.end:
             return f"Until {timezone.localtime(self.end).strftime('%b %d, %Y %I:%M %p')}"
         return "Open ended"
-
-
-class BlockOutZone(models.Model):
-    """Represents a collection of desks unavailable for a time period."""
-
-    name = models.CharField(max_length=150)
-    desks = models.ManyToManyField(Desk, related_name="block_zones")
-    start = models.DateTimeField(default=timezone.now)
-    end = models.DateTimeField(blank=True, null=True)
-    is_permanent = models.BooleanField(default=False)
-    reason = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.CharField(max_length=200, blank=True)
-
-    class Meta:
-        ordering = ["-start", "name"]
-
-    def __str__(self) -> str:  # pragma: no cover
-        return self.name
-
-    def is_active(self, reference_time=None) -> bool:
-        reference_time = reference_time or timezone.now()
-        if self.start and self.start > reference_time:
-            return False
-        if self.is_permanent:
-            return True
-        if self.end is None:
-            return True
-        return self.end >= reference_time

@@ -13,13 +13,9 @@ from django.views.decorators.http import require_GET, require_POST
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 
-from .employees import match_employee, normalize_extension_input
-from .forms import AssignmentForm, BlockOutZoneForm
+from .forms import AssignmentForm
 from .layout import GRID_COLUMNS, GRID_ROWS, cell_identifier, grid_to_percentages
-from .models import Assignment, BlockOutZone, Department, Desk
-
-
-SESSION_EMPLOYEE_PROFILE_KEY = "floorplan_employee_profile"
+from .models import Assignment, Department, Desk
 
 
 def _localized_datetime(value):
@@ -42,15 +38,6 @@ def _datetime_display_value(value):
     return localized.strftime("%b %d, %Y %I:%M %p")
 
 
-def _block_zone_duration_display(zone: BlockOutZone) -> str:
-    if zone.is_permanent:
-        return "Permanent block"
-    end_display = _datetime_display_value(zone.end)
-    if end_display:
-        return f"Until {end_display}"
-    return "Open ended"
-
-
 def _serialize_assignment(assignment: Assignment, now=None) -> dict | None:
     if not assignment:
         return None
@@ -70,11 +57,6 @@ def _serialize_assignment(assignment: Assignment, now=None) -> dict | None:
                 "department": assignment.desk.department.name,
             }
         )
-        data["blocked_zones"] = [
-            zone.name
-            for zone in assignment.desk.block_zones.all()
-            if zone.is_active(now)
-        ]
     return data
 
 
@@ -88,12 +70,7 @@ def _is_kiosk_desk(desk: Desk) -> bool:
 def _desk_payload(desk: Desk, now=None) -> dict:
     now = now or timezone.now()
     active_assignment = desk.active_assignment(now)
-    block_zones = [zone for zone in desk.block_zones.all() if zone.is_active(now)]
-    status = "free"
-    if active_assignment:
-        status = "occupied"
-    if block_zones:
-        status = "blocked"
+    status = "occupied" if active_assignment else "free"
     is_kiosk = _is_kiosk_desk(desk)
     is_assignable = is_kiosk or desk.department.name not in {"Utility/Resource", "Walkway"}
     left, top, width, height = grid_to_percentages(
@@ -122,8 +99,6 @@ def _desk_payload(desk: Desk, now=None) -> dict:
             "height": f"{height}%",
         },
         "status": status,
-        "is_blocked": bool(block_zones),
-        "block_zones": [zone.name for zone in block_zones],
         "assignment": _serialize_assignment(active_assignment, now),
         "department_id": desk.department_id,
     }
@@ -143,7 +118,7 @@ def index(request):
     now = timezone.now()
     desks = (
         Desk.objects.select_related("department")
-        .prefetch_related("block_zones", "assignments")
+        .prefetch_related("assignments")
         .all()
     )
     desk_payloads = [_desk_payload(desk, now) for desk in desks]
@@ -186,63 +161,15 @@ def assignment_info(request):
         response["message"] = "You are scheduled to work from home."
     else:
         desk = active_assignment.desk
-        block_zones = [zone.name for zone in desk.block_zones.all() if zone.is_active(now)]
-        if block_zones:
-            response["needs_action"] = True
-            response["message"] = (
-                "Your workspace is under construction. Please select a new location."
-            )
-            response["assignment"]["blocked_zones"] = block_zones
-        else:
-            response["message"] = f"You are assigned to {desk.label} in {desk.department.name}."
+        response["message"] = f"You are assigned to {desk.label} in {desk.department.name}."
 
     return JsonResponse(response)
-
-
-@require_POST
-def authenticate_employee(request):
-    last_name = (request.POST.get("last_name") or "").strip()
-    extension = (request.POST.get("extension") or "").strip()
-
-    if not last_name or not extension:
-        return JsonResponse(
-            {
-                "error": "Please enter your last name and the last four digits of your phone extension.",
-            },
-            status=400,
-        )
-
-    normalized_extension = normalize_extension_input(extension)
-    if len(normalized_extension) != 4:
-        return JsonResponse(
-            {
-                "error": "Please double-check that you're using only the last four digits of your extension.",
-            },
-            status=400,
-        )
-
-    employee = match_employee(last_name, extension)
-    if employee is None:
-        return JsonResponse(
-            {
-                "error": "We couldn't find a match for those details. Verify your last name and extension and try again.",
-            },
-            status=400,
-        )
-
-    profile = {
-        "first_name": employee.first_name,
-        "last_name": employee.last_name,
-        "full_name": employee.full_name,
-    }
-    request.session[SESSION_EMPLOYEE_PROFILE_KEY] = profile
-    return JsonResponse(profile)
 
 
 @require_GET
 def desk_detail(request, identifier: str):
     desk = get_object_or_404(
-        Desk.objects.select_related("department").prefetch_related("block_zones", "assignments"),
+        Desk.objects.select_related("department").prefetch_related("assignments"),
         identifier=identifier,
     )
     return JsonResponse(_desk_payload(desk))
@@ -251,26 +178,16 @@ def desk_detail(request, identifier: str):
 @require_POST
 def assign_to_desk(request, identifier: str):
     desk = get_object_or_404(Desk, identifier=identifier)
-    profile = request.session.get(SESSION_EMPLOYEE_PROFILE_KEY) or {}
-    assignee_name = (profile.get("full_name") or "").strip()
+    assignee_name = (request.POST.get("assignee_name") or "").strip()
     if not assignee_name:
         return JsonResponse(
             {
-                "error": "Please verify your employee information before reserving a seat.",
-            },
-            status=403,
-        )
-
-    now = timezone.now()
-    if desk.is_blocked(now):
-        return JsonResponse(
-            {
-                "error": "This desk is currently unavailable due to a block-out zone.",
-                "desk": _desk_payload(desk, now),
+                "error": "Please enter your name before reserving a seat.",
             },
             status=400,
         )
 
+    now = timezone.now()
     if desk.active_assignment(now):
         return JsonResponse(
             {"error": "This desk is already assigned.", "desk": _desk_payload(desk, now)},
@@ -346,46 +263,15 @@ def admin_console(request):
     active_assignments = [
         assignment for assignment in assignments if assignment.is_active(evaluation_time)
     ]
-    block_zone_queryset = (
-        BlockOutZone.objects.prefetch_related("desks").order_by("start", "name")
-    )
-    scheduled_blocks: list[BlockOutZone] = []
-    block_zone_payload: list[dict] = []
-    for zone in block_zone_queryset:
-        is_active = zone.is_active(evaluation_time)
-        starts_in_future = bool(zone.start and zone.start > evaluation_time)
-        if not is_active and not starts_in_future:
-            continue
-        setattr(zone, "admin_is_active", is_active)
-        scheduled_blocks.append(zone)
-        block_zone_payload.append(
-            {
-                "id": zone.pk,
-                "name": zone.name,
-                "desk_count": zone.desks.count(),
-                "is_permanent": zone.is_permanent,
-                "duration_choice": "permanent" if zone.is_permanent else "temporary",
-                "reason": zone.reason or "",
-                "created_by": zone.created_by or "",
-                "start": _datetime_input_value(zone.start),
-                "end": "" if zone.is_permanent else _datetime_input_value(zone.end),
-                "start_display": _datetime_display_value(zone.start),
-                "end_display": _datetime_display_value(zone.end),
-                "is_active": is_active,
-                "duration_display": _block_zone_duration_display(zone),
-            }
-        )
     desks = (
         Desk.objects.select_related("department")
-        .prefetch_related("block_zones", "assignments")
+        .prefetch_related("assignments")
         .all()
     )
     layout_desks = [_desk_payload(desk, evaluation_time) for desk in desks]
 
     context = {
         "active_assignments": active_assignments,
-        "block_zones": scheduled_blocks,
-        "block_zone_data": json.dumps(block_zone_payload),
         "now": local_now,
         "view_datetime": localized_evaluation_time,
         "view_date": selected_date,
@@ -397,76 +283,6 @@ def admin_console(request):
         "departments": Department.objects.all(),
     }
     return render(request, "floorplan/admin_console.html", context)
-
-@staff_member_required
-@require_POST
-def delete_block_zone(request, pk: int):
-    block_zone = get_object_or_404(BlockOutZone, pk=pk)
-    block_zone.delete()
-    messages.success(request, f"Block-out zone '{block_zone.name}' deleted.")
-    return redirect("floorplan:admin-console")
-
-
-@staff_member_required
-@require_POST
-def update_block_zone(request, pk: int):
-    block_zone = get_object_or_404(BlockOutZone, pk=pk)
-
-    name = (request.POST.get("name") or "").strip()
-    if not name:
-        messages.error(request, "Enter a name for this block-out zone before saving.")
-        return redirect("floorplan:admin-console")
-
-    duration_choice = request.POST.get("duration_choice") or "temporary"
-    is_permanent = duration_choice == "permanent"
-
-    start_raw = (request.POST.get("start") or "").strip()
-    end_raw = (request.POST.get("end") or "").strip()
-
-    try:
-        if start_raw:
-            parsed_start = datetime.fromisoformat(start_raw)
-            if timezone.is_naive(parsed_start):
-                parsed_start = timezone.make_aware(
-                    parsed_start, timezone.get_current_timezone()
-                )
-        else:
-            parsed_start = block_zone.start or timezone.now()
-    except ValueError:
-        messages.error(request, "Invalid start date for this block-out zone.")
-        return redirect("floorplan:admin-console")
-
-    parsed_end = None
-    if not is_permanent and end_raw:
-        try:
-            parsed_end = datetime.fromisoformat(end_raw)
-            if timezone.is_naive(parsed_end):
-                parsed_end = timezone.make_aware(
-                    parsed_end, timezone.get_current_timezone()
-                )
-        except ValueError:
-            messages.error(request, "Invalid end date for this block-out zone.")
-            return redirect("floorplan:admin-console")
-
-    if not is_permanent and parsed_end and parsed_end <= parsed_start:
-        messages.error(
-            request,
-            "The block-out zone must end after it begins. Adjust the end time and try again.",
-        )
-        return redirect("floorplan:admin-console")
-
-    block_zone.name = name
-    block_zone.start = parsed_start
-    block_zone.is_permanent = is_permanent
-    block_zone.end = None if is_permanent else parsed_end
-    block_zone.reason = (request.POST.get("reason") or "").strip()
-    block_zone.created_by = (request.POST.get("created_by") or "").strip()
-    block_zone.save(
-        update_fields=["name", "start", "end", "is_permanent", "reason", "created_by"]
-    )
-
-    messages.success(request, f"Block-out zone '{block_zone.name}' updated.")
-    return redirect("floorplan:admin-console")
 
 
 @staff_member_required
@@ -507,7 +323,7 @@ def update_layout(request):
             seen.add(key)
             normalized_cells.append(key)
 
-    if action not in {"assign", "clear", "block", "assignment"}:
+    if action not in {"assign", "clear", "assignment"}:
         return JsonResponse({"error": "Unsupported action."}, status=400)
 
     now = timezone.now()
@@ -515,7 +331,6 @@ def update_layout(request):
     updated_identifiers: set[str] = set()
     cleared_cells: list[dict[str, int]] = []
     created_assignments: list[Assignment] = []
-    blocked_count = 0
 
     with transaction.atomic():
         if action == "assign":
@@ -582,44 +397,6 @@ def update_layout(request):
                     continue
                 cleared_cells.append({"row": row, "column": column})
                 desk.delete()
-        elif action == "block":
-            data = payload.get("data") or {}
-            desks = []
-            for row, column in normalized_cells:
-                try:
-                    desk = Desk.objects.select_for_update().get(
-                        row_index=row, column_index=column
-                    )
-                except Desk.DoesNotExist:
-                    continue
-                desks.append(desk)
-            if not desks:
-                return JsonResponse(
-                    {"error": "Select desks with existing workspaces before blocking."},
-                    status=400,
-                )
-
-            form_data = QueryDict("", mutable=True)
-            form_data["name"] = (data.get("name") or "").strip()
-            form_data["duration_choice"] = data.get("duration_choice") or "temporary"
-            form_data["start"] = data.get("start") or local_now.strftime("%Y-%m-%dT%H:%M")
-            if data.get("end"):
-                form_data["end"] = data["end"]
-            if data.get("reason"):
-                form_data["reason"] = data["reason"]
-            if data.get("created_by"):
-                form_data["created_by"] = data["created_by"]
-            form_data.setlist("desks", [str(desk.pk) for desk in desks])
-
-            block_form = BlockOutZoneForm(form_data)
-            if not block_form.is_valid():
-                return JsonResponse(
-                    {"error": _first_form_error(block_form, "Unable to save block-out zone.")},
-                    status=400,
-                )
-            block = block_form.save()
-            blocked_count = block.desks.count()
-            updated_identifiers.update(block.desks.values_list("identifier", flat=True))
         else:  # assignment
             data = payload.get("data") or {}
             desks = []
@@ -691,7 +468,7 @@ def update_layout(request):
 
     refreshed = (
         Desk.objects.select_related("department")
-        .prefetch_related("block_zones", "assignments")
+        .prefetch_related("assignments")
         .filter(identifier__in=list(updated_identifiers))
     )
     updated_payloads = [_desk_payload(desk, now) for desk in refreshed]
@@ -701,8 +478,6 @@ def update_layout(request):
         message = f"Updated {len(updated_identifiers)} cell(s)."
     elif action == "clear":
         message = f"Cleared {len(cleared_cells)} cell(s)."
-    elif action == "block":
-        message = f"Blocked {blocked_count} desk(s)."
     else:
         message = f"Created {len(created_assignments)} assignment(s)."
 

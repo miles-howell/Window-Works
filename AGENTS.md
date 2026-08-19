@@ -3,7 +3,7 @@
 
 > Guidance for code-generation agents (e.g., Codex) working in this repository.
 
-This repository contains a **Django** application named **Window‑Works** for coordinating temporary desk moves on an interactive floor plan. It uses **Django 5.x** and **WhiteNoise** for serving static assets.
+This repository contains a **Django** application named **Window‑Works**, a general-purpose floorplan tracker for keeping track of desks, departments, and who's sitting where. It uses **Django 5.x** and **WhiteNoise** for serving static assets.
 
 ---
 
