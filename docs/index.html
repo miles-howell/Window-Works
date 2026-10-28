@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Window-Works · Who sits where, at a glance</title>
+  <meta name="description" content="Window-Works is an open-source Django app that turns your office into a clickable, colour-coded floor plan. Anyone can reserve a free desk with just their name, and staff repaint the layout in the browser.">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="canonical" href="https://window-works.plannedpixel.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Window-Works: who sits where, at a glance">
+  <meta property="og:description" content="A self-hosted, colour-coded office floor plan. Reserve a desk with just your name; staff manage the layout in the browser.">
+  <meta property="og:url" content="https://window-works.plannedpixel.com/">
+  <meta property="og:image" content="https://window-works.plannedpixel.com/assets/floor-plan.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Window-Works home">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2" y="2" width="9" height="9" rx="2.2" fill="#5B9BD5"/>
+          <rect x="13" y="2" width="9" height="9" rx="2.2" fill="#FF66CC"/>
+          <rect x="2" y="13" width="9" height="9" rx="2.2" fill="#70AD47"/>
+          <rect x="13" y="13" width="9" height="9" rx="2.2" fill="#F97316"/>
+        </svg>
+        <span>Window-Works</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#demo">Demo</a>
+        <a href="#features">Features</a>
+        <a href="#admin">Admin</a>
+        <a href="#get-started">Get started</a>
+      </nav>
+      <a class="button button-small button-ghost" href="https://github.com/miles-howell/Window-Works">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <p class="eyebrow"><span class="dot"></span> Open source · Django · Self-hosted</p>
+        <h1>Who sits where,<br><span class="gradient-text">at a glance.</span></h1>
+        <p class="lede">
+          Window-Works turns your office into one clickable, colour-coded floor plan.
+          Anyone can grab a free desk by typing their name. Staff repaint the layout
+          right in the browser, with no spreadsheets and no database edits.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#get-started">Get started in 5 minutes</a>
+          <a class="button button-ghost" href="#demo">Try the live demo ↓</a>
+        </div>
+        <ul class="hero-points" aria-label="Highlights">
+          <li><span class="check" aria-hidden="true">✓</span> No accounts to book a seat</li>
+          <li><span class="check" aria-hidden="true">✓</span> Runs on SQLite out of the box</li>
+          <li><span class="check" aria-hidden="true">✓</span> Apache-2.0 licensed</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="demo-section" id="demo" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="window" role="group" aria-labelledby="demo-title">
+          <div class="window-bar">
+            <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="window-url">window-works.local / floor-plan</span>
+            <span class="demo-badge">Live demo</span>
+          </div>
+          <div class="window-body">
+            <div class="demo-head">
+              <div>
+                <h2 id="demo-title" class="demo-title">Office floor plan</h2>
+                <p class="demo-sub">The real 13 × 30 layout that ships with the project. Click a desk to see who's there, or claim a free one.</p>
+              </div>
+              <div class="demo-stats" aria-live="polite">
+                <span class="pill pill-free"><i></i><b id="stat-free">0</b> free</span>
+                <span class="pill pill-occupied"><i></i><b id="stat-occupied">0</b> occupied</span>
+              </div>
+            </div>
+
+            <div class="demo-layout">
+              <div class="grid-scroller" tabindex="0" aria-label="Floor plan grid, scrollable">
+                <div class="floor-grid" id="floor-grid" role="grid" aria-label="Desks"></div>
+              </div>
+
+              <aside class="desk-panel" id="desk-panel" aria-live="polite">
+                <div class="panel-empty" id="panel-empty">
+                  <svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><rect x="6" y="6" width="16" height="16" rx="4" fill="currentColor" opacity=".18"/><rect x="26" y="6" width="16" height="16" rx="4" fill="currentColor" opacity=".35"/><rect x="6" y="26" width="16" height="16" rx="4" fill="currentColor" opacity=".35"/><rect x="26" y="26" width="16" height="16" rx="4" fill="currentColor"/></svg>
+                  <p><strong>Pick any coloured desk</strong></p>
+                  <p class="muted">Free desks can be reserved until the end of the day. Book a second one and your first is released.</p>
+                </div>
+                <div class="panel-detail" id="panel-detail" hidden>
+                  <p class="panel-dept"><span class="swatch" id="panel-swatch"></span><span id="panel-dept"></span></p>
+                  <h3 id="panel-label"></h3>
+                  <p class="panel-id"><code id="panel-id"></code></p>
+                  <dl class="panel-facts">
+                    <div><dt>Status</dt><dd id="panel-status"></dd></div>
+                    <div><dt>Assigned to</dt><dd id="panel-assignee"></dd></div>
+                    <div><dt>Duration</dt><dd id="panel-duration"></dd></div>
+                  </dl>
+                  <form class="reserve-form" id="reserve-form" hidden>
+                    <label for="reserve-name">Your name</label>
+                    <input id="reserve-name" name="name" autocomplete="name" placeholder="e.g. Jordan Smith" required maxlength="60">
+                    <button class="button button-primary button-block" type="submit">Reserve seat</button>
+                  </form>
+                  <p class="panel-note muted" id="panel-note" hidden></p>
+                </div>
+              </aside>
+            </div>
+
+            <ul class="legend" id="legend" aria-label="Departments"></ul>
+          </div>
+        </div>
+        <p class="demo-footnote">This demo runs entirely in your browser; nothing is saved. In the real app every reservation goes through the Django back end.</p>
+      </div>
+    </section>
+
+    <section class="section" id="how" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-title">From "is anyone sitting here?" to booked in three clicks</h2>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <h3>Look</h3>
+            <p>Every desk is a cell on a fixed grid, coloured by department and badged <b>Free</b> or <b>Occupied</b>. Right-click and drag to pan around big floors.</p>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <h3>Inspect</h3>
+            <p>Click any desk to see its department, who's sitting there, and for how long.</p>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <h3>Reserve</h3>
+            <p>Click a free desk, type your name, confirm. It's yours until the end of the day, and your name is remembered for next time.</p>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <h3>Manage</h3>
+            <p>Staff paint departments, labels and colours onto the grid, and record desk or work-from-home assignments.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Features</p>
+          <h2 id="features-title">Small enough to understand, complete enough to use</h2>
+          <p class="section-lede">Window-Works does one job well: it keeps an accurate, shared picture of your office.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature">
+            <div class="feature-icon" style="--tint: #039855"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <h3>Zero-friction booking</h3>
+            <p>No sign-up, no passwords. Type a name and the seat is yours. Booking another desk automatically frees the old one.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" style="--tint: #2563eb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+            <h3>Paint the layout in the browser</h3>
+            <p>Select cells, then assign a department, label, colour override or notes. Changes save instantly for everyone.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" style="--tint: #f79009"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <h3>Scheduled assignments</h3>
+            <p>Record temporary or permanent desk and work-from-home assignments with start and end times. Preview any date.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" style="--tint: #7030A0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18" stroke="currentColor" stroke-width="2"/></svg></div>
+            <h3>Colour-coded departments</h3>
+            <p>Teams get their own colour, so you can spot Marketing, Finance or IT from across the room. Override per desk when you need to.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" style="--tint: #0e7490"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <h3>JSON API included</h3>
+            <p>The front end runs on plain JSON endpoints, so kiosks, chat bots and dashboards can plug straight in.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" style="--tint: #C00000"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.2 8 9 4.6-.8 8-4.5 8-9V6l-8-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+            <h3>Yours to host</h3>
+            <p>A single Django project with SQLite and WhiteNoise. No SaaS subscription, and your seating data stays on your servers.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="admin" aria-labelledby="admin-title">
+      <div class="container split">
+        <div class="split-copy">
+          <p class="eyebrow">Admin console</p>
+          <h2 id="admin-title">Re-arrange the office without touching the database</h2>
+          <p>Staff sign in to the admin console and work on the same grid everyone else sees.</p>
+          <ul class="ticks">
+            <li><b>Layout mode:</b> multi-select cells and set department, label, fill colour, or notes, or clear them.</li>
+            <li><b>Seat assignment mode:</b> create desk or WFH assignments, temporary or permanent, and note who made the change.</li>
+            <li><b>Schedule date:</b> view the plan for any day and end an assignment with one click.</li>
+          </ul>
+        </div>
+        <figure class="shot">
+          <img src="assets/admin-console.png" width="1800" height="1332" loading="lazy" alt="The Window-Works admin console: three Marketing cells selected on the grid, with Layout and Seat assignment modes and fields for department, label, fill colour override and notes.">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="api" aria-labelledby="api-title">
+      <div class="container split split-reverse">
+        <div class="split-copy">
+          <p class="eyebrow">Built to integrate</p>
+          <h2 id="api-title">A tiny API you can read in one sitting</h2>
+          <p>Desk identifiers follow the grid. For example, <code>enrollment-r13c10</code> is the Enrollment desk at row 13, column 10. Plug the endpoints into a lobby kiosk, a Slack command or a status board.</p>
+        </div>
+        <div class="api-card">
+          <table>
+            <thead><tr><th scope="col">Endpoint</th><th scope="col">Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><span class="verb verb-post">POST</span><code>/api/assignment-info/</code></td><td>Latest assignment for a name</td></tr>
+              <tr><td><span class="verb verb-get">GET</span><code>/api/desks/&lt;id&gt;/</code></td><td>Desk metadata and status</td></tr>
+              <tr><td><span class="verb verb-post">POST</span><code>/api/desks/&lt;id&gt;/assign/</code></td><td>Reserve a free desk</td></tr>
+              <tr><td><span class="verb verb-post">POST</span><code>/api/layout/update/</code></td><td>Staff-only layout edits</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="get-started" aria-labelledby="start-title">
+      <div class="container narrow">
+        <div class="section-head center">
+          <p class="eyebrow">Get started</p>
+          <h2 id="start-title">Up and running in five minutes</h2>
+          <p class="section-lede">All you need is Python 3.12 or newer. The bundled fixture gives you a full sample office to explore.</p>
+        </div>
+        <div class="code-card">
+          <div class="code-head">
+            <span>Terminal</span>
+            <button class="copy-button" type="button" data-copy-target="quickstart">Copy</button>
+          </div>
+<pre id="quickstart"><code><span class="c"># Clone and install</span>
+git clone https://github.com/miles-howell/Window-Works.git
+cd Window-Works
+python3 -m venv venv &amp;&amp; source venv/bin/activate
+pip install -r requirements.txt
+
+<span class="c"># Configure, migrate and load the sample office</span>
+echo "SECRET_KEY=change-me-in-production" &gt; .env
+python manage.py migrate
+python manage.py loaddata floorplan/fixtures/floorplan_layout.json
+
+<span class="c"># Create a staff login for the admin console, then run it</span>
+python manage.py createsuperuser
+python manage.py runserver</code></pre>
+        </div>
+        <p class="after-code">Open <code>http://127.0.0.1:8000/</code> for the floor plan and <code>/admin-console/</code> for the staff tools. Before deploying, turn off <code>DEBUG</code>, set <code>ALLOWED_HOSTS</code>, and run <code>collectstatic</code>.</p>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-inner">
+        <h2>Give your office a map everyone can read.</h2>
+        <p>Free, open source and self-hosted. Star the repo, try it locally, and tell us what your floor needs.</p>
+        <div class="hero-actions">
+          <a class="button button-light" href="https://github.com/miles-howell/Window-Works">View on GitHub</a>
+          <a class="button button-outline-light" href="https://github.com/miles-howell/Window-Works/issues">Request a feature</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Window-Works · Released under the <a href="https://github.com/miles-howell/Window-Works/blob/main/LICENSE">Apache-2.0 license</a></p>
+      <nav aria-label="Footer">
+        <a href="https://github.com/miles-howell/Window-Works">Source</a>
+        <a href="https://github.com/miles-howell/Window-Works#readme">Docs</a>
+        <a href="https://github.com/miles-howell/Window-Works/issues">Issues</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="assets/layout.js"></script>
+  <script src="demo.js"></script>
+</body>
+</html>

@@ -8,6 +8,8 @@
   <img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="Apache-2.0 license">
 </p>
 
+<p align="center"><a href="https://window-works.plannedpixel.com/"><b>Website and live demo →</b></a></p>
+
 Window-Works is a small Django app that turns your office into a clickable grid. Every desk is a cell, coloured by department and marked **Free** or **Occupied**. Anyone can claim a free desk by typing their name. Staff keep the map and the assignments up to date from a browser console, with no database edits.
 
 <p align="center">
@@ -82,6 +84,8 @@ python manage.py test
 ```
 
 CI runs the same suite on every push and pull request to `main`. The hero image is generated from the real layout fixture. Run `python assets/readme/source/build_hero.py` to redraw it after changing `floorplan_layout.json`.
+
+The project website lives in `docs/` and is served by GitHub Pages (Settings → Pages → deploy from the `main` branch, `/docs` folder). Its interactive demo reads `docs/assets/layout.js`; run `python docs/source/build_demo_layout.py` to regenerate it from the same fixture.
 
 ## Notes
 
